@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Транспортная компания - Форма груза</title>
+    <link rel="stylesheet" href="other/styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Транспортная компания</h1>
+            <p>Форма для оформления груза</p>
+        </div>
+        
+        <div class="order-info">
+            <p><strong>Номер заявки:</strong> <span id="orderNumber">A-2023-04567</span></p>
+            <p><strong>Дата:</strong> <span id="currentDate"></span></p>
+        </div>
+        
+        <form id="cargoForm">
+            <div class="form-section">
+                <h2>Количество мест</h2>
+                <div class="form-group">
+                    <label for="placesCount">Укажите общее количество мест:</label>
+                    <input type="number" id="placesCount" name="placesCount" min="1" max="20" value="1">
+                </div>
+            </div>
+
+            <div id="placesContainer" class="places-container">
+                <!-- Динамически генерируемые места -->
+            </div>
+            
+            <div class="form-section">
+                <h2>Фотография груза</h2>
+                <div class="photo-upload" id="photoUpload">
+                    <i>📷</i>
+                    <p>Нажмите для загрузки фотографии</p>
+                    <input type="file" id="photoInput" accept="image/*" style="display: none;">
+                    <img id="photoPreview" class="photo-preview" alt="Предпросмотр фотографии">
+                </div>
+            </div>
+            
+            <button type="submit" class="btn">Отправить данные оператору</button>
+        </form>
+    </div>
+
+    <!-- Шаблон для места -->
+    <template id="placeTemplate">
+        <div class="place-item" data-place-index="0">
+            <div class="place-header">
+                <h3>Место <span class="place-number">1</span></h3>
+                <button type="button" class="btn-remove-place" style="display: none;">×</button>
+            </div>
+            
+            <div class="form-section">
+                <h4>Выберите тип груза</h4>
+                <div class="cargo-types">
+                    <div class="cargo-type" data-type="standard">
+                        <div class="cargo-image">
+                            <img src="pic/груз обычный.png" alt="Стандартный груз">
+                        </div>
+                        <h5>Стандартный</h5>
+                        <p>Ввод размеров и веса вручную</p>
+                    </div>
+                    <div class="cargo-type" data-type="standard-pallet">
+                        <div class="cargo-image">
+                            <img src="pic/евро палет .jpg" alt="Стандартный палет">
+                        </div>
+                        <h5>Стандартный палет</h5>
+                        <p>Данные константа</p>
+                    </div>
+                    <div class="cargo-type" data-type="american-pallet">
+                        <div class="cargo-image">
+                            <img src="pic/евро палет .jpg" alt="Американский палет">
+                        </div>
+                        <h5>Американский палет</h5>
+                        <p>Данные константа</p>
+                    </div>
+                    <div class="cargo-type" data-type="non-standard">
+                        <div class="cargo-image">
+                            <img src="pic/груз нестандартный.jpeg" alt="Нестандартный груз">
+                        </div>
+                        <h5>Нестандартный груз</h5>
+                        <p>Ввод размеров и веса вручную</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="place-dimensions-section hidden">
+                <h4>Размеры груза</h4>
+                <div class="dimensions">
+                    <div class="form-group">
+                        <label>Длина (см)</label>
+                        <input type="number" class="place-length" min="1" placeholder="Длина">
+                    </div>
+                    <div class="form-group">
+                        <label>Ширина (см)</label>
+                        <input type="number" class="place-width" min="1" placeholder="Ширина">
+                    </div>
+                    <div class="form-group">
+                        <label>Высота (см)</label>
+                        <input type="number" class="place-height" min="1" placeholder="Высота">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-group place-weight-section hidden">
+                <label>Вес (кг)</label>
+                <input type="number" class="place-weight" min="0.1" step="0.1" placeholder="Вес">
+            </div>
+            
+            <div class="place-constants-info constants-info hidden">
+                <!-- Здесь будет отображаться информация о константах -->
+            </div>
+        </div>
+    </template>
+
+    <script src="other/script.js"></script>
+</body>
+</html>
