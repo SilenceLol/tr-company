@@ -4,33 +4,40 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Транспортная компания - Форма груза</title>
-    <link rel="stylesheet" href="other/styles.css">
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>Транспортная компания</h1>
-            <p>Форма для оформления груза</p>
-        </div>
-        
-        <div class="order-info">
-            <p><strong>Номер заявки:</strong> <span id="orderNumber">A-2023-04567</span></p>
-            <p><strong>Дата:</strong> <span id="currentDate"></span></p>
-        </div>
-        
-        <form id="cargoForm">
-            <div class="form-section">
-                <h2>Количество мест</h2>
-                <div class="form-group">
-                    <label for="placesCount">Укажите общее количество мест:</label>
-                    <input type="number" id="placesCount" name="placesCount" min="1" max="20" value="1">
+    <!-- Главный экран -->
+    <div id="mainScreen" class="screen active">
+        <div class="container">
+            <div class="header">
+                <h1>Транспортная компания</h1>
+                <p>Оформление груза</p>
+            </div>
+            
+            <div class="order-info">
+                <p><strong>Номер заявки:</strong> <span id="orderNumber">A-2023-04567</span></p>
+                <p><strong>Дата:</strong> <span id="currentDate"></span></p>
+            </div>
+
+            <div class="places-list" id="placesList">
+                <!-- Список мест будет добавляться динамически -->
+                <div class="empty-state">
+                    <p>Нажмите "+" чтобы добавить первое место</p>
                 </div>
             </div>
 
-            <div id="placesContainer" class="places-container">
-                <!-- Динамически генерируемые места -->
+            <div class="actions">
+                <button id="addPlaceBtn" class="btn btn-primary btn-large">
+                    <span class="btn-icon">+</span>
+                    Добавить место
+                </button>
+                
+                <button id="submitBtn" class="btn btn-secondary" disabled>
+                    Передать данные оператору
+                </button>
             </div>
-            
+
             <div class="form-section">
                 <h2>Фотография груза</h2>
                 <div class="photo-upload" id="photoUpload">
@@ -40,82 +47,124 @@
                     <img id="photoPreview" class="photo-preview" alt="Предпросмотр фотографии">
                 </div>
             </div>
-            
-            <button type="submit" class="btn">Отправить данные оператору</button>
-        </form>
+        </div>
     </div>
 
-    <!-- Шаблон для места -->
-    <template id="placeTemplate">
-        <div class="place-item" data-place-index="0">
-            <div class="place-header">
-                <h3>Место <span class="place-number">1</span></h3>
-                <button type="button" class="btn-remove-place" style="display: none;">×</button>
+    <!-- Экран выбора типа груза -->
+    <div id="typeSelectionScreen" class="screen">
+        <div class="container">
+            <div class="screen-header">
+                <button class="btn-back" id="backFromTypeBtn">← Назад</button>
+                <h2>Выберите тип груза</h2>
             </div>
-            
-            <div class="form-section">
-                <h4>Выберите тип груза</h4>
-                <div class="cargo-types">
-                    <div class="cargo-type" data-type="standard">
-                        <div class="cargo-image">
-                            <img src="pic/груз обычный.png" alt="Стандартный груз">
-                        </div>
-                        <h5>Стандартный</h5>
-                        <p>Ввод размеров и веса вручную</p>
+
+            <div class="cargo-types">
+                <div class="cargo-type" data-type="standard">
+                    <div class="cargo-image">
+                        <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=200&h=120&fit=crop" alt="Стандартный груз">
                     </div>
-                    <div class="cargo-type" data-type="standard-pallet">
-                        <div class="cargo-image">
-                            <img src="pic/евро палет .jpg" alt="Стандартный палет">
-                        </div>
-                        <h5>Стандартный палет</h5>
-                        <p>Данные константа</p>
-                    </div>
-                    <div class="cargo-type" data-type="american-pallet">
-                        <div class="cargo-image">
-                            <img src="pic/евро палет .jpg" alt="Американский палет">
-                        </div>
-                        <h5>Американский палет</h5>
-                        <p>Данные константа</p>
-                    </div>
-                    <div class="cargo-type" data-type="non-standard">
-                        <div class="cargo-image">
-                            <img src="pic/груз нестандартный.jpeg" alt="Нестандартный груз">
-                        </div>
-                        <h5>Нестандартный груз</h5>
-                        <p>Ввод размеров и веса вручную</p>
-                    </div>
+                    <h3>Стандартный</h3>
+                    <p>Ввод размеров и веса вручную</p>
                 </div>
-            </div>
-            
-            <div class="place-dimensions-section hidden">
-                <h4>Размеры груза</h4>
-                <div class="dimensions">
-                    <div class="form-group">
-                        <label>Длина (см)</label>
-                        <input type="number" class="place-length" min="1" placeholder="Длина">
+                <div class="cargo-type" data-type="standard-pallet">
+                    <div class="cargo-image">
+                        <img src="https://images.unsplash.com/photo-1586528116314-48c0fb893579?w=200&h=120&fit=crop" alt="Стандартный палет">
                     </div>
-                    <div class="form-group">
-                        <label>Ширина (см)</label>
-                        <input type="number" class="place-width" min="1" placeholder="Ширина">
-                    </div>
-                    <div class="form-group">
-                        <label>Высота (см)</label>
-                        <input type="number" class="place-height" min="1" placeholder="Высота">
-                    </div>
+                    <h3>Стандартный палет</h3>
+                    <p>Данные константа</p>
                 </div>
-            </div>
-            
-            <div class="form-group place-weight-section hidden">
-                <label>Вес (кг)</label>
-                <input type="number" class="place-weight" min="0.1" step="0.1" placeholder="Вес">
-            </div>
-            
-            <div class="place-constants-info constants-info hidden">
-                <!-- Здесь будет отображаться информация о константах -->
+                <div class="cargo-type" data-type="american-pallet">
+                    <div class="cargo-image">
+                        <img src="https://images.unsplash.com/photo-1611251432627-298c42083b1d?w=200&h=120&fit=crop" alt="Американский палет">
+                    </div>
+                    <h3>Американский палет</h3>
+                    <p>Данные константа</p>
+                </div>
+                <div class="cargo-type" data-type="non-standard">
+                    <div class="cargo-image">
+                        <img src="https://images.unsplash.com/photo-1607083206968-13611e3d76db?w=200&h=120&fit=crop" alt="Нестандартный груз">
+                    </div>
+                    <h3>Нестандартный груз</h3>
+                    <p>Ввод размеров и веса вручную</p>
+                </div>
             </div>
         </div>
-    </template>
+    </div>
 
-    <script src="other/script.js"></script>
+    <!-- Экран ввода параметров груза -->
+    <div id="paramsScreen" class="screen">
+        <div class="container">
+            <div class="screen-header">
+                <button class="btn-back" id="backFromParamsBtn">← Назад</button>
+                <h2>Параметры груза</h2>
+            </div>
+
+            <div class="cargo-preview">
+                <div id="cargoPreviewImage" class="cargo-preview-image">
+                    <!-- Изображение будет подставляться динамически -->
+                </div>
+                <h3 id="cargoTypeTitle">Тип груза</h3>
+            </div>
+
+            <div id="dimensionsSection">
+                <h3>Размеры (см)</h3>
+                <div class="slider-group">
+                    <label>Длина: <span id="lengthValue">100</span> см</label>
+                    <input type="range" id="lengthSlider" class="slider" min="10" max="300" step="10" value="100">
+                    <div class="slider-controls">
+                        <button class="btn-small" data-target="lengthSlider" data-action="decrease">-10</button>
+                        <button class="btn-small" data-target="lengthSlider" data-action="increase">+10</button>
+                    </div>
+                </div>
+
+                <div class="slider-group">
+                    <label>Ширина: <span id="widthValue">80</span> см</label>
+                    <input type="range" id="widthSlider" class="slider" min="10" max="200" step="10" value="80">
+                    <div class="slider-controls">
+                        <button class="btn-small" data-target="widthSlider" data-action="decrease">-10</button>
+                        <button class="btn-small" data-target="widthSlider" data-action="increase">+10</button>
+                    </div>
+                </div>
+
+                <div class="slider-group">
+                    <label>Высота: <span id="heightValue">60</span> см</label>
+                    <input type="range" id="heightSlider" class="slider" min="10" max="200" step="10" value="60">
+                    <div class="slider-controls">
+                        <button class="btn-small" data-target="heightSlider" data-action="decrease">-10</button>
+                        <button class="btn-small" data-target="heightSlider" data-action="increase">+10</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="weight-section">
+                <h3>Вес (кг)</h3>
+                <div class="weight-control">
+                    <button class="weight-btn" id="decreaseWeight">-</button>
+                    <div class="weight-display">
+                        <span id="weightValue">25</span> кг
+                    </div>
+                    <button class="weight-btn" id="increaseWeight">+</button>
+                </div>
+                <div class="weight-steps">
+                    <button class="btn-small" data-weight="-10">-10</button>
+                    <button class="btn-small" data-weight="-1">-1</button>
+                    <button class="btn-small" data-weight="+1">+1</button>
+                    <button class="btn-small" data-weight="+10">+10</button>
+                </div>
+            </div>
+
+            <div id="constantsInfo" class="constants-info">
+                <!-- Константные значения для палетов -->
+            </div>
+
+            <div class="actions">
+                <button id="savePlaceBtn" class="btn btn-primary btn-large">
+                    Сохранить место
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
 </body>
 </html>

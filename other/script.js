@@ -1,15 +1,18 @@
 // Основной объект приложения
 const TransportApp = {
+    currentPlace: null,
+    places: [],
+    
     // Инициализация приложения
     init: function() {
         this.setCurrentDate();
         this.getOrderFromURL();
         this.setupEventListeners();
         this.preloadImages();
-        this.generatePlaces(1); // Начальное количество мест
+        this.updateSubmitButton();
     },
 
-    // Предзагрузка изображений для лучшего UX
+    // Предзагрузка изображений
     preloadImages: function() {
         const imageUrls = [
             'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=200&h=120&fit=crop',
@@ -40,169 +43,96 @@ const TransportApp = {
 
     // Настройка обработчиков событий
     setupEventListeners: function() {
-        // Обработчик изменения количества мест
-        document.getElementById('placesCount').addEventListener('change', (e) => {
-            this.generatePlaces(parseInt(e.target.value));
+        // Кнопки навигации
+        document.getElementById('addPlaceBtn').addEventListener('click', () => this.showTypeSelection());
+        document.getElementById('backFromTypeBtn').addEventListener('click', () => this.showMainScreen());
+        document.getElementById('backFromParamsBtn').addEventListener('click', () => this.showTypeSelection());
+        
+        // Выбор типа груза
+        document.querySelectorAll('.cargo-type').forEach(type => {
+            type.addEventListener('click', (e) => this.handleCargoTypeSelection(e.currentTarget));
         });
-
-        this.setupPhotoUploadListener();
-        this.setupFormSubmitListener();
+        
+        // Слайдеры размеров
+        this.setupSliders();
+        
+        // Контроль веса
+        this.setupWeightControls();
+        
+        // Сохранение места
+        document.getElementById('savePlaceBtn').addEventListener('click', () => this.savePlace());
+        
+        // Загрузка фото
+        this.setupPhotoUpload();
+        
+        // Отправка формы
+        document.getElementById('submitBtn').addEventListener('click', () => this.submitForm());
     },
 
-    // Генерация мест
-    generatePlaces: function(count) {
-        const container = document.getElementById('placesContainer');
-        container.innerHTML = '';
-
-        for (let i = 0; i < count; i++) {
-            this.createPlaceElement(i + 1);
-        }
-
-        this.setupPlaceEventListeners();
-    },
-
-    // Создание элемента места
-    createPlaceElement: function(placeNumber) {
-        const template = document.getElementById('placeTemplate');
-        const clone = template.content.cloneNode(true);
-        const placeElement = clone.querySelector('.place-item');
-
-        placeElement.setAttribute('data-place-index', placeNumber);
-        placeElement.querySelector('.place-number').textContent = placeNumber;
-
-        // Показываем кнопку удаления только если мест больше 1
-        if (placeNumber > 1) {
-            placeElement.querySelector('.btn-remove-place').style.display = 'block';
-        }
-
-        document.getElementById('placesContainer').appendChild(placeElement);
-    },
-
-    // Настройка обработчиков событий для мест
-    setupPlaceEventListeners: function() {
-        // Обработчики для выбора типа груза в каждом месте
-        document.querySelectorAll('.place-item').forEach(place => {
-            const cargoTypes = place.querySelectorAll('.cargo-type');
+    // Настройка слайдеров
+    setupSliders: function() {
+        const sliders = ['lengthSlider', 'widthSlider', 'heightSlider'];
+        
+        sliders.forEach(sliderId => {
+            const slider = document.getElementById(sliderId);
+            const valueSpan = document.getElementById(sliderId.replace('Slider', 'Value'));
             
-            cargoTypes.forEach(type => {
-                type.addEventListener('click', () => {
-                    this.handleCargoTypeSelection(type, place);
-                });
+            slider.addEventListener('input', () => {
+                valueSpan.textContent = slider.value;
             });
-
-            // Обработчик удаления места
-            const removeBtn = place.querySelector('.btn-remove-place');
-            if (removeBtn) {
-                removeBtn.addEventListener('click', () => {
-                    this.removePlace(place);
-                });
-            }
+        });
+        
+        // Кнопки управления слайдерами
+        document.querySelectorAll('.slider-controls .btn-small').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const target = document.getElementById(e.target.dataset.target);
+                const action = e.target.dataset.action;
+                const step = 10;
+                
+                if (action === 'increase') {
+                    target.value = Math.min(parseInt(target.max), parseInt(target.value) + step);
+                } else {
+                    target.value = Math.max(parseInt(target.min), parseInt(target.value) - step);
+                }
+                
+                target.dispatchEvent(new Event('input'));
+            });
         });
     },
 
-    // Удаление места
-    removePlace: function(placeElement) {
-        if (confirm('Удалить это место?')) {
-            placeElement.remove();
-            this.updatePlacesNumbers();
-            this.updatePlacesCountInput();
-        }
-    },
-
-    // Обновление номеров мест после удаления
-    updatePlacesNumbers: function() {
-        const places = document.querySelectorAll('.place-item');
-        places.forEach((place, index) => {
-            const placeNumber = index + 1;
-            place.setAttribute('data-place-index', placeNumber);
-            place.querySelector('.place-number').textContent = placeNumber;
-
-            // Показываем/скрываем кнопку удаления
-            const removeBtn = place.querySelector('.btn-remove-place');
-            if (removeBtn) {
-                removeBtn.style.display = placeNumber > 1 ? 'block' : 'none';
+    // Настройка контроля веса
+    setupWeightControls: function() {
+        const weightValue = document.getElementById('weightValue');
+        
+        // Основные кнопки +/-
+        document.getElementById('increaseWeight').addEventListener('click', () => {
+            weightValue.textContent = parseInt(weightValue.textContent) + 1;
+        });
+        
+        document.getElementById('decreaseWeight').addEventListener('click', () => {
+            const current = parseInt(weightValue.textContent);
+            if (current > 1) {
+                weightValue.textContent = current - 1;
             }
+        });
+        
+        // Быстрые шаги
+        document.querySelectorAll('.weight-steps .btn-small').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const change = parseInt(e.target.dataset.weight);
+                const newValue = parseInt(weightValue.textContent) + change;
+                if (newValue >= 1) {
+                    weightValue.textContent = newValue;
+                }
+            });
         });
     },
 
-    // Обновление поля ввода количества мест
-    updatePlacesCountInput: function() {
-        const currentPlaces = document.querySelectorAll('.place-item').length;
-        document.getElementById('placesCount').value = currentPlaces;
-    },
-
-    // Обработка выбора типа груза для конкретного места
-    handleCargoTypeSelection: function(selectedType, placeElement) {
-        // Сброс предыдущего выбора в этом месте
-        placeElement.querySelectorAll('.cargo-type').forEach(t => {
-            t.classList.remove('selected');
-        });
-        
-        // Установка нового выбора
-        selectedType.classList.add('selected');
-        
-        const cargoType = selectedType.getAttribute('data-type');
-        this.togglePlaceFormSections(cargoType, placeElement);
-        
-        // Установка константных значений для палетов
-        if (cargoType === 'standard-pallet' || cargoType === 'american-pallet') {
-            this.setPlaceConstantValues(cargoType, placeElement);
-        }
-    },
-
-    // Переключение видимости секций формы для места
-    togglePlaceFormSections: function(cargoType, placeElement) {
-        const dimensionsSection = placeElement.querySelector('.place-dimensions-section');
-        const weightSection = placeElement.querySelector('.place-weight-section');
-        const constantsInfo = placeElement.querySelector('.place-constants-info');
-
-        if (cargoType === 'standard-pallet' || cargoType === 'american-pallet') {
-            dimensionsSection.classList.add('hidden');
-            weightSection.classList.add('hidden');
-            constantsInfo.classList.remove('hidden');
-        } else {
-            dimensionsSection.classList.remove('hidden');
-            weightSection.classList.remove('hidden');
-            constantsInfo.classList.add('hidden');
-        }
-    },
-
-    // Установка константных значений для места
-    setPlaceConstantValues: function(cargoType, placeElement) {
-        const constantsInfo = placeElement.querySelector('.place-constants-info');
-        
-        const constants = {
-            'standard-pallet': {
-                title: 'Стандартный палет',
-                dimensions: '120 × 80 × 15 см',
-                weight: '25 кг',
-                capacity: '1000 кг',
-                image: 'https://images.unsplash.com/photo-1586528116314-48c0fb893579?w=200&h=120&fit=crop'
-            },
-            'american-pallet': {
-                title: 'Американский палет',
-                dimensions: '120 × 100 × 15 см',
-                weight: '30 кг',
-                capacity: '1200 кг',
-                image: 'https://images.unsplash.com/photo-1611251432627-298c42083b1d?w=200&h=120&fit=crop'
-            }
-        };
-
-        const constant = constants[cargoType];
-        if (constant) {
-            constantsInfo.innerHTML = `
-                <h4>${constant.title}</h4>
-                <p><strong>Размеры:</strong> ${constant.dimensions}</p>
-                <p><strong>Вес:</strong> ${constant.weight}</p>
-                <p><strong>Грузоподъемность:</strong> ${constant.capacity}</p>
-            `;
-        }
-    },
-
-    // Настройка загрузки фотографии
-    setupPhotoUploadListener: function() {
+    // Настройка загрузки фото
+    setupPhotoUpload: function() {
         const photoUpload = document.getElementById('photoUpload');
         const photoInput = document.getElementById('photoInput');
+        const photoPreview = document.getElementById('photoPreview');
 
         photoUpload.addEventListener('click', () => {
             photoInput.click();
@@ -213,7 +143,7 @@ const TransportApp = {
         });
     },
 
-    // Обработка загрузки фотографии
+    // Обработка загрузки фото
     handlePhotoUpload: function(event) {
         const file = event.target.files[0];
         const photoPreview = document.getElementById('photoPreview');
@@ -230,161 +160,216 @@ const TransportApp = {
         }
     },
 
-    // Настройка отправки формы
-    setupFormSubmitListener: function() {
-        const form = document.getElementById('cargoForm');
-        form.addEventListener('submit', (event) => {
-            event.preventDefault();
-            this.handleFormSubmit();
+    // Показать экран выбора типа
+    showTypeSelection: function() {
+        this.hideAllScreens();
+        document.getElementById('typeSelectionScreen').classList.add('active');
+    },
+
+    // Показать главный экран
+    showMainScreen: function() {
+        this.hideAllScreens();
+        document.getElementById('mainScreen').classList.add('active');
+        this.updatePlacesList();
+        this.updateSubmitButton();
+    },
+
+    // Показать экран параметров
+    showParamsScreen: function() {
+        this.hideAllScreens();
+        document.getElementById('paramsScreen').classList.add('active');
+    },
+
+    // Скрыть все экраны
+    hideAllScreens: function() {
+        document.querySelectorAll('.screen').forEach(screen => {
+            screen.classList.remove('active');
         });
     },
 
-    // Обработка отправки формы
-    handleFormSubmit: function() {
-        // Сбор данных всех мест
-        const placesData = this.collectPlacesData();
+    // Обработка выбора типа груза
+    handleCargoTypeSelection: function(selectedType) {
+        // Сброс предыдущего выбора
+        document.querySelectorAll('.cargo-type').forEach(t => {
+            t.classList.remove('selected');
+        });
+        
+        // Установка нового выбора
+        selectedType.classList.add('selected');
+        
+        const cargoType = selectedType.getAttribute('data-type');
+        this.currentPlace = {
+            type: cargoType,
+            typeName: selectedType.querySelector('h3').textContent,
+            image: selectedType.querySelector('img').src
+        };
+        
+        this.showParamsScreen();
+        this.setupParamsForType(cargoType);
+    },
 
-        // Валидация данных
-        if (!this.validatePlacesData(placesData)) {
+    // Настройка параметров для выбранного типа
+    setupParamsForType: function(cargoType) {
+        // Установка изображения и названия
+        const previewImage = document.getElementById('cargoPreviewImage');
+        const typeTitle = document.getElementById('cargoTypeTitle');
+        
+        previewImage.innerHTML = `<img src="${this.currentPlace.image}" alt="${this.currentPlace.typeName}">`;
+        typeTitle.textContent = this.currentPlace.typeName;
+        
+        // Настройка видимости секций
+        const dimensionsSection = document.getElementById('dimensionsSection');
+        const constantsInfo = document.getElementById('constantsInfo');
+        
+        if (cargoType === 'standard-pallet' || cargoType === 'american-pallet') {
+            dimensionsSection.classList.add('hidden');
+            constantsInfo.classList.remove('hidden');
+            this.setConstantValues(cargoType);
+        } else {
+            dimensionsSection.classList.remove('hidden');
+            constantsInfo.classList.add('hidden');
+        }
+        
+        // Установка значений по умолчанию
+        this.setDefaultValues(cargoType);
+    },
+
+    // Установка константных значений
+    setConstantValues: function(cargoType) {
+        const constantsInfo = document.getElementById('constantsInfo');
+        
+        const constants = {
+            'standard-pallet': {
+                dimensions: '120 × 80 × 15 см',
+                weight: '25 кг',
+                capacity: '1000 кг'
+            },
+            'american-pallet': {
+                dimensions: '120 × 100 × 15 см',
+                weight: '30 кг',
+                capacity: '1200 кг'
+            }
+        };
+
+        const constant = constants[cargoType];
+        if (constant) {
+            constantsInfo.innerHTML = `
+                <h4>Автоматически заполненные параметры</h4>
+                <p><strong>Размеры:</strong> ${constant.dimensions}</p>
+                <p><strong>Вес:</strong> ${constant.weight}</p>
+                <p><strong>Грузоподъемность:</strong> ${constant.capacity}</p>
+            `;
+        }
+    },
+
+    // Установка значений по умолчанию
+    setDefaultValues: function(cargoType) {
+        const defaults = {
+            'standard': { length: 100, width: 80, height: 60, weight: 25 },
+            'non-standard': { length: 150, width: 100, height: 80, weight: 50 },
+            'standard-pallet': { length: 120, width: 80, height: 15, weight: 25 },
+            'american-pallet': { length: 120, width: 100, height: 15, weight: 30 }
+        };
+        
+        const defaultValues = defaults[cargoType] || defaults.standard;
+        
+        // Установка значений слайдеров
+        document.getElementById('lengthSlider').value = defaultValues.length;
+        document.getElementById('widthSlider').value = defaultValues.width;
+        document.getElementById('heightSlider').value = defaultValues.height;
+        document.getElementById('weightValue').textContent = defaultValues.weight;
+        
+        // Обновление отображаемых значений
+        document.getElementById('lengthValue').textContent = defaultValues.length;
+        document.getElementById('widthValue').textContent = defaultValues.width;
+        document.getElementById('heightValue').textContent = defaultValues.height;
+    },
+
+    // Сохранение места
+    savePlace: function() {
+        const placeData = {
+            ...this.currentPlace,
+            dimensions: {
+                length: document.getElementById('lengthSlider').value,
+                width: document.getElementById('widthSlider').value,
+                height: document.getElementById('heightSlider').value
+            },
+            weight: document.getElementById('weightValue').textContent
+        };
+        
+        this.places.push(placeData);
+        this.showMainScreen();
+    },
+
+    // Обновление списка мест
+    updatePlacesList: function() {
+        const placesList = document.getElementById('placesList');
+        
+        if (this.places.length === 0) {
+            placesList.innerHTML = `
+                <div class="empty-state">
+                    <p>Нажмите "+" чтобы добавить первое место</p>
+                </div>
+            `;
             return;
         }
+        
+        placesList.innerHTML = this.places.map((place, index) => `
+            <div class="place-card">
+                <div class="place-header">
+                    <div class="place-title">Место ${index + 1}</div>
+                    <button class="place-remove" onclick="TransportApp.removePlace(${index})">×</button>
+                </div>
+                <div class="place-details">
+                    <div class="place-detail"><strong>Тип:</strong> ${place.typeName}</div>
+                    <div class="place-detail"><strong>Вес:</strong> ${place.weight} кг</div>
+                    <div class="place-detail"><strong>Размеры:</strong> ${place.dimensions.length}×${place.dimensions.width}×${place.dimensions.height} см</div>
+                </div>
+            </div>
+        `).join('');
+    },
 
-        // Сбор общих данных формы
+    // Удаление места
+    removePlace: function(index) {
+        if (confirm('Удалить это место?')) {
+            this.places.splice(index, 1);
+            this.updatePlacesList();
+            this.updateSubmitButton();
+        }
+    },
+
+    // Обновление состояния кнопки отправки
+    updateSubmitButton: function() {
+        const submitBtn = document.getElementById('submitBtn');
+        submitBtn.disabled = this.places.length === 0;
+    },
+
+    // Отправка формы
+    submitForm: function() {
         const formData = {
             orderNumber: document.getElementById('orderNumber').textContent,
-            placesCount: placesData.length,
-            places: placesData,
+            places: this.places,
             photo: document.getElementById('photoInput').files[0] ? 
                    document.getElementById('photoInput').files[0].name : null
         };
-
-        // Отправка данных
-        this.submitFormData(formData);
-    },
-
-    // Сбор данных всех мест
-    collectPlacesData: function() {
-        const places = [];
         
-        document.querySelectorAll('.place-item').forEach((placeElement, index) => {
-            const selectedCargoType = placeElement.querySelector('.cargo-type.selected');
-            
-            if (selectedCargoType) {
-                const placeData = {
-                    placeNumber: index + 1,
-                    cargoType: selectedCargoType.getAttribute('data-type'),
-                    cargoTypeName: selectedCargoType.querySelector('h5').textContent
-                };
-
-                // Добавление размеров и веса
-                this.addPlaceDimensionsAndWeight(placeData, placeElement);
-                places.push(placeData);
-            }
-        });
-
-        return places;
-    },
-
-    // Добавление размеров и веса для места
-    addPlaceDimensionsAndWeight: function(placeData, placeElement) {
-        const cargoType = placeData.cargoType;
-
-        if (cargoType === 'standard' || cargoType === 'non-standard') {
-            placeData.length = placeElement.querySelector('.place-length').value;
-            placeData.width = placeElement.querySelector('.place-width').value;
-            placeData.height = placeElement.querySelector('.place-height').value;
-            placeData.weight = placeElement.querySelector('.place-weight').value;
-        } else if (cargoType === 'standard-pallet') {
-            placeData.length = 120;
-            placeData.width = 80;
-            placeData.height = 15;
-            placeData.weight = 25;
-        } else if (cargoType === 'american-pallet') {
-            placeData.length = 120;
-            placeData.width = 100;
-            placeData.height = 15;
-            placeData.weight = 30;
-        }
-    },
-
-    // Валидация данных мест
-    validatePlacesData: function(placesData) {
-        if (placesData.length === 0) {
-            alert('Пожалуйста, укажите хотя бы одно место');
-            return false;
-        }
-
-        for (let i = 0; i < placesData.length; i++) {
-            const place = placesData[i];
-            
-            if (!place.cargoType) {
-                alert(`Пожалуйста, выберите тип груза для места ${i + 1}`);
-                return false;
-            }
-
-            // Проверка заполнения полей для ручного ввода
-            if (place.cargoType === 'standard' || place.cargoType === 'non-standard') {
-                if (!place.length || !place.width || !place.height || !place.weight) {
-                    alert(`Пожалуйста, заполните все поля с размерами и весом для места ${i + 1}`);
-                    return false;
-                }
-
-                // Проверка корректности числовых значений
-                if (place.length <= 0 || place.width <= 0 || place.height <= 0 || place.weight <= 0) {
-                    alert(`Размеры и вес должны быть положительными числами для места ${i + 1}`);
-                    return false;
-                }
-            }
-        }
-
-        // Проверка загрузки фотографии
-        if (!document.getElementById('photoInput').files[0]) {
-            alert('Пожалуйста, загрузите фотографию груза');
-            return false;
-        }
-
-        return true;
-    },
-
-    // Отправка данных формы
-    submitFormData: function(formData) {
         // Показать состояние загрузки
-        const submitBtn = document.querySelector('.btn');
+        const submitBtn = document.getElementById('submitBtn');
         const originalText = submitBtn.textContent;
         submitBtn.textContent = 'Отправка...';
-        submitBtn.classList.add('loading');
-
+        submitBtn.disabled = true;
+        
         // Имитация отправки на сервер
         setTimeout(() => {
-            // В реальном приложении здесь будет отправка данных на сервер
             console.log('Данные для отправки в 1С:', formData);
             
             // Показать сообщение об успехе
-            this.showSuccessMessage(formData);
+            alert('Данные успешно отправлены оператору! Номер заявки: ' + formData.orderNumber);
             
             // Восстановить кнопку
             submitBtn.textContent = originalText;
-            submitBtn.classList.remove('loading');
+            submitBtn.disabled = false;
         }, 1500);
-    },
-
-    // Показать сообщение об успешной отправке
-    showSuccessMessage: function(formData) {
-        const successMessage = document.createElement('div');
-        successMessage.className = 'success-message';
-        successMessage.innerHTML = `
-            <strong>Данные успешно отправлены оператору!</strong><br>
-            Номер заявки: ${formData.orderNumber}<br>
-            Количество мест: ${formData.placesCount}
-        `;
-        
-        const container = document.querySelector('.container');
-        container.insertBefore(successMessage, document.getElementById('cargoForm'));
-        
-        // Автоматически скрыть сообщение через 5 секунд
-        setTimeout(() => {
-            successMessage.remove();
-        }, 5000);
     }
 };
 
