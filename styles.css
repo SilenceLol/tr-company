@@ -1,0 +1,583 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+}
+
+body {
+    background-color: #f8f9fa;
+    color: #1a1a1a;
+    line-height: 1.5;
+    padding: 0;
+    font-size: 16px;
+}
+
+.container {
+    max-width: 100%;
+    margin: 0 auto;
+    background: white;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+/* Экраны */
+.screen {
+    display: none;
+}
+
+.screen.active {
+    display: block;
+}
+
+/* Заголовок */
+.header {
+    text-align: center;
+    margin-bottom: 24px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.header h1 {
+    color: #1a1a1a;
+    margin-bottom: 8px;
+    font-size: 24px;
+    font-weight: 700;
+}
+
+.header p {
+    color: #6c757d;
+    font-size: 16px;
+}
+
+/* Информация о заявке */
+.order-info {
+    background-color: #e8f4fd;
+    padding: 16px;
+    border-radius: 12px;
+    margin-bottom: 24px;
+    border-left: 4px solid #007bff;
+}
+
+.order-info p {
+    margin-bottom: 8px;
+    font-size: 15px;
+}
+
+.order-info strong {
+    color: #1a1a1a;
+}
+
+/* Список мест */
+.places-list {
+    margin-bottom: 20px;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 40px 20px;
+    color: #6c757d;
+    background: #f8f9fa;
+    border-radius: 12px;
+    border: 2px dashed #dee2e6;
+    font-size: 15px;
+}
+
+.place-card {
+    background: white;
+    border: 1px solid #e9ecef;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 12px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.place-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.place-title {
+    font-weight: 600;
+    color: #1a1a1a;
+    font-size: 16px;
+}
+
+.place-remove {
+    background: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    width: 28px;
+    height: 28px;
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.place-details {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    font-size: 14px;
+}
+
+.place-detail {
+    color: #6c757d;
+}
+
+.place-detail strong {
+    color: #1a1a1a;
+}
+
+/* Кнопка добавления места */
+.add-place-btn-container {
+    text-align: center;
+    margin-bottom: 24px;
+}
+
+.btn-add-place {
+    width: 60px;
+    height: 60px;
+    border: none;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #007bff, #0056b3);
+    color: white;
+    font-size: 28px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+    transition: all 0.3s ease;
+}
+
+.btn-add-place:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 16px rgba(0, 123, 255, 0.4);
+}
+
+/* Загрузка фото */
+.form-section {
+    margin-bottom: 24px;
+}
+
+.form-section h2 {
+    color: #1a1a1a;
+    margin-bottom: 12px;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.photo-upload {
+    border: 2px dashed #dee2e6;
+    border-radius: 12px;
+    padding: 32px 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: #f8f9fa;
+}
+
+.photo-upload:hover {
+    border-color: #007bff;
+    background: #e8f4fd;
+}
+
+.photo-upload-icon {
+    font-size: 40px;
+    margin-bottom: 12px;
+    opacity: 0.7;
+}
+
+.photo-upload p {
+    color: #6c757d;
+    font-size: 15px;
+    margin: 0;
+}
+
+.photo-preview {
+    display: none;
+    max-width: 100%;
+    max-height: 200px;
+    margin-top: 16px;
+    border-radius: 8px;
+    border: 1px solid #dee2e6;
+}
+
+/* Кнопка отправки */
+.actions {
+    margin-top: 24px;
+}
+
+.btn-submit {
+    width: 100%;
+    padding: 16px 20px;
+    background: #28a745;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 17px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-submit:hover:not(:disabled) {
+    background: #218838;
+    transform: translateY(-1px);
+}
+
+.btn-submit:disabled {
+    background: #6c757d;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Навигация */
+.screen-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.screen-header h2 {
+    color: #1a1a1a;
+    margin-left: 12px;
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.btn-back {
+    background: none;
+    border: none;
+    color: #007bff;
+    cursor: pointer;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: background-color 0.3s ease;
+}
+
+.btn-back:hover {
+    background-color: #e8f4fd;
+}
+
+.back-arrow {
+    font-size: 18px;
+}
+
+/* Выбор типа груза */
+.cargo-types-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+}
+
+.cargo-type-card {
+    border: 2px solid #e9ecef;
+    border-radius: 16px;
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: white;
+}
+
+.cargo-type-card:hover {
+    border-color: #007bff;
+    background: #f8fbff;
+    transform: translateY(-2px);
+}
+
+.cargo-type-card.selected {
+    border-color: #007bff;
+    background: #e8f4fd;
+    transform: translateY(-1px);
+}
+
+.cargo-icon {
+    font-size: 40px;
+    margin-bottom: 12px;
+}
+
+.cargo-type-card h3 {
+    font-size: 17px;
+    margin-bottom: 8px;
+    color: #1a1a1a;
+    font-weight: 600;
+}
+
+.cargo-type-card p {
+    font-size: 14px;
+    color: #6c757d;
+    margin: 0;
+}
+
+/* Отображение типа груза */
+.cargo-type-display {
+    text-align: center;
+    margin-bottom: 24px;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 16px;
+}
+
+.cargo-type-icon {
+    font-size: 48px;
+    margin-bottom: 12px;
+}
+
+.cargo-type-display h3 {
+    color: #1a1a1a;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+/* Секции */
+.section-title {
+    color: #1a1a1a;
+    margin-bottom: 20px;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+/* Управление размерами */
+.dimension-control {
+    margin-bottom: 24px;
+    padding: 16px;
+    background: #f8f9fa;
+    border-radius: 12px;
+}
+
+.dimension-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.dimension-label {
+    font-weight: 600;
+    color: #1a1a1a;
+    font-size: 15px;
+}
+
+.dimension-value {
+    font-weight: 600;
+    color: #007bff;
+    font-size: 16px;
+}
+
+.dimension-slider {
+    width: 100%;
+    height: 6px;
+    border-radius: 3px;
+    background: #dee2e6;
+    outline: none;
+    margin-bottom: 12px;
+    -webkit-appearance: none;
+}
+
+.dimension-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: #007bff;
+    cursor: pointer;
+    border: 3px solid white;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+
+.dimension-slider::-moz-range-thumb {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: #007bff;
+    cursor: pointer;
+    border: 3px solid white;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+
+.slider-controls {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+}
+
+.slider-btn {
+    padding: 8px 16px;
+    background: white;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.slider-btn:hover {
+    background: #007bff;
+    color: white;
+    border-color: #007bff;
+}
+
+/* Управление весом */
+.weight-section {
+    text-align: center;
+    margin-bottom: 24px;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 16px;
+}
+
+.weight-control {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.weight-btn {
+    width: 44px;
+    height: 44px;
+    border: none;
+    border-radius: 50%;
+    background: #007bff;
+    color: white;
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.weight-btn:hover {
+    background: #0056b3;
+    transform: scale(1.1);
+}
+
+.weight-display {
+    font-size: 28px;
+    font-weight: 700;
+    color: #1a1a1a;
+    min-width: 100px;
+}
+
+.weight-presets {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+}
+
+.weight-preset-btn {
+    padding: 10px 8px;
+    background: white;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.weight-preset-btn:hover {
+    background: #007bff;
+    color: white;
+    border-color: #007bff;
+}
+
+/* Константные значения */
+.constants-info {
+    background-color: #e8f4fd;
+    padding: 20px;
+    border-radius: 12px;
+    margin-bottom: 24px;
+    border-left: 4px solid #007bff;
+}
+
+.constants-info h4 {
+    color: #1a1a1a;
+    margin-bottom: 12px;
+    font-size: 16px;
+}
+
+.constants-info p {
+    margin-bottom: 8px;
+    color: #1a1a1a;
+    font-size: 14px;
+}
+
+/* Кнопка сохранения */
+.btn-save {
+    width: 100%;
+    padding: 16px 20px;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 17px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-save:hover {
+    background: #0056b3;
+    transform: translateY(-1px);
+}
+
+/* Утилиты */
+.hidden {
+    display: none !important;
+}
+
+/* Адаптивность */
+@media (max-width: 480px) {
+    .container {
+        padding: 16px;
+    }
+    
+    .header h1 {
+        font-size: 22px;
+    }
+    
+    .cargo-types-grid {
+        gap: 10px;
+    }
+    
+    .cargo-type-card {
+        padding: 16px;
+    }
+    
+    .weight-control {
+        gap: 16px;
+    }
+    
+    .weight-btn {
+        width: 40px;
+        height: 40px;
+        font-size: 18px;
+    }
+    
+    .weight-display {
+        font-size: 24px;
+    }
+    
+    .weight-presets {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}

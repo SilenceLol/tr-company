@@ -16,36 +16,37 @@
             </div>
             
             <div class="order-info">
-                <p><strong>Номер заявки:</strong> <span id="orderNumber">A-2023-04567</span></p>
+                <p><strong>Номер заявки:</strong> <span id="orderNumber">А-3031-0507</span></p>
                 <p><strong>Дата:</strong> <span id="currentDate"></span></p>
             </div>
 
             <div class="places-list" id="placesList">
                 <!-- Список мест будет добавляться динамически -->
                 <div class="empty-state">
-                    <p>Нажмите "+" чтобы добавить первое место</p>
+                    <p>Нажмите "+" чтобы добавить место</p>
                 </div>
             </div>
 
-            <div class="actions">
-                <button id="addPlaceBtn" class="btn btn-primary btn-large">
-                    <span class="btn-icon">+</span>
-                    Добавить место
-                </button>
-                
-                <button id="submitBtn" class="btn btn-secondary" disabled>
-                    Передать данные оператору
+            <div class="add-place-btn-container">
+                <button id="addPlaceBtn" class="btn-add-place">
+                    <span class="btn-add-icon">+</span>
                 </button>
             </div>
 
             <div class="form-section">
                 <h2>Фотография груза</h2>
                 <div class="photo-upload" id="photoUpload">
-                    <i>📷</i>
+                    <div class="photo-upload-icon">📷</div>
                     <p>Нажмите для загрузки фотографии</p>
                     <input type="file" id="photoInput" accept="image/*" style="display: none;">
                     <img id="photoPreview" class="photo-preview" alt="Предпросмотр фотографии">
                 </div>
+            </div>
+
+            <div class="actions">
+                <button id="submitBtn" class="btn-submit" disabled>
+                    Передать данные оператору
+                </button>
             </div>
         </div>
     </div>
@@ -54,38 +55,33 @@
     <div id="typeSelectionScreen" class="screen">
         <div class="container">
             <div class="screen-header">
-                <button class="btn-back" id="backFromTypeBtn">← Назад</button>
+                <button class="btn-back" id="backFromTypeBtn">
+                    <span class="back-arrow">←</span>
+                    Назад
+                </button>
                 <h2>Выберите тип груза</h2>
             </div>
 
-            <div class="cargo-types">
-                <div class="cargo-type" data-type="standard">
-                    <div class="cargo-image">
-                        <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=200&h=120&fit=crop" alt="Стандартный груз">
-                    </div>
+            <div class="cargo-types-grid">
+                <div class="cargo-type-card" data-type="standard">
+                    <div class="cargo-icon">📦</div>
                     <h3>Стандартный</h3>
-                    <p>Ввод размеров и веса вручную</p>
+                    <p>Ввод размеров вручную</p>
                 </div>
-                <div class="cargo-type" data-type="standard-pallet">
-                    <div class="cargo-image">
-                        <img src="https://images.unsplash.com/photo-1586528116314-48c0fb893579?w=200&h=120&fit=crop" alt="Стандартный палет">
-                    </div>
+                <div class="cargo-type-card" data-type="standard-pallet">
+                    <div class="cargo-icon">🚛</div>
                     <h3>Стандартный палет</h3>
                     <p>Данные константа</p>
                 </div>
-                <div class="cargo-type" data-type="american-pallet">
-                    <div class="cargo-image">
-                        <img src="https://images.unsplash.com/photo-1611251432627-298c42083b1d?w=200&h=120&fit=crop" alt="Американский палет">
-                    </div>
+                <div class="cargo-type-card" data-type="american-pallet">
+                    <div class="cargo-icon">🇺🇸</div>
                     <h3>Американский палет</h3>
                     <p>Данные константа</p>
                 </div>
-                <div class="cargo-type" data-type="non-standard">
-                    <div class="cargo-image">
-                        <img src="https://images.unsplash.com/photo-1607083206968-13611e3d76db?w=200&h=120&fit=crop" alt="Нестандартный груз">
-                    </div>
+                <div class="cargo-type-card" data-type="non-standard">
+                    <div class="cargo-icon">📏</div>
                     <h3>Нестандартный груз</h3>
-                    <p>Ввод размеров и веса вручную</p>
+                    <p>Ввод размеров вручную</p>
                 </div>
             </div>
         </div>
@@ -95,70 +91,83 @@
     <div id="paramsScreen" class="screen">
         <div class="container">
             <div class="screen-header">
-                <button class="btn-back" id="backFromParamsBtn">← Назад</button>
+                <button class="btn-back" id="backFromParamsBtn">
+                    <span class="back-arrow">←</span>
+                    Назад
+                </button>
                 <h2>Параметры груза</h2>
             </div>
 
-            <div class="cargo-preview">
-                <div id="cargoPreviewImage" class="cargo-preview-image">
-                    <!-- Изображение будет подставляться динамически -->
-                </div>
-                <h3 id="cargoTypeTitle">Тип груза</h3>
+            <div class="cargo-type-display">
+                <div class="cargo-type-icon" id="cargoTypeIcon">📦</div>
+                <h3 id="cargoTypeTitle">Стандартный</h3>
             </div>
 
             <div id="dimensionsSection">
-                <h3>Размеры (см)</h3>
-                <div class="slider-group">
-                    <label>Длина: <span id="lengthValue">100</span> см</label>
-                    <input type="range" id="lengthSlider" class="slider" min="10" max="300" step="10" value="100">
+                <h3 class="section-title">Размеры (см)</h3>
+                
+                <div class="dimension-control">
+                    <div class="dimension-header">
+                        <span class="dimension-label">Длина</span>
+                        <span class="dimension-value" id="lengthValue">100</span>
+                    </div>
+                    <input type="range" id="lengthSlider" class="dimension-slider" min="10" max="300" step="10" value="100">
                     <div class="slider-controls">
-                        <button class="btn-small" data-target="lengthSlider" data-action="decrease">-10</button>
-                        <button class="btn-small" data-target="lengthSlider" data-action="increase">+10</button>
+                        <button class="slider-btn" data-target="lengthSlider" data-change="-10">-10</button>
+                        <button class="slider-btn" data-target="lengthSlider" data-change="+10">+10</button>
                     </div>
                 </div>
 
-                <div class="slider-group">
-                    <label>Ширина: <span id="widthValue">80</span> см</label>
-                    <input type="range" id="widthSlider" class="slider" min="10" max="200" step="10" value="80">
+                <div class="dimension-control">
+                    <div class="dimension-header">
+                        <span class="dimension-label">Ширина</span>
+                        <span class="dimension-value" id="widthValue">80</span>
+                    </div>
+                    <input type="range" id="widthSlider" class="dimension-slider" min="10" max="200" step="10" value="80">
                     <div class="slider-controls">
-                        <button class="btn-small" data-target="widthSlider" data-action="decrease">-10</button>
-                        <button class="btn-small" data-target="widthSlider" data-action="increase">+10</button>
+                        <button class="slider-btn" data-target="widthSlider" data-change="-10">-10</button>
+                        <button class="slider-btn" data-target="widthSlider" data-change="+10">+10</button>
                     </div>
                 </div>
 
-                <div class="slider-group">
-                    <label>Высота: <span id="heightValue">60</span> см</label>
-                    <input type="range" id="heightSlider" class="slider" min="10" max="200" step="10" value="60">
+                <div class="dimension-control">
+                    <div class="dimension-header">
+                        <span class="dimension-label">Высота</span>
+                        <span class="dimension-value" id="heightValue">60</span>
+                    </div>
+                    <input type="range" id="heightSlider" class="dimension-slider" min="10" max="200" step="10" value="60">
                     <div class="slider-controls">
-                        <button class="btn-small" data-target="heightSlider" data-action="decrease">-10</button>
-                        <button class="btn-small" data-target="heightSlider" data-action="increase">+10</button>
+                        <button class="slider-btn" data-target="heightSlider" data-change="-10">-10</button>
+                        <button class="slider-btn" data-target="heightSlider" data-change="+10">+10</button>
                     </div>
                 </div>
             </div>
 
             <div class="weight-section">
-                <h3>Вес (кг)</h3>
+                <h3 class="section-title">Вес (кг)</h3>
                 <div class="weight-control">
-                    <button class="weight-btn" id="decreaseWeight">-</button>
+                    <button class="weight-btn decrease" id="decreaseWeight">-</button>
                     <div class="weight-display">
-                        <span id="weightValue">25</span> кг
+                        <span id="weightValue">25.0</span>
                     </div>
-                    <button class="weight-btn" id="increaseWeight">+</button>
+                    <button class="weight-btn increase" id="increaseWeight">+</button>
                 </div>
-                <div class="weight-steps">
-                    <button class="btn-small" data-weight="-10">-10</button>
-                    <button class="btn-small" data-weight="-1">-1</button>
-                    <button class="btn-small" data-weight="+1">+1</button>
-                    <button class="btn-small" data-weight="+10">+10</button>
+                <div class="weight-presets">
+                    <button class="weight-preset-btn" data-weight="0.1">0.1</button>
+                    <button class="weight-preset-btn" data-weight="0.2">0.2</button>
+                    <button class="weight-preset-btn" data-weight="0.5">0.5</button>
+                    <button class="weight-preset-btn" data-weight="1.0">1.0</button>
+                    <button class="weight-preset-btn" data-weight="5.0">5.0</button>
+                    <button class="weight-preset-btn" data-weight="10.0">10.0</button>
                 </div>
             </div>
 
-            <div id="constantsInfo" class="constants-info">
+            <div id="constantsInfo" class="constants-info hidden">
                 <!-- Константные значения для палетов -->
             </div>
 
             <div class="actions">
-                <button id="savePlaceBtn" class="btn btn-primary btn-large">
+                <button id="savePlaceBtn" class="btn-save">
                     Сохранить место
                 </button>
             </div>
