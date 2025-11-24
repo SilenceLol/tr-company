@@ -114,12 +114,13 @@ function changeWeight(change) {
     }
 }
 
-// Изменение размеров
+// Изменение размеров (теперь можно устанавливать 0)
 function changeDimension(dimension, change) {
     const input = document.getElementById(dimension);
     let newValue = parseInt(input.value) + change;
     
-    if (newValue >= 1 && newValue <= 1000) {
+    // Разрешаем значения от 0 до 1000
+    if (newValue >= 0 && newValue <= 1000) {
         input.value = newValue;
         currentDimensions[dimension] = newValue;
     }
@@ -183,6 +184,12 @@ function resetPhoto() {
 
 // Добавить груз в список
 function addCargo() {
+    // Проверяем, что хотя бы один размер не равен 0
+    if (currentDimensions.length === 0 && currentDimensions.width === 0 && currentDimensions.height === 0) {
+        alert('Укажите хотя бы один размер груза!');
+        return;
+    }
+    
     const cargo = {
         id: Date.now(),
         type: currentCargoType,
