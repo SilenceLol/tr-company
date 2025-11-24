@@ -12,31 +12,15 @@ let cargoList = [];
 // Стандартные размеры паллетов
 const palletSizes = {
     'euro-pallet': { length: 120, width: 80 },
-    'standard-pallet': { length: 100, width: 120 },
+    'american-pallet': { length: 120, width: 120 },
     'box': { length: 50, width: 40, height: 30 },
     'non-standard': { length: 100, width: 50, height: 40 }
 };
 
-// SVG иконки для типов грузов
+// Emoji для типов грузов
 const cargoIcons = {
-    'euro-pallet': `
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect x="3" y="6" width="18" height="12" rx="1" stroke="currentColor" stroke-width="2"/>
-            <path d="M3 9H21" stroke="currentColor" stroke-width="2"/>
-            <path d="M3 15H21" stroke="currentColor" stroke-width="2"/>
-            <path d="M8 6V18" stroke="currentColor" stroke-width="2"/>
-            <path d="M16 6V18" stroke="currentColor" stroke-width="2"/>
-        </svg>
-    `,
-    'standard-pallet': `
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect x="3" y="6" width="18" height="12" rx="1" stroke="currentColor" stroke-width="2"/>
-            <path d="M3 9H21" stroke="currentColor" stroke-width="2"/>
-            <path d="M3 15H21" stroke="currentColor" stroke-width="2"/>
-            <path d="M8 6V18" stroke="currentColor" stroke-width="2"/>
-            <path d="M16 6V18" stroke="currentColor" stroke-width="2"/>
-        </svg>
-    `,
+    'euro-pallet': '🚛',
+    'american-pallet': '🚛', 
     'box': '📦',
     'non-standard': '📏'
 };
@@ -49,14 +33,14 @@ document.addEventListener('DOMContentLoaded', function() {
     updateTotals();
     
     // Выбираем европаллет по умолчанию
-    document.querySelector('.cargo-type[data-type="euro-pallet"]').classList.add('selected');
+    document.querySelector('.cargo-type-compact[data-type="euro-pallet"]').classList.add('selected');
     setPalletDimensions('euro-pallet');
     updateControlsVisibility();
 });
 
 // Инициализация выбора типа груза
 function initCargoTypeSelection() {
-    const cargoTypes = document.querySelectorAll('.cargo-type');
+    const cargoTypes = document.querySelectorAll('.cargo-type-compact');
     
     cargoTypes.forEach(type => {
         type.addEventListener('click', function() {
@@ -66,7 +50,7 @@ function initCargoTypeSelection() {
             currentCargoType = this.getAttribute('data-type');
             
             // Устанавливаем стандартные размеры
-            if (currentCargoType === 'euro-pallet' || currentCargoType === 'standard-pallet') {
+            if (currentCargoType === 'euro-pallet' || currentCargoType === 'american-pallet') {
                 setPalletDimensions(currentCargoType);
             } else {
                 setDefaultDimensions(currentCargoType);
@@ -87,7 +71,7 @@ function updateControlsVisibility() {
     const widthControl = document.getElementById('widthControl');
     
     // Для паллетов скрываем длину и ширину (они фиксированные)
-    if (currentCargoType === 'euro-pallet' || currentCargoType === 'standard-pallet') {
+    if (currentCargoType === 'euro-pallet' || currentCargoType === 'american-pallet') {
         lengthControl.classList.add('hidden');
         widthControl.classList.add('hidden');
     } else {
@@ -220,7 +204,7 @@ function resetCurrentCargo() {
     resetPhoto();
     
     // Возвращаем стандартные размеры для текущего типа
-    if (currentCargoType === 'euro-pallet' || currentCargoType === 'standard-pallet') {
+    if (currentCargoType === 'euro-pallet' || currentCargoType === 'american-pallet') {
         setPalletDimensions(currentCargoType);
     } else {
         setDefaultDimensions(currentCargoType);
@@ -290,14 +274,16 @@ function closeCargoListModal() {
 function renderCargoListModal() {
     const container = document.getElementById('cargoListContent');
     
+    if (cargoList.length === 0) {
+        container.innerHTML = '<div class="empty-state">Нет добавленных грузов</div>';
+        return;
+    }
+    
     container.innerHTML = cargoList.map(cargo => `
         <div class="cargo-list-item">
             <div class="cargo-list-header">
                 <div class="cargo-type-badge">
-                    ${typeof cargoIcons[cargo.type] === 'string' && cargoIcons[cargo.type].includes('svg') 
-                        ? `<span class="cargo-icon-small">${cargoIcons[cargo.type]}</span>`
-                        : `<span class="cargo-emoji-small">${cargoIcons[cargo.type]}</span>`
-                    }
+                    <span class="cargo-emoji-small">${cargoIcons[cargo.type]}</span>
                     ${getCargoTypeName(cargo.type)}
                 </div>
                 <span class="cargo-weight">${cargo.weight} кг</span>
@@ -356,7 +342,7 @@ function sendToOperator() {
 function getCargoTypeName(type) {
     const names = {
         'euro-pallet': 'Европаллет',
-        'standard-pallet': 'Обычный паллет',
+        'american-pallet': 'Американский паллет',
         'box': 'Коробка',
         'non-standard': 'Нестандартный груз'
     };
