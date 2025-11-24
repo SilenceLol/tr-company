@@ -69,7 +69,25 @@ const TransportApp = {
         if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
             console.warn('Камера не поддерживается в этом браузере');
             document.getElementById('takePhotoBtn').style.display = 'none';
+            return false;
         }
+        
+        // Проверка конкретных возможностей
+        navigator.mediaDevices.enumerateDevices()
+            .then(devices => {
+                const videoDevices = devices.filter(device => device.kind === 'videoinput');
+                console.log('Доступные видео устройства:', videoDevices);
+                
+                if (videoDevices.length === 0) {
+                    console.warn('Камеры не найдены на устройстве');
+                    document.getElementById('takePhotoBtn').style.display = 'none';
+                }
+            })
+            .catch(error => {
+                console.error('Ошибка при проверке устройств:', error);
+            });
+        
+        return true;
     },
 
     // Настройка обработчиков событий
@@ -202,6 +220,7 @@ const TransportApp = {
                 photoUpload.querySelector('h4').textContent = 'Фотография загружена';
                 photoUpload.querySelector('p').textContent = 'Файл успешно загружен';
                 this.showSuccess('Фотография успешно загружена');
+                this.updateSubmitButton();
             };
             reader.onerror = () => {
                 this.showError('Ошибка при загрузке файла');
@@ -215,31 +234,70 @@ const TransportApp = {
         document.getElementById('photoInput').click();
     },
 
-    // Запуск камеры
+    // ЗАПУСК КАМЕРЫ - ИСПРАВЛЕННАЯ ВЕРСИЯ
     startCamera: function() {
+        console.log('Запуск камеры...');
         this.showCameraScreen();
         
+        // Сначала остановим предыдущий поток, если он есть
+        if (this.stream) {
+            this.stopCamera();
+        }
+
+        // Упрощенные constraints для лучшей совместимости
         const constraints = {
             video: {
                 facingMode: this.currentFacingMode,
-                width: { ideal: 1920 },
-                height: { ideal: 1080 }
+                width: { ideal: 1280 },
+                height: { ideal: 720 }
             },
             audio: false
         };
 
+        console.log('Constraints:', constraints);
+
         navigator.mediaDevices.getUserMedia(constraints)
             .then(stream => {
+                console.log('Камера успешно запущена, получен поток');
                 this.stream = stream;
                 const video = document.getElementById('cameraVideo');
+                
+                // Устанавливаем srcObject ДО попытки воспроизведения
                 video.srcObject = stream;
+                
+                // Ждем когда видео будет готово к воспроизведению
+                video.onloadedmetadata = () => {
+                    console.log('Метаданные видео загружены, запускаем воспроизведение...');
+                    video.play()
+                        .then(() => {
+                            console.log('Видео успешно воспроизводится');
+                        })
+                        .catch(e => {
+                            console.error('Ошибка воспроизведения видео:', e);
+                            this.showCameraError(e);
+                        });
+                };
+                
+                // Обработка ошибок видео
+                video.onerror = (e) => {
+                    console.error('Ошибка видео элемента:', e);
+                    this.showCameraError(e);
+                };
+                
+                // Дополнительная проверка через секунду
+                setTimeout(() => {
+                    if (video.readyState === 0) {
+                        console.warn('Видео все еще не загружено, пробуем принудительный play');
+                        video.play().catch(e => console.error('Принудительный play failed:', e));
+                    }
+                }, 1000);
                 
                 // Показать кнопку переключения камеры, если доступно несколько камер
                 this.checkMultipleCameras();
             })
             .catch(error => {
                 console.error('Ошибка доступа к камере:', error);
-                this.showCameraError();
+                this.showCameraError(error);
             });
     },
 
@@ -248,6 +306,7 @@ const TransportApp = {
         navigator.mediaDevices.enumerateDevices()
             .then(devices => {
                 const videoDevices = devices.filter(device => device.kind === 'videoinput');
+                console.log('Найдено видео устройств:', videoDevices.length);
                 if (videoDevices.length > 1) {
                     document.getElementById('switchCameraBtn').style.display = 'block';
                 }
@@ -265,12 +324,16 @@ const TransportApp = {
             });
             this.stream = null;
         }
-        this.showMainScreen();
+        const video = document.getElementById('cameraVideo');
+        if (video) {
+            video.srcObject = null;
+        }
     },
 
     // Переключение камеры
     switchCamera: function() {
         this.currentFacingMode = this.currentFacingMode === 'user' ? 'environment' : 'user';
+        console.log('Переключение камеры на:', this.currentFacingMode);
         this.stopCamera();
         this.startCamera();
     },
@@ -321,7 +384,9 @@ const TransportApp = {
         photoUpload.querySelector('p').textContent = 'Фото сделано с камеры';
         
         this.showSuccess('Фотография успешно сохранена');
+        this.updateSubmitButton();
         this.stopCamera();
+        this.showMainScreen();
     },
 
     // Обработка выбора типа груза
@@ -682,7 +747,8 @@ const TransportApp = {
     showCameraScreen: function() {
         this.hideAllScreens();
         document.getElementById('cameraScreen').classList.add('active');
-        this.startCamera();
+        // Запускаем камеру сразу после показа экрана
+        setTimeout(() => this.startCamera(), 100);
     },
 
     // Скрыть все экраны
@@ -692,10 +758,37 @@ const TransportApp = {
         });
     },
 
-    // Показать ошибку камеры
-    showCameraError: function() {
-        this.showError('Не удалось получить доступ к камере. Пожалуйста, проверьте разрешения или используйте загрузку файла.');
-        this.showMainScreen();
+    // Показать ошибку камеры - ИСПРАВЛЕННАЯ ВЕРСИЯ
+    showCameraError: function(error) {
+        let errorMessage = 'Не удалось получить доступ к камере. ';
+        
+        console.error('Camera error details:', error);
+        
+        switch(error.name) {
+            case 'NotAllowedError':
+                errorMessage += 'Разрешение на использование камеры было отклонено. Пожалуйста, разрешите доступ к камере в настройках браузера.';
+                break;
+            case 'NotFoundError':
+                errorMessage += 'Камера не найдена на устройстве.';
+                break;
+            case 'NotSupportedError':
+                errorMessage += 'Браузер не поддерживает доступ к камере. Попробуйте использовать современный браузер.';
+                break;
+            case 'NotReadableError':
+                errorMessage += 'Камера уже используется другим приложением. Закройте другие приложения, использующие камеру.';
+                break;
+            case 'OverconstrainedError':
+                errorMessage += 'Запрошенные параметры камеры не поддерживаются.';
+                break;
+            case 'TypeError':
+                errorMessage += 'Ошибка инициализации камеры. Убедитесь, что используется HTTPS соединение.';
+                break;
+            default:
+                errorMessage += `Техническая информация: ${error.message || 'неизвестная ошибка'}. Пожалуйста, используйте загрузку файла.`;
+        }
+        
+        this.showError(errorMessage);
+        // Не возвращаемся на главный экран сразу, даем пользователю прочитать ошибку
     },
 
     // Показать сообщение об ошибке
@@ -718,22 +811,6 @@ const TransportApp = {
                 <span class="notification-icon">${type === 'error' ? '❌' : type === 'success' ? '✅' : 'ℹ️'}</span>
                 <span class="notification-text">${message}</span>
             </div>
-        `;
-        
-        // Стили для уведомления
-        notification.style.cssText = `
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: ${type === 'error' ? '#fef2f2' : type === 'success' ? '#f0fdf4' : '#f0f9ff'};
-            border: 1px solid ${type === 'error' ? '#fecaca' : type === 'success' ? '#bbf7d0' : '#bae6fd'};
-            color: ${type === 'error' ? '#dc2626' : type === 'success' ? '#16a34a' : '#0369a1'};
-            padding: 12px 16px;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            z-index: 1000;
-            max-width: 320px;
-            animation: slideIn 0.3s ease;
         `;
         
         document.body.appendChild(notification);
@@ -769,99 +846,9 @@ const TransportApp = {
             </div>
         `;
         
-        // Стили для модального окна
-        modal.style.cssText = `
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 2000;
-            animation: fadeIn 0.3s ease;
-        `;
-        
-        const modalContent = modal.querySelector('.modal');
-        modalContent.style.cssText = `
-            background: white;
-            border-radius: 12px;
-            padding: 0;
-            max-width: 400px;
-            width: 90%;
-            animation: scaleIn 0.3s ease;
-        `;
-        
         document.body.appendChild(modal);
     }
 };
-
-// Добавление CSS анимаций
-const style = document.createElement('style');
-style.textContent = `
-    @keyframes slideIn {
-        from { transform: translateX(100%); opacity: 0; }
-        to { transform: translateX(0); opacity: 1; }
-    }
-    
-    @keyframes slideOut {
-        from { transform: translateX(0); opacity: 1; }
-        to { transform: translateX(100%); opacity: 0; }
-    }
-    
-    @keyframes fadeIn {
-        from { opacity: 0; }
-        to { opacity: 1; }
-    }
-    
-    @keyframes scaleIn {
-        from { transform: scale(0.9); opacity: 0; }
-        to { transform: scale(1); opacity: 1; }
-    }
-    
-    .modal-header {
-        padding: 20px 20px 0;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-    
-    .modal-header h3 {
-        margin: 0;
-        font-size: 18px;
-        font-weight: 600;
-    }
-    
-    .modal-close {
-        background: none;
-        border: none;
-        font-size: 24px;
-        cursor: pointer;
-        color: #64748b;
-    }
-    
-    .modal-body {
-        padding: 20px;
-        text-align: center;
-    }
-    
-    .modal-icon {
-        font-size: 48px;
-        margin-bottom: 16px;
-    }
-    
-    .modal-content {
-        line-height: 1.5;
-    }
-    
-    .modal-footer {
-        padding: 0 20px 20px;
-        text-align: center;
-    }
-`;
-document.head.appendChild(style);
 
 // Инициализация приложения после загрузки DOM
 document.addEventListener('DOMContentLoaded', function() {
