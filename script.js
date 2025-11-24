@@ -45,6 +45,7 @@ const cargoIcons = {
 document.addEventListener('DOMContentLoaded', function() {
     initCargoTypeSelection();
     loadCargoList();
+    updateCargoCount();
     
     // Выбираем европаллет по умолчанию
     document.querySelector('.cargo-type[data-type="euro-pallet"]').classList.add('selected');
@@ -193,7 +194,7 @@ function addCargo() {
     
     cargoList.push(cargo);
     saveCargoList();
-    renderCargoList();
+    updateCargoCount();
     
     // Сбрасываем текущие настройки для нового груза
     resetCurrentCargo();
@@ -217,7 +218,8 @@ function resetCurrentCargo() {
 function removeCargo(cargoId) {
     cargoList = cargoList.filter(cargo => cargo.id !== cargoId);
     saveCargoList();
-    renderCargoList();
+    updateCargoCount();
+    renderCargoListModal();
 }
 
 // Сохранить список грузов
@@ -231,22 +233,36 @@ function loadCargoList() {
     if (saved) {
         cargoList = JSON.parse(saved);
     }
-    renderCargoList();
 }
 
-// Отобразить список грузов
-function renderCargoList() {
-    const container = document.getElementById('cargoList');
-    
+// Обновить счетчик грузов
+function updateCargoCount() {
+    document.getElementById('cargoCount').textContent = cargoList.length;
+}
+
+// Показать модальное окно списка грузов
+function showCargoListModal() {
     if (cargoList.length === 0) {
-        container.innerHTML = '<div class="empty-state">Нет добавленных грузов</div>';
+        alert('Нет добавленных грузов!');
         return;
     }
     
+    renderCargoListModal();
+    document.getElementById('cargoListModal').style.display = 'block';
+}
+
+// Закрыть модальное окно списка грузов
+function closeCargoListModal() {
+    document.getElementById('cargoListModal').style.display = 'none';
+}
+
+// Отобразить список грузов в модальном окне
+function renderCargoListModal() {
+    const container = document.getElementById('cargoListContent');
+    
     container.innerHTML = cargoList.map(cargo => `
-        <div class="cargo-item">
-            <button class="remove-cargo" onclick="removeCargo(${cargo.id})">×</button>
-            <div class="cargo-item-header">
+        <div class="cargo-list-item">
+            <div class="cargo-list-header">
                 <div class="cargo-type-badge">
                     ${typeof cargoIcons[cargo.type] === 'string' && cargoIcons[cargo.type].includes('svg') 
                         ? `<span class="cargo-icon-small">${cargoIcons[cargo.type]}</span>`
@@ -267,6 +283,9 @@ function renderCargoList() {
                 </div>
             </div>
             ${cargo.photo ? `<img src="${cargo.photo}" class="cargo-photo-preview" alt="Фото груза">` : ''}
+            <button class="remove-cargo" onclick="removeCargo(${cargo.id})">
+                🗑️ Удалить этот груз
+            </button>
         </div>
     `).join('');
 }
@@ -293,7 +312,7 @@ function sendToOperator() {
     // Очищаем список после отправки
     cargoList = [];
     saveCargoList();
-    renderCargoList();
+    updateCargoCount();
 }
 
 // Получить название типа груза
@@ -309,8 +328,13 @@ function getCargoTypeName(type) {
 
 // Закрытие модальных окон при клике вне их
 window.addEventListener('click', function(e) {
-    const modal = document.getElementById('dimensionsModal');
-    if (e.target === modal) {
+    const dimensionsModal = document.getElementById('dimensionsModal');
+    const cargoListModal = document.getElementById('cargoListModal');
+    
+    if (e.target === dimensionsModal) {
         closeDimensionsModal();
+    }
+    if (e.target === cargoListModal) {
+        closeCargoListModal();
     }
 });
