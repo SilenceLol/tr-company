@@ -187,6 +187,29 @@ h1 {
     max-width: 250px;
 }
 
+/* Улучшенные стили для мобильных устройств */
+.number-input.mobile-friendly {
+    max-width: none;
+    width: 100%;
+    min-height: 50px;
+}
+
+.number-input.mobile-friendly .number-btn {
+    min-width: 60px;
+    min-height: 50px;
+    padding: 15px;
+    font-size: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.number-input.mobile-friendly input {
+    padding: 15px 5px;
+    font-size: 20px;
+    min-height: 50px;
+}
+
 .number-input input {
     border: none;
     text-align: center;
@@ -196,6 +219,7 @@ h1 {
     font-weight: bold;
     color: #2c3e50;
     flex: 1;
+    min-width: 0;
 }
 
 .number-btn {
@@ -208,10 +232,18 @@ h1 {
     color: white;
     transition: background 0.2s;
     min-width: 50px;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-tap-highlight-color: transparent;
 }
 
 .number-btn:hover {
     background: #2980b9;
+}
+
+.number-btn:active {
+    background: #21618c;
+    transform: scale(0.95);
 }
 
 .btn-primary {
@@ -392,6 +424,7 @@ h1 {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 15px;
 }
 
 .dimension-group label {
@@ -400,10 +433,11 @@ h1 {
     font-size: 14px;
     font-weight: 600;
     color: #495057;
+    min-width: 60px;
 }
 
-.dimension-group .number-input {
-    flex: 0 0 130px;
+.dimension-group .number-input.mobile-friendly {
+    flex: 0 0 180px;
 }
 
 .form-actions {
@@ -549,6 +583,7 @@ h1 {
     border: 2px dashed #dee2e6;
 }
 
+/* Улучшения для мобильных устройств */
 @media (max-width: 768px) {
     body {
         padding: 5px;
@@ -601,5 +636,67 @@ h1 {
     .cargo-details {
         grid-template-columns: 1fr;
         gap: 5px;
+    }
+    
+    /* Улучшения для модального окна размеров на мобильных */
+    .dimension-group {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+    }
+    
+    .dimension-group label {
+        text-align: center;
+        min-width: auto;
+    }
+    
+    .dimension-group .number-input.mobile-friendly {
+        flex: none;
+        width: 100%;
+    }
+    
+    .number-input.mobile-friendly .number-btn {
+        min-width: 50px;
+        min-height: 45px;
+        padding: 12px;
+        font-size: 20px;
+    }
+    
+    .number-input.mobile-friendly input {
+        padding: 12px 5px;
+        font-size: 18px;
+        min-height: 45px;
+    }
+}
+
+@media (max-width: 480px) {
+    .app-container {
+        padding: 10px;
+    }
+    
+    h1 {
+        font-size: 1.4em;
+        margin-bottom: 20px;
+    }
+    
+    .measurements-panel {
+        padding: 15px;
+    }
+    
+    .photo-container {
+        padding: 15px;
+    }
+    
+    .number-input.mobile-friendly .number-btn {
+        min-width: 45px;
+        min-height: 40px;
+        padding: 10px;
+        font-size: 18px;
+    }
+    
+    .number-input.mobile-friendly input {
+        padding: 10px 5px;
+        font-size: 16px;
+        min-height: 40px;
     }
 }
