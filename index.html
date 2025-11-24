@@ -10,7 +10,7 @@
     <div class="container">
         <header>
             <div class="logo">
-                <img src="https://nordwheel.ru/local/templates/.default/assets/img/logo.svg" alt="NORD WHEEL" class="logo-image" onerror="this.style.display='none'">
+                <img src="logonw.jpeg" alt="NORD WHEEL" class="logo-image" onerror="this.style.display='none'">
                 <span class="logo-text">NORD WHEEL</span>
             </div>
         </header>
@@ -57,27 +57,52 @@
                 <div class="measurements-panel">
                     <div class="photo-section">
                         <label>Фото груза:</label>
-                        <div class="photo-container" onclick="takePhoto()">
-                            <div class="photo-placeholder" id="photoPlaceholder">
-                                <div class="camera-icon">📷</div>
+                        <div class="photo-container-small" onclick="takePhoto()">
+                            <div class="photo-placeholder-small" id="photoPlaceholder">
+                                <div class="camera-icon-small">📷</div>
                                 <span>Сделать фото</span>
                             </div>
-                            <img id="cargoPhoto" class="cargo-photo" style="display: none;">
+                            <img id="cargoPhoto" class="cargo-photo-small" style="display: none;">
                         </div>
                     </div>
 
-                    <div class="weight-control">
-                        <label>Вес груза (кг):</label>
-                        <div class="number-input large">
-                            <button type="button" class="number-btn" onclick="changeWeight(-1)">-</button>
-                            <input type="number" id="weight" value="1" min="1" max="10000" readonly>
-                            <button type="button" class="number-btn" onclick="changeWeight(1)">+</button>
+                    <div class="controls-container">
+                        <div class="control-group">
+                            <label>Вес (кг):</label>
+                            <div class="control-buttons">
+                                <button type="button" class="control-btn minus" onclick="changeWeight(-1)">-</button>
+                                <span class="control-value" id="weight">1</span>
+                                <button type="button" class="control-btn plus" onclick="changeWeight(1)">+</button>
+                            </div>
+                        </div>
+
+                        <div class="control-group" id="lengthControl">
+                            <label>Длина (см):</label>
+                            <div class="control-buttons">
+                                <button type="button" class="control-btn minus" onclick="changeDimension('length', -1)">-</button>
+                                <span class="control-value" id="lengthValue">120</span>
+                                <button type="button" class="control-btn plus" onclick="changeDimension('length', 1)">+</button>
+                            </div>
+                        </div>
+
+                        <div class="control-group" id="widthControl">
+                            <label>Ширина (см):</label>
+                            <div class="control-buttons">
+                                <button type="button" class="control-btn minus" onclick="changeDimension('width', -1)">-</button>
+                                <span class="control-value" id="widthValue">80</span>
+                                <button type="button" class="control-btn plus" onclick="changeDimension('width', 1)">+</button>
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            <label>Высота (см):</label>
+                            <div class="control-buttons">
+                                <button type="button" class="control-btn minus" onclick="changeDimension('height', -1)">-</button>
+                                <span class="control-value" id="heightValue">30</span>
+                                <button type="button" class="control-btn plus" onclick="changeDimension('height', 1)">+</button>
+                            </div>
                         </div>
                     </div>
-
-                    <button class="btn-primary" onclick="showDimensionsModal()">
-                        Настроить размеры
-                    </button>
 
                     <div class="add-cargo-buttons">
                         <button class="btn-save" onclick="addCargo()">
@@ -95,6 +120,17 @@
                     </div>
                 </div>
 
+                <div class="totals-panel">
+                    <div class="total-item">
+                        <span class="total-label">Итоговый вес:</span>
+                        <span class="total-value" id="totalWeight">0 кг</span>
+                    </div>
+                    <div class="total-item">
+                        <span class="total-label">Итоговый объем:</span>
+                        <span class="total-value" id="totalVolume">0 м³</span>
+                    </div>
+                </div>
+
                 <div class="action-buttons-bottom">
                     <button class="btn-send" onclick="sendToOperator()">
                         📧 Отправить оператору
@@ -102,46 +138,6 @@
                 </div>
             </div>
         </main>
-    </div>
-
-    <!-- Модальное окно настроек размеров -->
-    <div id="dimensionsModal" class="modal">
-        <div class="modal-content compact-modal">
-            <span class="close" onclick="closeDimensionsModal()">&times;</span>
-            <h3>Настройки размеров (см)</h3>
-            <div class="dimensions-form">
-                <div class="dimension-group">
-                    <label>Длина:</label>
-                    <div class="number-input mobile-friendly">
-                        <button type="button" class="number-btn" onclick="changeDimension('length', -1)">-</button>
-                        <input type="number" id="length" value="120" min="0" max="1000" readonly>
-                        <button type="button" class="number-btn" onclick="changeDimension('length', 1)">+</button>
-                    </div>
-                </div>
-                
-                <div class="dimension-group">
-                    <label>Ширина:</label>
-                    <div class="number-input mobile-friendly">
-                        <button type="button" class="number-btn" onclick="changeDimension('width', -1)">-</button>
-                        <input type="number" id="width" value="80" min="0" max="1000" readonly>
-                        <button type="button" class="number-btn" onclick="changeDimension('width', 1)">+</button>
-                    </div>
-                </div>
-                
-                <div class="dimension-group">
-                    <label>Высота:</label>
-                    <div class="number-input mobile-friendly">
-                        <button type="button" class="number-btn" onclick="changeDimension('height', -1)">-</button>
-                        <input type="number" id="height" value="30" min="0" max="1000" readonly>
-                        <button type="button" class="number-btn" onclick="changeDimension('height', 1)">+</button>
-                    </div>
-                </div>
-                
-                <div class="form-actions">
-                    <button type="button" class="btn-primary" onclick="applyDimensions()">Применить</button>
-                </div>
-            </div>
-        </div>
     </div>
 
     <!-- Модальное окно списка грузов -->
@@ -152,6 +148,16 @@
             <div class="cargo-list-container">
                 <div id="cargoListContent" class="cargo-list-content">
                     <!-- Список грузов будет здесь -->
+                </div>
+            </div>
+            <div class="modal-totals">
+                <div class="total-item">
+                    <span class="total-label">Общий вес:</span>
+                    <span class="total-value" id="modalTotalWeight">0 кг</span>
+                </div>
+                <div class="total-item">
+                    <span class="total-label">Общий объем:</span>
+                    <span class="total-value" id="modalTotalVolume">0 м³</span>
                 </div>
             </div>
             <div class="cargo-list-actions">
