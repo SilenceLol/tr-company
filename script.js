@@ -46,10 +46,12 @@ document.addEventListener('DOMContentLoaded', function() {
     initCargoTypeSelection();
     loadCargoList();
     updateCargoCount();
+    updateTotals();
     
     // Выбираем европаллет по умолчанию
     document.querySelector('.cargo-type[data-type="euro-pallet"]').classList.add('selected');
     setPalletDimensions('euro-pallet');
+    updateControlsVisibility();
 });
 
 // Инициализация выбора типа груза
@@ -63,17 +65,36 @@ function initCargoTypeSelection() {
             
             currentCargoType = this.getAttribute('data-type');
             
-            // Устанавливаем стандартные размеры для паллетов
+            // Устанавливаем стандартные размеры
             if (currentCargoType === 'euro-pallet' || currentCargoType === 'standard-pallet') {
                 setPalletDimensions(currentCargoType);
             } else {
                 setDefaultDimensions(currentCargoType);
             }
             
+            // Обновляем видимость контролов
+            updateControlsVisibility();
+            
             // Сбрасываем фото при смене типа груза
             resetPhoto();
         });
     });
+}
+
+// Обновить видимость контролов длины и ширины
+function updateControlsVisibility() {
+    const lengthControl = document.getElementById('lengthControl');
+    const widthControl = document.getElementById('widthControl');
+    
+    // Для паллетов скрываем длину и ширину (они фиксированные)
+    if (currentCargoType === 'euro-pallet' || currentCargoType === 'standard-pallet') {
+        lengthControl.classList.add('hidden');
+        widthControl.classList.add('hidden');
+    } else {
+        // Для коробок и нестандартного груза показываем длину и ширину
+        lengthControl.classList.remove('hidden');
+        widthControl.classList.remove('hidden');
+    }
 }
 
 // Установка размеров для паллетов
@@ -83,8 +104,8 @@ function setPalletDimensions(palletType) {
     currentDimensions.width = sizes.width;
     currentDimensions.height = currentDimensions.height || 30;
     
-    // Обновляем значения в модальном окне если оно открыто
-    updateDimensionsModal();
+    // Обновляем отображение всех размеров
+    updateAllDimensionsDisplay();
 }
 
 // Установка размеров по умолчанию
@@ -92,17 +113,15 @@ function setDefaultDimensions(cargoType) {
     const sizes = palletSizes[cargoType];
     if (sizes) {
         currentDimensions = { ...sizes };
-        updateDimensionsModal();
+        updateAllDimensionsDisplay();
     }
 }
 
-// Обновить модальное окно размеров
-function updateDimensionsModal() {
-    if (document.getElementById('dimensionsModal').style.display === 'block') {
-        document.getElementById('length').value = currentDimensions.length;
-        document.getElementById('width').value = currentDimensions.width;
-        document.getElementById('height').value = currentDimensions.height;
-    }
+// Обновить отображение всех размеров
+function updateAllDimensionsDisplay() {
+    document.getElementById('lengthValue').textContent = currentDimensions.length;
+    document.getElementById('widthValue').textContent = currentDimensions.width;
+    document.getElementById('heightValue').textContent = currentDimensions.height;
 }
 
 // Изменение веса
@@ -110,43 +129,27 @@ function changeWeight(change) {
     const newWeight = currentWeight + change;
     if (newWeight >= 1 && newWeight <= 10000) {
         currentWeight = newWeight;
-        document.getElementById('weight').value = currentWeight;
+        document.getElementById('weight').textContent = currentWeight;
     }
 }
 
 // Изменение размеров (теперь можно устанавливать 0)
 function changeDimension(dimension, change) {
-    const input = document.getElementById(dimension);
-    let newValue = parseInt(input.value) + change;
+    let newValue = currentDimensions[dimension] + change;
     
     // Разрешаем значения от 0 до 1000
     if (newValue >= 0 && newValue <= 1000) {
-        input.value = newValue;
         currentDimensions[dimension] = newValue;
+        
+        // Обновляем отображение соответствующего размера
+        if (dimension === 'length') {
+            document.getElementById('lengthValue').textContent = newValue;
+        } else if (dimension === 'width') {
+            document.getElementById('widthValue').textContent = newValue;
+        } else if (dimension === 'height') {
+            document.getElementById('heightValue').textContent = newValue;
+        }
     }
-}
-
-// Показать модальное окно размеров
-function showDimensionsModal() {
-    // Обновляем значения в модальном окне
-    document.getElementById('length').value = currentDimensions.length;
-    document.getElementById('width').value = currentDimensions.width;
-    document.getElementById('height').value = currentDimensions.height;
-    
-    document.getElementById('dimensionsModal').style.display = 'block';
-}
-
-// Закрыть модальное окно размеров
-function closeDimensionsModal() {
-    document.getElementById('dimensionsModal').style.display = 'none';
-}
-
-// Применить размеры
-function applyDimensions() {
-    currentDimensions.length = parseInt(document.getElementById('length').value);
-    currentDimensions.width = parseInt(document.getElementById('width').value);
-    currentDimensions.height = parseInt(document.getElementById('height').value);
-    closeDimensionsModal();
 }
 
 // Сделать фото
@@ -202,6 +205,7 @@ function addCargo() {
     cargoList.push(cargo);
     saveCargoList();
     updateCargoCount();
+    updateTotals();
     
     // Сбрасываем текущие настройки для нового груза
     resetCurrentCargo();
@@ -212,12 +216,14 @@ function addCargo() {
 // Сброс текущих настроек
 function resetCurrentCargo() {
     currentWeight = 1;
-    document.getElementById('weight').value = currentWeight;
+    document.getElementById('weight').textContent = currentWeight;
     resetPhoto();
     
     // Возвращаем стандартные размеры для текущего типа
     if (currentCargoType === 'euro-pallet' || currentCargoType === 'standard-pallet') {
         setPalletDimensions(currentCargoType);
+    } else {
+        setDefaultDimensions(currentCargoType);
     }
 }
 
@@ -226,6 +232,7 @@ function removeCargo(cargoId) {
     cargoList = cargoList.filter(cargo => cargo.id !== cargoId);
     saveCargoList();
     updateCargoCount();
+    updateTotals();
     renderCargoListModal();
 }
 
@@ -245,6 +252,22 @@ function loadCargoList() {
 // Обновить счетчик грузов
 function updateCargoCount() {
     document.getElementById('cargoCount').textContent = cargoList.length;
+}
+
+// Обновить итоговые показатели
+function updateTotals() {
+    const totalWeight = cargoList.reduce((sum, cargo) => sum + cargo.weight, 0);
+    const totalVolume = cargoList.reduce((sum, cargo) => {
+        const volume = (cargo.dimensions.length * cargo.dimensions.width * cargo.dimensions.height) / 1000000; // в м³
+        return sum + volume;
+    }, 0);
+    
+    document.getElementById('totalWeight').textContent = `${totalWeight} кг`;
+    document.getElementById('totalVolume').textContent = `${totalVolume.toFixed(3)} м³`;
+    
+    // Обновляем в модальном окне
+    document.getElementById('modalTotalWeight').textContent = `${totalWeight} кг`;
+    document.getElementById('modalTotalVolume').textContent = `${totalVolume.toFixed(3)} м³`;
 }
 
 // Показать модальное окно списка грузов
@@ -285,8 +308,8 @@ function renderCargoListModal() {
                     <span class="detail-value">${cargo.dimensions.length}×${cargo.dimensions.width}×${cargo.dimensions.height} см</span>
                 </div>
                 <div class="detail-item">
-                    <span class="detail-label">Фото:</span>
-                    <span class="detail-value">${cargo.photo ? '✅' : '❌'}</span>
+                    <span class="detail-label">Объем:</span>
+                    <span class="detail-value">${((cargo.dimensions.length * cargo.dimensions.width * cargo.dimensions.height) / 1000000).toFixed(3)} м³</span>
                 </div>
             </div>
             ${cargo.photo ? `<img src="${cargo.photo}" class="cargo-photo-preview" alt="Фото груза">` : ''}
@@ -304,9 +327,15 @@ function sendToOperator() {
         return;
     }
     
+    const totalWeight = cargoList.reduce((sum, cargo) => sum + cargo.weight, 0);
+    const totalVolume = cargoList.reduce((sum, cargo) => {
+        return sum + (cargo.dimensions.length * cargo.dimensions.width * cargo.dimensions.height) / 1000000;
+    }, 0);
+    
     const shipmentData = {
         cargos: cargoList,
-        totalWeight: cargoList.reduce((sum, cargo) => sum + cargo.weight, 0),
+        totalWeight: totalWeight,
+        totalVolume: parseFloat(totalVolume.toFixed(3)),
         timestamp: new Date().toLocaleString('ru-RU'),
         totalItems: cargoList.length
     };
@@ -314,12 +343,13 @@ function sendToOperator() {
     // Здесь будет логика отправки данных оператору
     console.log('Данные для отправки оператору:', shipmentData);
     
-    alert(`Данные отправлены оператору! Всего грузов: ${cargoList.length}`);
+    alert(`Данные отправлены оператору!\nВсего грузов: ${cargoList.length}\nОбщий вес: ${totalWeight} кг\nОбщий объем: ${totalVolume.toFixed(3)} м³`);
     
     // Очищаем список после отправки
     cargoList = [];
     saveCargoList();
     updateCargoCount();
+    updateTotals();
 }
 
 // Получить название типа груза
@@ -335,12 +365,7 @@ function getCargoTypeName(type) {
 
 // Закрытие модальных окон при клике вне их
 window.addEventListener('click', function(e) {
-    const dimensionsModal = document.getElementById('dimensionsModal');
     const cargoListModal = document.getElementById('cargoListModal');
-    
-    if (e.target === dimensionsModal) {
-        closeDimensionsModal();
-    }
     if (e.target === cargoListModal) {
         closeCargoListModal();
     }
