@@ -3,323 +3,147 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NordW - Оформление груза</title>
+    <title>NORD WHEEL - Замер грузов</title>
     <link rel="stylesheet" href="styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <!-- Главный экран -->
-    <div id="mainScreen" class="screen active">
-        <div class="container">
-            <!-- Хедер -->
-            <header class="main-header">
-                <div class="header-content">
-                    <div class="logo">
-                        <div class="logo-icon">NW</div>
-                        <div class="logo-text">
-                            <span class="logo-title">NORDW</span>
-                            <span class="logo-subtitle">Транспортные решения</span>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <img src="https://nordwheel.ru/local/templates/.default/assets/img/logo.svg" alt="NORD WHEEL" class="logo-image" onerror="this.style.display='none'">
+                <span class="logo-text">NORD WHEEL</span>
+            </div>
+        </header>
+
+        <main>
+            <div class="app-container">
+                <h1>Замер грузов</h1>
+                
+                <div class="cargo-types">
+                    <div class="cargo-type" data-type="euro-pallet">
+                        <div class="cargo-icon">
+                            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <rect x="3" y="6" width="18" height="12" rx="1" stroke="currentColor" stroke-width="2"/>
+                                <path d="M3 9H21" stroke="currentColor" stroke-width="2"/>
+                                <path d="M3 15H21" stroke="currentColor" stroke-width="2"/>
+                                <path d="M8 6V18" stroke="currentColor" stroke-width="2"/>
+                                <path d="M16 6V18" stroke="currentColor" stroke-width="2"/>
+                            </svg>
                         </div>
+                        <span>Европаллет</span>
                     </div>
-                    <div class="header-actions">
-                        <div class="user-info">
-                            <span class="user-name">Кладовщик</span>
+                    <div class="cargo-type" data-type="standard-pallet">
+                        <div class="cargo-icon">
+                            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <rect x="3" y="6" width="18" height="12" rx="1" stroke="currentColor" stroke-width="2"/>
+                                <path d="M3 9H21" stroke="currentColor" stroke-width="2"/>
+                                <path d="M3 15H21" stroke="currentColor" stroke-width="2"/>
+                                <path d="M8 6V18" stroke="currentColor" stroke-width="2"/>
+                                <path d="M16 6V18" stroke="currentColor" stroke-width="2"/>
+                            </svg>
                         </div>
+                        <span>Обычный паллет</span>
+                    </div>
+                    <div class="cargo-type" data-type="box">
+                        <div class="cargo-emoji">📦</div>
+                        <span>Коробка</span>
+                    </div>
+                    <div class="cargo-type" data-type="non-standard">
+                        <div class="cargo-emoji">📏</div>
+                        <span>Нестандартный</span>
                     </div>
                 </div>
-            </header>
 
-            <!-- Основной контент -->
-            <main class="main-content">
-                <!-- Карточка заявки -->
-                <div class="order-card">
-                    <div class="card-header">
-                        <h2>Заявка на груз</h2>
-                        <div class="status-badge" id="orderStatus">Активна</div>
-                    </div>
-                    <div class="card-body">
-                        <div class="info-grid">
-                            <div class="info-item">
-                                <label>Номер заявки</label>
-                                <div class="info-value order-number" id="orderNumber">-</div>
+                <div class="measurements-panel">
+                    <div class="photo-section">
+                        <label>Фото груза:</label>
+                        <div class="photo-container" onclick="takePhoto()">
+                            <div class="photo-placeholder" id="photoPlaceholder">
+                                <div class="camera-icon">📷</div>
+                                <span>Сделать фото</span>
                             </div>
-                            <div class="info-item">
-                                <label>Дата создания</label>
-                                <div class="info-value" id="currentDate">-</div>
-                            </div>
-                            <div class="info-item">
-                                <label>Статус</label>
-                                <div class="info-value status-active">В обработке</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Секция мест -->
-                <div class="section">
-                    <div class="section-header">
-                        <h3>Места груза</h3>
-                        <span class="section-count" id="placesCount">0 мест</span>
-                    </div>
-                    
-                    <div class="places-list" id="placesList">
-                        <div class="empty-state">
-                            <div class="empty-icon">📦</div>
-                            <h4>Нет добавленных мест</h4>
-                            <p>Добавьте места груза для оформления заявки</p>
+                            <img id="cargoPhoto" class="cargo-photo" style="display: none;">
                         </div>
                     </div>
 
-                    <div class="add-place-section">
-                        <button id="addPlaceBtn" class="btn-primary btn-large">
-                            <span class="btn-icon">+</span>
-                            Добавить место груза
+                    <div class="weight-control">
+                        <label>Вес груза (кг):</label>
+                        <div class="number-input large">
+                            <button type="button" class="number-btn" onclick="changeWeight(-1)">-</button>
+                            <input type="number" id="weight" value="1" min="1" max="10000" readonly>
+                            <button type="button" class="number-btn" onclick="changeWeight(1)">+</button>
+                        </div>
+                    </div>
+
+                    <button class="btn-primary" onclick="showDimensionsModal()">
+                        Настроить размеры
+                    </button>
+
+                    <div class="add-cargo-buttons">
+                        <button class="btn-save" onclick="addCargo()">
+                            ➕ Добавить этот груз
                         </button>
                     </div>
                 </div>
 
-                <!-- Секция фотографии -->
-                <div class="section">
-                    <div class="section-header">
-                        <h3>Фотография груза</h3>
-                    </div>
-                    
-                    <div class="photo-section">
-                        <div class="photo-upload-card" id="photoUpload">
-                            <div class="photo-upload-content">
-                                <div class="photo-upload-icon">📷</div>
-                                <div class="photo-upload-text">
-                                    <h4>Добавить фотографию</h4>
-                                    <p>Загрузите фото груза для документации</p>
-                                </div>
-                            </div>
-                            <input type="file" id="photoInput" accept="image/*" style="display: none;">
-                            <img id="photoPreview" class="photo-preview" alt="Предпросмотр фотографии">
-                        </div>
-                        
-                        <div class="camera-options">
-                            <button class="camera-option-btn" id="takePhotoBtn">
-                                <span class="camera-icon">📸</span>
-                                Сделать фото
-                            </button>
-                            <button class="camera-option-btn secondary" id="chooseFileBtn">
-                                <span class="gallery-icon">🖼️</span>
-                                Выбрать файл
-                            </button>
-                        </div>
+                <div id="savedMeasurements" class="saved-measurements">
+                    <h3>Добавленные грузы</h3>
+                    <div class="cargo-list" id="cargoList">
+                        <div class="empty-state">Нет добавленных грузов</div>
                     </div>
                 </div>
 
-                <!-- Кнопка отправки -->
-                <div class="submit-section">
-                    <button id="submitBtn" class="btn-submit" disabled>
-                        <span class="btn-text">Передать данные оператору</span>
-                        <span class="btn-arrow">→</span>
+                <div class="action-buttons-bottom">
+                    <button class="btn-send" onclick="sendToOperator()">
+                        📧 Отправить оператору
                     </button>
                 </div>
-            </main>
+            </div>
+        </main>
+    </div>
+
+    <!-- Модальное окно настроек размеров -->
+    <div id="dimensionsModal" class="modal">
+        <div class="modal-content compact-modal">
+            <span class="close" onclick="closeDimensionsModal()">&times;</span>
+            <h3>Настройки размеров (см)</h3>
+            <div class="dimensions-form">
+                <div class="dimension-group">
+                    <label>Длина:</label>
+                    <div class="number-input">
+                        <button type="button" class="number-btn" onclick="changeDimension('length', -1)">-</button>
+                        <input type="number" id="length" value="120" min="1" max="1000" readonly>
+                        <button type="button" class="number-btn" onclick="changeDimension('length', 1)">+</button>
+                    </div>
+                </div>
+                
+                <div class="dimension-group">
+                    <label>Ширина:</label>
+                    <div class="number-input">
+                        <button type="button" class="number-btn" onclick="changeDimension('width', -1)">-</button>
+                        <input type="number" id="width" value="80" min="1" max="1000" readonly>
+                        <button type="button" class="number-btn" onclick="changeDimension('width', 1)">+</button>
+                    </div>
+                </div>
+                
+                <div class="dimension-group">
+                    <label>Высота:</label>
+                    <div class="number-input">
+                        <button type="button" class="number-btn" onclick="changeDimension('height', -1)">-</button>
+                        <input type="number" id="height" value="30" min="1" max="1000" readonly>
+                        <button type="button" class="number-btn" onclick="changeDimension('height', 1)">+</button>
+                    </div>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="btn-primary" onclick="applyDimensions()">Применить</button>
+                </div>
+            </div>
         </div>
     </div>
 
-    <!-- Экран выбора типа груза -->
-    <div id="typeSelectionScreen" class="screen">
-        <div class="container">
-            <header class="screen-header">
-                <button class="btn-back" id="backFromTypeBtn">
-                    <span class="back-arrow">←</span>
-                    Назад
-                </button>
-                <h1>Выберите тип груза</h1>
-            </header>
-
-            <main class="screen-content">
-                <div class="cargo-types-grid">
-                    <div class="cargo-type-card" data-type="standard">
-                        <div class="cargo-icon">📦</div>
-                        <div class="cargo-info">
-                            <h3>Стандартный</h3>
-                            <p>Коробки, упаковки стандартных размеров</p>
-                        </div>
-                        <div class="cargo-arrow">→</div>
-                    </div>
-                    
-                    <div class="cargo-type-card" data-type="standard-pallet">
-                        <div class="cargo-icon">🚛</div>
-                        <div class="cargo-info">
-                            <h3>Стандартный палет</h3>
-                            <p>Евро палет 120×80×15 см</p>
-                        </div>
-                        <div class="cargo-arrow">→</div>
-                    </div>
-                    
-                    <div class="cargo-type-card" data-type="american-pallet">
-                        <div class="cargo-icon">🇺🇸</div>
-                        <div class="cargo-info">
-                            <h3>Американский палет</h3>
-                            <p>Палет 120×100×15 см</p>
-                        </div>
-                        <div class="cargo-arrow">→</div>
-                    </div>
-                    
-                    <div class="cargo-type-card" data-type="non-standard">
-                        <div class="cargo-icon">📏</div>
-                        <div class="cargo-info">
-                            <h3>Нестандартный груз</h3>
-                            <p>Грузы нестандартных размеров</p>
-                        </div>
-                        <div class="cargo-arrow">→</div>
-                    </div>
-                </div>
-            </main>
-        </div>
-    </div>
-
-    <!-- Экран параметров груза -->
-    <div id="paramsScreen" class="screen">
-        <div class="container">
-            <header class="screen-header">
-                <button class="btn-back" id="backFromParamsBtn">
-                    <span class="back-arrow">←</span>
-                    Назад
-                </button>
-                <h1>Параметры груза</h1>
-            </header>
-
-            <main class="screen-content">
-                <div class="cargo-preview-card">
-                    <div class="cargo-type-display">
-                        <div class="cargo-type-icon" id="cargoTypeIcon">📦</div>
-                        <div class="cargo-type-info">
-                            <h3 id="cargoTypeTitle">Стандартный</h3>
-                            <p id="cargoTypeDescription">Коробки, упаковки стандартных размеров</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="dimensionsSection" class="params-section">
-                    <div class="section-title">
-                        <h3>Размеры груза</h3>
-                        <span class="section-unit">см</span>
-                    </div>
-                    
-                    <div class="dimension-controls">
-                        <div class="dimension-control">
-                            <div class="dimension-header">
-                                <span class="dimension-label">Длина</span>
-                                <span class="dimension-value" id="lengthValue">100</span>
-                            </div>
-                            <input type="range" id="lengthSlider" class="dimension-slider" min="10" max="300" step="10" value="100">
-                            <div class="slider-controls">
-                                <button class="slider-btn" data-target="lengthSlider" data-change="-10">-10</button>
-                                <button class="slider-btn" data-target="lengthSlider" data-change="+10">+10</button>
-                            </div>
-                        </div>
-
-                        <div class="dimension-control">
-                            <div class="dimension-header">
-                                <span class="dimension-label">Ширина</span>
-                                <span class="dimension-value" id="widthValue">80</span>
-                            </div>
-                            <input type="range" id="widthSlider" class="dimension-slider" min="10" max="200" step="10" value="80">
-                            <div class="slider-controls">
-                                <button class="slider-btn" data-target="widthSlider" data-change="-10">-10</button>
-                                <button class="slider-btn" data-target="widthSlider" data-change="+10">+10</button>
-                            </div>
-                        </div>
-
-                        <div class="dimension-control">
-                            <div class="dimension-header">
-                                <span class="dimension-label">Высота</span>
-                                <span class="dimension-value" id="heightValue">60</span>
-                            </div>
-                            <input type="range" id="heightSlider" class="dimension-slider" min="10" max="200" step="10" value="60">
-                            <div class="slider-controls">
-                                <button class="slider-btn" data-target="heightSlider" data-change="-10">-10</button>
-                                <button class="slider-btn" data-target="heightSlider" data-change="+10">+10</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="weight-section params-section">
-                    <div class="section-title">
-                        <h3>Вес груза</h3>
-                        <span class="section-unit">кг</span>
-                    </div>
-                    
-                    <div class="weight-control">
-                        <button class="weight-btn decrease" id="decreaseWeight">-</button>
-                        <div class="weight-display">
-                            <span id="weightValue">25.0</span>
-                        </div>
-                        <button class="weight-btn increase" id="increaseWeight">+</button>
-                    </div>
-                    
-                    <div class="weight-presets">
-                        <button class="weight-preset-btn" data-weight="0.1">0.1</button>
-                        <button class="weight-preset-btn" data-weight="0.2">0.2</button>
-                        <button class="weight-preset-btn" data-weight="0.5">0.5</button>
-                        <button class="weight-preset-btn" data-weight="1.0">1.0</button>
-                        <button class="weight-preset-btn" data-weight="5.0">5.0</button>
-                        <button class="weight-preset-btn" data-weight="10.0">10.0</button>
-                    </div>
-                </div>
-
-                <div id="constantsInfo" class="constants-info hidden">
-                    <!-- Константные значения для палетов -->
-                </div>
-
-                <div class="actions-section">
-                    <button id="savePlaceBtn" class="btn-primary btn-large">
-                        Сохранить место
-                    </button>
-                </div>
-            </main>
-        </div>
-    </div>
-
-    <!-- Экран камеры -->
-    <div id="cameraScreen" class="screen">
-        <div class="container">
-            <header class="screen-header">
-                <button class="btn-back" id="backFromCameraBtn">
-                    <span class="back-arrow">←</span>
-                    Назад
-                </button>
-                <h1>Сделайте фото груза</h1>
-            </header>
-
-            <main class="screen-content">
-                <div class="camera-container">
-                    <video id="cameraVideo" autoplay playsinline></video>
-                    <canvas id="cameraCanvas" style="display: none;"></canvas>
-                    <div class="camera-overlay">
-                        <div class="camera-frame"></div>
-                    </div>
-                </div>
-
-                <div class="camera-controls">
-                    <button id="captureBtn" class="btn-capture">
-                        <span class="capture-icon"></span>
-                    </button>
-                    <button id="switchCameraBtn" class="btn-switch-camera" style="display: none;">
-                        <span class="switch-icon">🔄</span>
-                    </button>
-                </div>
-
-                <div class="photo-preview-container" id="photoPreviewContainer" style="display: none;">
-                    <div class="photo-preview-header">
-                        <h3>Предпросмотр фото</h3>
-                    </div>
-                    <img id="capturedPhoto" class="captured-photo" alt="Сделанное фото">
-                    <div class="photo-actions">
-                        <button id="retakePhotoBtn" class="btn-secondary">Переснять</button>
-                        <button id="usePhotoBtn" class="btn-primary">Использовать фото</button>
-                    </div>
-                </div>
-            </main>
-        </div>
-    </div>
+    <!-- Скрытый input для загрузки фото -->
+    <input type="file" id="photoInput" accept="image/*" capture="environment" style="display: none;">
 
     <script src="script.js"></script>
 </body>
