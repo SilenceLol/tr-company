@@ -100,8 +100,35 @@ h1 {
     box-shadow: 0 2px 8px rgba(52, 152, 219, 0.2);
 }
 
+/* Стили для изображений грузов */
+.cargo-image-placeholder {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 4px;
+    background: #f8f9fa;
+    border-radius: 6px;
+    border: 1px dashed #ccc;
+}
+
+.cargo-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border-radius: 4px;
+}
+
+.image-placeholder {
+    font-size: 20px;
+    color: #999;
+}
+
+/* Стили для иконок (для коробок и нестандартного) */
 .cargo-icon-small {
     font-size: 20px;
+    margin-bottom: 4px;
 }
 
 .cargo-type-compact span {
@@ -636,6 +663,11 @@ h1 {
     
     .cargo-type-compact {
         padding: 15px 8px;
+    }
+    
+    .cargo-image-placeholder {
+        width: 45px;
+        height: 45px;
     }
     
     .cargo-icon-small {
