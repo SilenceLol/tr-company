@@ -86,10 +86,12 @@
                     </div>
                 </div>
 
-                <div id="savedMeasurements" class="saved-measurements">
-                    <h3>Добавленные грузы</h3>
-                    <div class="cargo-list" id="cargoList">
-                        <div class="empty-state">Нет добавленных грузов</div>
+                <div class="cargo-summary">
+                    <div class="summary-header">
+                        <h3>Добавленные грузы: <span id="cargoCount">0</span></h3>
+                        <button class="btn-view-cargos" onclick="showCargoListModal()">
+                            📋 Просмотреть все
+                        </button>
                     </div>
                 </div>
 
@@ -138,6 +140,22 @@
                 <div class="form-actions">
                     <button type="button" class="btn-primary" onclick="applyDimensions()">Применить</button>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно списка грузов -->
+    <div id="cargoListModal" class="modal">
+        <div class="modal-content cargo-list-modal">
+            <span class="close" onclick="closeCargoListModal()">&times;</span>
+            <h3>Добавленные грузы</h3>
+            <div class="cargo-list-container">
+                <div id="cargoListContent" class="cargo-list-content">
+                    <!-- Список грузов будет здесь -->
+                </div>
+            </div>
+            <div class="cargo-list-actions">
+                <button class="btn-secondary" onclick="closeCargoListModal()">Закрыть</button>
             </div>
         </div>
     </div>
