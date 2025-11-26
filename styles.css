@@ -2,6 +2,10 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    touch-action: manipulation;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
 }
 
 body {
@@ -26,7 +30,7 @@ body {
 }
 
 header {
-    background: #696e73;
+    background: #2c3e50;
     padding: 12px 15px;
     display: flex;
     justify-content: center;
@@ -72,7 +76,7 @@ h1 {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 8px;
-    margin-bottom: 15px;
+    margin-bottom: 20px;
     flex-shrink: 0;
 }
 
@@ -125,7 +129,7 @@ h1 {
     color: #999;
 }
 
-/* Стили для иконок (для коробок и нестандартного) */
+/* Стили для иконок */
 .cargo-icon-small {
     font-size: 20px;
     margin-bottom: 4px;
@@ -138,39 +142,48 @@ h1 {
     line-height: 1.2;
 }
 
-/* Компактная панель управления */
-.compact-controls-panel {
-    background: #f8f9fa;
-    padding: 15px;
-    border-radius: 10px;
-    border: 1px solid #e9ecef;
-    margin-bottom: 15px;
+/* Основной контент */
+.main-content {
     display: grid;
-    grid-template-columns: auto 1fr;
-    gap: 15px;
-    align-items: start;
-    flex-shrink: 0;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    flex: 1;
+}
+
+/* Колонка контролов */
+.controls-column {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
 }
 
 /* Компактная секция фото */
 .photo-section-compact {
-    display: flex;
-    justify-content: center;
+    text-align: center;
+}
+
+.photo-section-compact label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #495057;
+    font-size: 14px;
 }
 
 .photo-container-compact {
     border: 2px dashed #3498db;
     border-radius: 8px;
-    padding: 12px;
+    padding: 15px;
     text-align: center;
     cursor: pointer;
     transition: all 0.3s ease;
     background: white;
-    width: 70px;
-    height: 70px;
+    width: 100px;
+    height: 100px;
     display: flex;
     align-items: center;
     justify-content: center;
+    margin: 0 auto;
 }
 
 .photo-container-compact:hover {
@@ -181,11 +194,11 @@ h1 {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 4px;
+    gap: 6px;
 }
 
 .camera-icon-compact {
-    font-size: 20px;
+    font-size: 24px;
 }
 
 .cargo-photo-compact {
@@ -195,58 +208,50 @@ h1 {
     object-fit: cover;
 }
 
-/* Сетка контролов */
-.controls-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
+/* Стек контролов */
+.controls-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
 }
 
 .control-item {
     text-align: center;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-}
-
-.control-item.hidden {
-    display: none;
 }
 
 .control-item label {
+    display: block;
+    margin-bottom: 8px;
     font-weight: 600;
     color: #495057;
-    font-size: 12px;
-    margin-bottom: 0;
+    font-size: 14px;
 }
 
 .control-buttons-compact {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 6px;
+    gap: 8px;
     background: white;
     border: 2px solid #3498db;
-    border-radius: 6px;
-    padding: 4px;
+    border-radius: 8px;
+    padding: 8px;
 }
 
 .control-btn-compact {
     background: #3498db;
     color: white;
     border: none;
-    border-radius: 4px;
-    width: 28px;
-    height: 28px;
+    border-radius: 6px;
+    padding: 10px 12px;
     cursor: pointer;
-    font-size: 14px;
+    font-size: 12px;
     font-weight: bold;
     display: flex;
     align-items: center;
     justify-content: center;
     transition: all 0.2s ease;
-    user-select: none;
-    -webkit-user-select: none;
+    min-width: 50px;
 }
 
 .control-btn-compact:hover {
@@ -275,120 +280,136 @@ h1 {
 }
 
 .control-value-compact {
-    font-size: 14px;
+    font-size: 16px;
     font-weight: bold;
     color: #2c3e50;
-    min-width: 30px;
+    min-width: 50px;
     text-align: center;
 }
 
-.control-unit {
-    font-size: 10px;
-    color: #666;
-    font-weight: 600;
+/* Колонка кнопок действий */
+.action-buttons-column {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
-/* Компактные кнопки действий */
-.action-buttons-compact {
-    display: grid;
-    grid-template-columns: 1fr auto 1fr;
-    gap: 8px;
-    margin-bottom: 12px;
-    flex-shrink: 0;
-}
-
-.btn-add-compact {
-    background: linear-gradient(135deg, #27ae60, #219653);
+.btn-create {
+    background: linear-gradient(135deg, #3498db, #2980b9);
     color: white;
     border: none;
-    padding: 12px 8px;
+    padding: 15px;
     border-radius: 8px;
     cursor: pointer;
-    font-size: 12px;
+    font-size: 14px;
     font-weight: 600;
     transition: all 0.3s ease;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 4px;
+    gap: 8px;
 }
 
-.btn-add-compact:hover {
+.btn-create:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+}
+
+.btn-save {
+    background: linear-gradient(135deg, #27ae60, #219653);
+    color: white;
+    border: none;
+    padding: 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.btn-save:hover {
     transform: translateY(-1px);
     box-shadow: 0 4px 12px rgba(39, 174, 96, 0.3);
 }
 
-.btn-view-compact {
-    background: linear-gradient(135deg, #f39c12, #e67e22);
-    color: white;
-    border: none;
-    padding: 12px 10px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 12px;
-    font-weight: 600;
-    transition: all 0.3s ease;
+/* Секция с итогами */
+.summary-section {
     display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 4px;
-    min-width: 60px;
-}
-
-.btn-view-compact:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(243, 156, 18, 0.3);
-}
-
-.btn-send-compact {
-    background: linear-gradient(135deg, #e74c3c, #c0392b);
-    color: white;
-    border: none;
-    padding: 12px 8px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 12px;
-    font-weight: 600;
-    transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 4px;
-}
-
-.btn-send-compact:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(231, 76, 60, 0.3);
+    flex-direction: column;
+    gap: 15px;
 }
 
 /* Компактные итоги */
 .totals-compact {
     background: linear-gradient(135deg, #3498db, #2980b9);
     color: white;
-    padding: 12px 15px;
-    border-radius: 8px;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    flex-shrink: 0;
+    padding: 20px;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
 }
 
 .total-item-compact {
-    text-align: center;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.2);
+}
+
+.total-item-compact:last-child {
+    border-bottom: none;
+}
+
+.total-item-compact.clickable {
+    cursor: pointer;
+    transition: background 0.2s ease;
+    padding: 8px 12px;
+    border-radius: 6px;
+    margin: 0 -12px;
+}
+
+.total-item-compact.clickable:hover {
+    background: rgba(255,255,255,0.1);
 }
 
 .total-label-compact {
-    display: block;
-    font-size: 11px;
+    font-size: 14px;
     font-weight: 600;
-    margin-bottom: 2px;
     opacity: 0.9;
 }
 
 .total-value-compact {
-    display: block;
-    font-size: 14px;
+    font-size: 16px;
     font-weight: bold;
+}
+
+/* Основная кнопка отправки */
+.btn-send-main {
+    background: linear-gradient(135deg, #e74c3c, #c0392b);
+    color: white;
+    border: none;
+    padding: 18px 20px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.btn-send-main:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(231, 76, 60, 0.3);
 }
 
 /* Модальные окна */
@@ -410,7 +431,7 @@ h1 {
     padding: 20px;
     border-radius: 12px;
     width: 95%;
-    max-width: 400px;
+    max-width: 450px;
     position: relative;
     box-shadow: 0 15px 35px rgba(0,0,0,0.3);
     max-height: 80vh;
@@ -421,15 +442,15 @@ h1 {
 .modal h3 {
     margin-bottom: 15px;
     color: #2c3e50;
-    font-size: 16px;
+    font-size: 18px;
     text-align: center;
 }
 
 .close {
     position: absolute;
-    right: 15px;
-    top: 15px;
-    font-size: 20px;
+    right: 20px;
+    top: 20px;
+    font-size: 22px;
     cursor: pointer;
     color: #999;
     font-weight: bold;
@@ -449,12 +470,12 @@ h1 {
 .cargo-list-content {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 10px;
 }
 
 .cargo-list-item {
     background: white;
-    padding: 12px;
+    padding: 15px;
     border-radius: 8px;
     border: 2px solid #e9ecef;
     position: relative;
@@ -464,36 +485,36 @@ h1 {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 8px;
+    margin-bottom: 10px;
 }
 
 .cargo-type-badge {
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 8px;
     font-weight: 600;
     color: #2c3e50;
-    font-size: 12px;
+    font-size: 14px;
 }
 
 .cargo-emoji-small {
-    font-size: 16px;
+    font-size: 18px;
 }
 
 .cargo-weight {
     background: #e3f2fd;
     color: #1976d2;
-    padding: 3px 8px;
-    border-radius: 10px;
-    font-size: 10px;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 12px;
     font-weight: bold;
 }
 
 .cargo-details {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 8px;
-    margin-bottom: 8px;
+    gap: 10px;
+    margin-bottom: 10px;
 }
 
 .detail-item {
@@ -503,19 +524,19 @@ h1 {
 .detail-label {
     font-weight: 600;
     color: #495057;
-    font-size: 10px;
+    font-size: 12px;
     display: block;
 }
 
 .detail-value {
     color: #2c3e50;
     font-weight: bold;
-    font-size: 11px;
+    font-size: 13px;
 }
 
 .cargo-photo-preview {
-    width: 50px;
-    height: 50px;
+    width: 60px;
+    height: 60px;
     border-radius: 6px;
     object-fit: cover;
     margin: 0 auto;
@@ -527,13 +548,13 @@ h1 {
     color: white;
     border: none;
     border-radius: 6px;
-    padding: 6px 10px;
+    padding: 8px 12px;
     cursor: pointer;
-    font-size: 11px;
+    font-size: 12px;
     font-weight: 600;
     transition: background 0.3s ease;
     width: 100%;
-    margin-top: 8px;
+    margin-top: 10px;
 }
 
 .remove-cargo:hover {
@@ -543,26 +564,32 @@ h1 {
 /* Итоги в модальном окне */
 .modal-totals-compact {
     background: #f8f9fa;
-    padding: 12px;
+    padding: 15px;
     border-radius: 8px;
-    margin-bottom: 12px;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
     gap: 8px;
 }
 
 .modal-totals-compact .total-item-compact {
     text-align: center;
+    border-bottom: 1px solid #dee2e6;
+    padding: 6px 0;
+}
+
+.modal-totals-compact .total-item-compact:last-child {
+    border-bottom: none;
 }
 
 .modal-totals-compact .total-label-compact {
     color: #495057;
-    font-size: 11px;
+    font-size: 13px;
 }
 
 .modal-totals-compact .total-value-compact {
     color: #2c3e50;
-    font-size: 13px;
+    font-size: 14px;
 }
 
 .cargo-list-actions {
@@ -575,10 +602,10 @@ h1 {
     background: #95a5a6;
     color: white;
     border: none;
-    padding: 10px 16px;
-    border-radius: 6px;
+    padding: 12px 20px;
+    border-radius: 8px;
     cursor: pointer;
-    font-size: 12px;
+    font-size: 14px;
     font-weight: 600;
     transition: background 0.3s ease;
 }
@@ -591,15 +618,20 @@ h1 {
     text-align: center;
     color: #999;
     font-style: italic;
-    padding: 20px;
+    padding: 30px;
     background: #f8f9fa;
     border-radius: 8px;
     border: 2px dashed #dee2e6;
-    font-size: 12px;
+    font-size: 14px;
 }
 
-/* Адаптивность для очень маленьких экранов */
-@media (max-width: 360px) {
+/* Адаптивность для мобильных устройств */
+@media (max-width: 768px) {
+    .main-content {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    
     .app-container {
         padding: 10px;
     }
@@ -614,108 +646,67 @@ h1 {
         gap: 6px;
     }
     
-    .compact-controls-panel {
-        grid-template-columns: 1fr;
-        gap: 12px;
-    }
-    
-    .photo-section-compact {
-        justify-content: center;
-    }
-    
-    .photo-container-compact {
-        width: 60px;
-        height: 60px;
-        padding: 10px;
-    }
-    
-    .controls-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 8px;
-    }
-    
-    .action-buttons-compact {
-        grid-template-columns: 1fr;
-        gap: 6px;
-    }
-    
-    .totals-compact {
-        grid-template-columns: 1fr;
-        gap: 8px;
-    }
-}
-
-/* Планшеты и большие телефоны */
-@media (min-width: 768px) and (max-width: 1024px) {
-    .container {
-        max-width: 600px;
-        margin: 0 auto;
-    }
-    
-    .app-container {
-        padding: 20px;
-    }
-    
-    .cargo-types-compact {
-        grid-template-columns: repeat(4, 1fr);
-        gap: 12px;
-    }
-    
-    .cargo-type-compact {
-        padding: 15px 8px;
-    }
-    
-    .cargo-image-placeholder {
-        width: 45px;
-        height: 45px;
-    }
-    
-    .cargo-icon-small {
-        font-size: 24px;
-    }
-    
-    .cargo-type-compact span {
-        font-size: 12px;
-    }
-    
-    .compact-controls-panel {
-        padding: 20px;
-        gap: 20px;
-    }
-    
     .photo-container-compact {
         width: 80px;
         height: 80px;
     }
     
-    .controls-grid {
-        gap: 15px;
-    }
-    
     .control-buttons-compact {
-        gap: 8px;
         padding: 6px;
     }
     
     .control-btn-compact {
-        width: 32px;
-        height: 32px;
-        font-size: 16px;
+        padding: 8px 10px;
+        font-size: 11px;
+        min-width: 45px;
     }
     
     .control-value-compact {
-        font-size: 16px;
-        min-width: 35px;
+        font-size: 14px;
+        min-width: 40px;
     }
     
-    .action-buttons-compact {
+    .btn-create,
+    .btn-save {
+        padding: 12px;
+        font-size: 13px;
+    }
+    
+    .btn-send-main {
+        padding: 15px;
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 480px) {
+    .controls-stack {
         gap: 12px;
     }
     
-    .btn-add-compact,
-    .btn-view-compact,
-    .btn-send-compact {
-        padding: 14px 12px;
-        font-size: 14px;
+    .control-item label {
+        font-size: 12px;
+    }
+    
+    .control-buttons-compact {
+        gap: 6px;
+    }
+    
+    .control-btn-compact {
+        padding: 6px 8px;
+        font-size: 10px;
+        min-width: 40px;
+    }
+    
+    .control-value-compact {
+        font-size: 13px;
+        min-width: 35px;
+    }
+}
+
+/* Планшеты */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .container {
+        max-width: 700px;
+        margin: 0 auto;
     }
 }
