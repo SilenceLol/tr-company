@@ -18,7 +18,7 @@ const palletSizes = {
     'non-standard': { length: 100, width: 50, height: 40 }
 };
 
-// Emoji для типов грузов
+// Emoji для типов грузов (используются только в модальном окне)
 const cargoIcons = {
     'euro-pallet': '🚛',
     'american-pallet': '🚛', 
@@ -34,13 +34,13 @@ document.addEventListener('DOMContentLoaded', function() {
     updateTotals();
     
     // Выбираем европаллет по умолчанию
-    document.querySelector('.cargo-type-compact[data-type="euro-pallet"]').classList.add('selected');
+    document.querySelector('.cargo-type-column[data-type="euro-pallet"]').classList.add('selected');
     setPalletDimensions('euro-pallet');
 });
 
 // Инициализация выбора типа груза
 function initCargoTypeSelection() {
-    const cargoTypes = document.querySelectorAll('.cargo-type-compact');
+    const cargoTypes = document.querySelectorAll('.cargo-type-column');
     
     cargoTypes.forEach(type => {
         type.addEventListener('click', function() {
@@ -79,7 +79,7 @@ function updateAllDimensionsDisplay() {
     document.getElementById('heightValue').textContent = currentDimensions.height;
 }
 
-// Изменение веса (шаг 10)
+// Изменение веса (шаг 1)
 function changeWeight(change) {
     const newWeight = currentWeight + change;
     if (newWeight >= 1 && newWeight <= 10000) {
@@ -230,7 +230,7 @@ function updateCargoCount() {
 function updateTotals() {
     const totalWeight = cargoList.reduce((sum, cargo) => sum + cargo.weight, 0);
     const totalVolume = cargoList.reduce((sum, cargo) => {
-        const volume = (cargo.dimensions.length * cargo.dimensions.width * cargo.dimensions.height) / 1000000; // в м³
+        const volume = (cargo.dimensions.length * cargo.dimensions.width * cargo.dimensions.height) / 1000000;
         return sum + volume;
     }, 0);
     
