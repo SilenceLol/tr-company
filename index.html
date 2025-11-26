@@ -10,7 +10,7 @@
     <div class="container">
         <header>
             <div class="logo">
-                <img src="lononwnew.png" alt="NORD WHEEL" class="logo-image" onerror="this.style.display='none'">
+                <img src="logonwnew.png" alt="NORD WHEEL" class="logo-image" onerror="this.style.display='none'">
                 <span class="logo-text">NORD WHEEL</span>
             </div>
         </header>
@@ -19,108 +19,112 @@
             <div class="app-container">
                 <h1>Замер грузов</h1>
                 
-                <div class="cargo-types-compact">
-                    <div class="cargo-type-compact" data-type="euro-pallet">
-                        <div class="cargo-image-placeholder">
-                            <img src="паллет.jpg" alt="Европаллет" class="cargo-image">
-                        </div>
-                        <span>Европаллет</span>
-                    </div>
-                    <div class="cargo-type-compact" data-type="american-pallet">
-                        <div class="cargo-image-placeholder">
-                            <!-- Замените на изображение американского паллета -->
-                            <img src="паллет.jpg" alt="Американский паллет" class="cargo-image">
-                        </div>
-                        <span>Американский</span>
-                    </div>
-                    <div class="cargo-type-compact" data-type="box">
-                        <div class="cargo-icon-small">📦</div>
-                        <span>Коробка</span>
-                    </div>
-                    <div class="cargo-type-compact" data-type="non-standard">
-                        <div class="cargo-icon-small">📏</div>
-                        <span>Нестандарт</span>
-                    </div>
-                </div>
-
-                <div class="main-content">
-                    <div class="controls-column">
-                        <div class="photo-section-compact">
-                            <label>Фото груза:</label>
-                            <div class="photo-container-compact" onclick="takePhoto()">
-                                <div class="photo-placeholder-compact" id="photoPlaceholder">
-                                    <div class="camera-icon-compact">📷</div>
+                <div class="main-layout">
+                    <!-- Левая колонка - типы грузов -->
+                    <div class="left-column">
+                        <div class="cargo-types-column">
+                            <div class="cargo-type-column" data-type="euro-pallet">
+                                <div class="cargo-image-placeholder">
+                                    <img src="паллет.jpg" alt="Европаллет" class="cargo-image">
                                 </div>
-                                <img id="cargoPhoto" class="cargo-photo-compact" style="display: none;">
+                                <span>Европаллет</span>
+                            </div>
+                            <div class="cargo-type-column" data-type="american-pallet">
+                                <div class="cargo-image-placeholder">
+                                    <img src="паллет.jpg" alt="Американский паллет" class="cargo-image">
+                                </div>
+                                <span>Американский</span>
+                            </div>
+                            <div class="cargo-type-column" data-type="box">
+                                <div class="cargo-image-placeholder">
+                                    <img src="паллет.jpg" alt="Коробка" class="cargo-image">
+                                </div>
+                                <span>Коробка</span>
+                            </div>
+                            <div class="cargo-type-column" data-type="non-standard">
+                                <div class="cargo-image-placeholder">
+                                    <img src="паллет.jpg" alt="Нестандарт" class="cargo-image">
+                                </div>
+                                <span>Нестандарт</span>
                             </div>
                         </div>
 
-                        <div class="controls-stack">
-                            <div class="control-item">
-                                <label>Вес (кг)</label>
-                                <div class="control-buttons-compact">
-                                    <button type="button" class="control-btn-compact minus" onclick="changeWeight(-10)">-10</button>
-                                    <span class="control-value-compact" id="weight">1</span>
-                                    <button type="button" class="control-btn-compact plus" onclick="changeWeight(10)">+10</button>
+                        <div class="photo-section-mini">
+                            <div class="photo-container-mini" onclick="takePhoto()">
+                                <div class="photo-placeholder-mini" id="photoPlaceholder">
+                                    <div class="camera-icon-mini">📷</div>
                                 </div>
+                                <img id="cargoPhoto" class="cargo-photo-mini" style="display: none;">
                             </div>
-
-                            <div class="control-item">
-                                <label>Длина (см)</label>
-                                <div class="control-buttons-compact">
-                                    <button type="button" class="control-btn-compact minus" onclick="changeDimension('length', -10)">-10</button>
-                                    <span class="control-value-compact" id="lengthValue">120</span>
-                                    <button type="button" class="control-btn-compact plus" onclick="changeDimension('length', 10)">+10</button>
-                                </div>
-                            </div>
-
-                            <div class="control-item">
-                                <label>Ширина (см)</label>
-                                <div class="control-buttons-compact">
-                                    <button type="button" class="control-btn-compact minus" onclick="changeDimension('width', -10)">-10</button>
-                                    <span class="control-value-compact" id="widthValue">80</span>
-                                    <button type="button" class="control-btn-compact plus" onclick="changeDimension('width', 10)">+10</button>
-                                </div>
-                            </div>
-
-                            <div class="control-item">
-                                <label>Высота (см)</label>
-                                <div class="control-buttons-compact">
-                                    <button type="button" class="control-btn-compact minus" onclick="changeDimension('height', -10)">-10</button>
-                                    <span class="control-value-compact" id="heightValue">30</span>
-                                    <button type="button" class="control-btn-compact plus" onclick="changeDimension('height', 10)">+10</button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="action-buttons-column">
-                            <button class="btn-create" onclick="createCargo()">
-                                📝 Создать место
-                            </button>
-                            <button class="btn-save" onclick="saveCargo()">
-                                💾 Сохранить
-                            </button>
+                            <span class="photo-label">Фото</span>
                         </div>
                     </div>
 
-                    <div class="summary-section">
-                        <div class="totals-compact">
-                            <div class="total-item-compact">
-                                <span class="total-label-compact">Общая масса:</span>
-                                <span class="total-value-compact" id="totalWeight">0 кг</span>
+                    <!-- Правая колонка - контролы -->
+                    <div class="right-column">
+                        <div class="controls-stack-compact">
+                            <div class="control-item-compact">
+                                <label>Вес</label>
+                                <div class="control-buttons-mini">
+                                    <button type="button" class="control-btn-mini minus" onclick="changeWeight(-1)">-</button>
+                                    <span class="control-value-mini" id="weight">1</span>
+                                    <button type="button" class="control-btn-mini plus" onclick="changeWeight(1)">+</button>
+                                </div>
+                                <span class="control-unit">кг</span>
                             </div>
-                            <div class="total-item-compact">
-                                <span class="total-label-compact">Общий объем:</span>
-                                <span class="total-value-compact" id="totalVolume">0 м³</span>
+
+                            <div class="control-item-compact">
+                                <label>Длина</label>
+                                <div class="control-buttons-mini">
+                                    <button type="button" class="control-btn-mini minus" onclick="changeDimension('length', -10)">-</button>
+                                    <span class="control-value-mini" id="lengthValue">120</span>
+                                    <button type="button" class="control-btn-mini plus" onclick="changeDimension('length', 10)">+</button>
+                                </div>
+                                <span class="control-unit">см</span>
                             </div>
-                            <div class="total-item-compact clickable" onclick="showCargoListModal()">
-                                <span class="total-label-compact">Количество мест:</span>
-                                <span class="total-value-compact" id="cargoCount">0</span>
+
+                            <div class="control-item-compact">
+                                <label>Ширина</label>
+                                <div class="control-buttons-mini">
+                                    <button type="button" class="control-btn-mini minus" onclick="changeDimension('width', -10)">-</button>
+                                    <span class="control-value-mini" id="widthValue">80</span>
+                                    <button type="button" class="control-btn-mini plus" onclick="changeDimension('width', 10)">+</button>
+                                </div>
+                                <span class="control-unit">см</span>
+                            </div>
+
+                            <div class="control-item-compact">
+                                <label>Высота</label>
+                                <div class="control-buttons-mini">
+                                    <button type="button" class="control-btn-mini minus" onclick="changeDimension('height', -10)">-</button>
+                                    <span class="control-value-mini" id="heightValue">30</span>
+                                    <button type="button" class="control-btn-mini plus" onclick="changeDimension('height', 10)">+</button>
+                                </div>
+                                <span class="control-unit">см</span>
                             </div>
                         </div>
 
-                        <button class="btn-send-main" onclick="sendToOperator()">
-                            📧 Отправить оператору
+                        <button class="btn-save-mini" onclick="saveCargo()">
+                            💾 Сохранить
+                        </button>
+
+                        <div class="stats-mini">
+                            <div class="stat-item" onclick="showCargoListModal()">
+                                <span class="stat-label">Места:</span>
+                                <span class="stat-value" id="cargoCount">0</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">Масса:</span>
+                                <span class="stat-value" id="totalWeight">0 кг</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">Объем:</span>
+                                <span class="stat-value" id="totalVolume">0 м³</span>
+                            </div>
+                        </div>
+
+                        <button class="btn-send-mini" onclick="sendToOperator()">
+                            📧 Отправить
                         </button>
                     </div>
                 </div>
