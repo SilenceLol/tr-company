@@ -13,7 +13,7 @@ body {
     line-height: 1.4;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     min-height: 100vh;
-    padding: 8px;
+    padding: 5px;
     overflow: hidden;
 }
 
@@ -21,17 +21,17 @@ body {
     max-width: 100%;
     margin: 0 auto;
     background: white;
-    border-radius: 12px;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
     overflow: hidden;
-    min-height: calc(100vh - 16px);
+    min-height: calc(100vh - 10px);
     display: flex;
     flex-direction: column;
 }
 
 header {
     background: #2c3e50;
-    padding: 12px 15px;
+    padding: 8px 12px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -41,22 +41,22 @@ header {
 .logo {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
 }
 
 .logo-image {
-    height: 30px;
+    height: 25px;
     width: auto;
 }
 
 .logo-text {
-    font-size: 18px;
+    font-size: 16px;
     font-weight: bold;
     color: white;
 }
 
 .app-container {
-    padding: 15px;
+    padding: 10px;
     flex: 1;
     display: flex;
     flex-direction: column;
@@ -65,351 +65,315 @@ header {
 
 h1 {
     text-align: center;
-    margin-bottom: 15px;
+    margin-bottom: 12px;
     color: #2c3e50;
-    font-size: 1.4em;
+    font-size: 1.2em;
     flex-shrink: 0;
 }
 
-/* Компактные типы грузов */
-.cargo-types-compact {
+/* Основной layout */
+.main-layout {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 8px;
-    margin-bottom: 20px;
-    flex-shrink: 0;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    flex: 1;
+    min-height: 0;
 }
 
-.cargo-type-compact {
-    border: 2px solid #e0e0e0;
-    border-radius: 8px;
-    padding: 10px 5px;
-    text-align: center;
+/* Левая колонка */
+.left-column {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* Колонка типов грузов */
+.cargo-types-column {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.cargo-type-column {
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    padding: 8px 6px;
     cursor: pointer;
     transition: all 0.3s ease;
     background: white;
     display: flex;
-    flex-direction: column;
     align-items: center;
-    gap: 4px;
+    gap: 6px;
+    min-height: 40px;
 }
 
-.cargo-type-compact:hover {
+.cargo-type-column:hover {
     border-color: #3498db;
 }
 
-.cargo-type-compact.selected {
+.cargo-type-column.selected {
     border-color: #3498db;
     background: #f0f8ff;
-    box-shadow: 0 2px 8px rgba(52, 152, 219, 0.2);
 }
 
-/* Стили для изображений грузов */
+/* Стили для изображений типов грузов */
 .cargo-image-placeholder {
-    width: 40px;
-    height: 40px;
+    width: 30px;
+    height: 30px;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 4px;
+    border-radius: 4px;
     background: #f8f9fa;
-    border-radius: 6px;
-    border: 1px dashed #ccc;
+    border: 1px solid #e9ecef;
 }
 
 .cargo-image {
-    width: 100%;
-    height: 100%;
+    width: 24px;
+    height: 24px;
     object-fit: contain;
-    border-radius: 4px;
 }
 
-.image-placeholder {
-    font-size: 20px;
-    color: #999;
-}
-
-/* Стили для иконок */
-.cargo-icon-small {
-    font-size: 20px;
-    margin-bottom: 4px;
-}
-
-.cargo-type-compact span {
+.cargo-type-column span {
     font-size: 11px;
     font-weight: 600;
     color: #2c3e50;
     line-height: 1.2;
 }
 
-/* Основной контент */
-.main-content {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
-    flex: 1;
-}
-
-/* Колонка контролов */
-.controls-column {
+/* Мини-секция фото */
+.photo-section-mini {
+    text-align: center;
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    align-items: center;
+    gap: 4px;
 }
 
-/* Компактная секция фото */
-.photo-section-compact {
-    text-align: center;
-}
-
-.photo-section-compact label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: 600;
-    color: #495057;
-    font-size: 14px;
-}
-
-.photo-container-compact {
-    border: 2px dashed #3498db;
-    border-radius: 8px;
-    padding: 15px;
-    text-align: center;
+.photo-container-mini {
+    border: 1px dashed #3498db;
+    border-radius: 6px;
+    padding: 8px;
     cursor: pointer;
     transition: all 0.3s ease;
     background: white;
-    width: 100px;
-    height: 100px;
+    width: 50px;
+    height: 50px;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 0 auto;
 }
 
-.photo-container-compact:hover {
+.photo-container-mini:hover {
     background: #f0f8ff;
 }
 
-.photo-placeholder-compact {
+.photo-placeholder-mini {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 6px;
+    gap: 2px;
 }
 
-.camera-icon-compact {
-    font-size: 24px;
+.camera-icon-mini {
+    font-size: 16px;
 }
 
-.cargo-photo-compact {
+.cargo-photo-mini {
     width: 100%;
     height: 100%;
-    border-radius: 6px;
+    border-radius: 4px;
     object-fit: cover;
 }
 
-/* Стек контролов */
-.controls-stack {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-
-.control-item {
-    text-align: center;
-}
-
-.control-item label {
-    display: block;
-    margin-bottom: 8px;
+.photo-label {
+    font-size: 10px;
+    color: #666;
     font-weight: 600;
-    color: #495057;
-    font-size: 14px;
 }
 
-.control-buttons-compact {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    background: white;
-    border: 2px solid #3498db;
-    border-radius: 8px;
-    padding: 8px;
-}
-
-.control-btn-compact {
-    background: #3498db;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    padding: 10px 12px;
-    cursor: pointer;
-    font-size: 12px;
-    font-weight: bold;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.2s ease;
-    min-width: 50px;
-}
-
-.control-btn-compact:hover {
-    background: #2980b9;
-}
-
-.control-btn-compact:active {
-    background: #21618c;
-    transform: scale(0.95);
-}
-
-.control-btn-compact.plus {
-    background: #27ae60;
-}
-
-.control-btn-compact.plus:hover {
-    background: #219653;
-}
-
-.control-btn-compact.minus {
-    background: #e74c3c;
-}
-
-.control-btn-compact.minus:hover {
-    background: #c0392b;
-}
-
-.control-value-compact {
-    font-size: 16px;
-    font-weight: bold;
-    color: #2c3e50;
-    min-width: 50px;
-    text-align: center;
-}
-
-/* Колонка кнопок действий */
-.action-buttons-column {
+/* Правая колонка */
+.right-column {
     display: flex;
     flex-direction: column;
     gap: 10px;
 }
 
-.btn-create {
-    background: linear-gradient(135deg, #3498db, #2980b9);
-    color: white;
-    border: none;
-    padding: 15px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: 600;
-    transition: all 0.3s ease;
+/* Компактный стек контролов */
+.controls-stack-compact {
     display: flex;
-    align-items: center;
-    justify-content: center;
+    flex-direction: column;
     gap: 8px;
 }
 
-.btn-create:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+.control-item-compact {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px;
+    background: #f8f9fa;
+    border-radius: 6px;
+    border: 1px solid #e9ecef;
 }
 
-.btn-save {
+.control-item-compact label {
+    font-weight: 600;
+    color: #495057;
+    font-size: 11px;
+    min-width: 45px;
+    margin: 0;
+}
+
+.control-buttons-mini {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    background: white;
+    border: 1px solid #3498db;
+    border-radius: 4px;
+    padding: 2px;
+    flex: 1;
+}
+
+.control-btn-mini {
+    background: #3498db;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    padding: 6px 8px;
+    cursor: pointer;
+    font-size: 10px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    min-width: 25px;
+}
+
+.control-btn-mini:hover {
+    background: #2980b9;
+}
+
+.control-btn-mini:active {
+    background: #21618c;
+    transform: scale(0.95);
+}
+
+.control-btn-mini.plus {
+    background: #27ae60;
+}
+
+.control-btn-mini.plus:hover {
+    background: #219653;
+}
+
+.control-btn-mini.minus {
+    background: #e74c3c;
+}
+
+.control-btn-mini.minus:hover {
+    background: #c0392b;
+}
+
+.control-value-mini {
+    font-size: 12px;
+    font-weight: bold;
+    color: #2c3e50;
+    min-width: 30px;
+    text-align: center;
+    padding: 0 4px;
+}
+
+.control-unit {
+    font-size: 9px;
+    color: #666;
+    font-weight: 600;
+    min-width: 20px;
+}
+
+/* Мини-кнопка сохранения */
+.btn-save-mini {
     background: linear-gradient(135deg, #27ae60, #219653);
     color: white;
     border: none;
-    padding: 15px;
-    border-radius: 8px;
+    padding: 10px;
+    border-radius: 6px;
     cursor: pointer;
-    font-size: 14px;
+    font-size: 12px;
     font-weight: 600;
     transition: all 0.3s ease;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
+    gap: 6px;
 }
 
-.btn-save:hover {
+.btn-save-mini:hover {
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(39, 174, 96, 0.3);
+    box-shadow: 0 2px 8px rgba(39, 174, 96, 0.3);
 }
 
-/* Секция с итогами */
-.summary-section {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-
-/* Компактные итоги */
-.totals-compact {
+/* Мини-статистика */
+.stats-mini {
     background: linear-gradient(135deg, #3498db, #2980b9);
     color: white;
-    padding: 20px;
-    border-radius: 12px;
+    padding: 10px;
+    border-radius: 6px;
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 6px;
 }
 
-.total-item-compact {
+.stat-item {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 8px 0;
-    border-bottom: 1px solid rgba(255,255,255,0.2);
+    padding: 4px 0;
+    font-size: 11px;
 }
 
-.total-item-compact:last-child {
-    border-bottom: none;
-}
-
-.total-item-compact.clickable {
+.stat-item:first-child {
     cursor: pointer;
     transition: background 0.2s ease;
-    padding: 8px 12px;
-    border-radius: 6px;
-    margin: 0 -12px;
+    padding: 4px 6px;
+    border-radius: 4px;
+    margin: 0 -6px;
 }
 
-.total-item-compact.clickable:hover {
+.stat-item:first-child:hover {
     background: rgba(255,255,255,0.1);
 }
 
-.total-label-compact {
-    font-size: 14px;
+.stat-label {
     font-weight: 600;
     opacity: 0.9;
 }
 
-.total-value-compact {
-    font-size: 16px;
+.stat-value {
     font-weight: bold;
 }
 
-/* Основная кнопка отправки */
-.btn-send-main {
+/* Мини-кнопка отправки */
+.btn-send-mini {
     background: linear-gradient(135deg, #e74c3c, #c0392b);
     color: white;
     border: none;
-    padding: 18px 20px;
-    border-radius: 10px;
+    padding: 12px;
+    border-radius: 6px;
     cursor: pointer;
-    font-size: 16px;
+    font-size: 12px;
     font-weight: 600;
     transition: all 0.3s ease;
-    width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
+    gap: 6px;
 }
 
-.btn-send-main:hover {
+.btn-send-mini:hover {
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(231, 76, 60, 0.3);
+    box-shadow: 0 2px 8px rgba(231, 76, 60, 0.3);
 }
 
 /* Модальные окна */
@@ -428,29 +392,29 @@ h1 {
 .cargo-list-modal-compact {
     background-color: white;
     margin: 5% auto;
-    padding: 20px;
-    border-radius: 12px;
+    padding: 15px;
+    border-radius: 10px;
     width: 95%;
-    max-width: 450px;
+    max-width: 400px;
     position: relative;
-    box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
     max-height: 80vh;
     display: flex;
     flex-direction: column;
 }
 
 .modal h3 {
-    margin-bottom: 15px;
+    margin-bottom: 12px;
     color: #2c3e50;
-    font-size: 18px;
+    font-size: 16px;
     text-align: center;
 }
 
 .close {
     position: absolute;
-    right: 20px;
-    top: 20px;
-    font-size: 22px;
+    right: 12px;
+    top: 12px;
+    font-size: 18px;
     cursor: pointer;
     color: #999;
     font-weight: bold;
@@ -464,20 +428,20 @@ h1 {
 .cargo-list-container {
     flex: 1;
     overflow-y: auto;
-    margin-bottom: 15px;
+    margin-bottom: 12px;
 }
 
 .cargo-list-content {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 8px;
 }
 
 .cargo-list-item {
     background: white;
-    padding: 15px;
-    border-radius: 8px;
-    border: 2px solid #e9ecef;
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid #e9ecef;
     position: relative;
 }
 
@@ -485,36 +449,36 @@ h1 {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 10px;
+    margin-bottom: 6px;
 }
 
 .cargo-type-badge {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
     font-weight: 600;
     color: #2c3e50;
-    font-size: 14px;
+    font-size: 12px;
 }
 
 .cargo-emoji-small {
-    font-size: 18px;
+    font-size: 14px;
 }
 
 .cargo-weight {
     background: #e3f2fd;
     color: #1976d2;
-    padding: 4px 10px;
-    border-radius: 12px;
-    font-size: 12px;
+    padding: 2px 6px;
+    border-radius: 8px;
+    font-size: 10px;
     font-weight: bold;
 }
 
 .cargo-details {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    margin-bottom: 10px;
+    gap: 6px;
+    margin-bottom: 6px;
 }
 
 .detail-item {
@@ -524,20 +488,20 @@ h1 {
 .detail-label {
     font-weight: 600;
     color: #495057;
-    font-size: 12px;
+    font-size: 10px;
     display: block;
 }
 
 .detail-value {
     color: #2c3e50;
     font-weight: bold;
-    font-size: 13px;
+    font-size: 11px;
 }
 
 .cargo-photo-preview {
-    width: 60px;
-    height: 60px;
-    border-radius: 6px;
+    width: 40px;
+    height: 40px;
+    border-radius: 4px;
     object-fit: cover;
     margin: 0 auto;
     display: block;
@@ -547,14 +511,14 @@ h1 {
     background: #e74c3c;
     color: white;
     border: none;
-    border-radius: 6px;
-    padding: 8px 12px;
+    border-radius: 4px;
+    padding: 4px 8px;
     cursor: pointer;
-    font-size: 12px;
+    font-size: 10px;
     font-weight: 600;
     transition: background 0.3s ease;
     width: 100%;
-    margin-top: 10px;
+    margin-top: 6px;
 }
 
 .remove-cargo:hover {
@@ -564,18 +528,19 @@ h1 {
 /* Итоги в модальном окне */
 .modal-totals-compact {
     background: #f8f9fa;
-    padding: 15px;
-    border-radius: 8px;
-    margin-bottom: 15px;
+    padding: 10px;
+    border-radius: 6px;
+    margin-bottom: 10px;
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 6px;
 }
 
 .modal-totals-compact .total-item-compact {
     text-align: center;
     border-bottom: 1px solid #dee2e6;
-    padding: 6px 0;
+    padding: 4px 0;
+    font-size: 12px;
 }
 
 .modal-totals-compact .total-item-compact:last-child {
@@ -584,28 +549,27 @@ h1 {
 
 .modal-totals-compact .total-label-compact {
     color: #495057;
-    font-size: 13px;
 }
 
 .modal-totals-compact .total-value-compact {
     color: #2c3e50;
-    font-size: 14px;
+    font-weight: bold;
 }
 
 .cargo-list-actions {
     display: flex;
     justify-content: center;
-    margin-top: 15px;
+    margin-top: 12px;
 }
 
 .btn-secondary {
     background: #95a5a6;
     color: white;
     border: none;
-    padding: 12px 20px;
-    border-radius: 8px;
+    padding: 8px 16px;
+    border-radius: 6px;
     cursor: pointer;
-    font-size: 14px;
+    font-size: 12px;
     font-weight: 600;
     transition: background 0.3s ease;
 }
@@ -618,95 +582,92 @@ h1 {
     text-align: center;
     color: #999;
     font-style: italic;
-    padding: 30px;
+    padding: 20px;
     background: #f8f9fa;
-    border-radius: 8px;
-    border: 2px dashed #dee2e6;
-    font-size: 14px;
+    border-radius: 6px;
+    border: 1px dashed #dee2e6;
+    font-size: 12px;
 }
 
-/* Адаптивность для мобильных устройств */
-@media (max-width: 768px) {
-    .main-content {
-        grid-template-columns: 1fr;
-        gap: 15px;
-    }
-    
+/* Адаптивность для очень маленьких экранов */
+@media (max-width: 320px) {
     .app-container {
-        padding: 10px;
+        padding: 8px;
     }
     
     h1 {
-        font-size: 1.2em;
-        margin-bottom: 12px;
+        font-size: 1.1em;
+        margin-bottom: 8px;
     }
     
-    .cargo-types-compact {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 6px;
+    .main-layout {
+        gap: 8px;
     }
     
-    .photo-container-compact {
-        width: 80px;
-        height: 80px;
+    .cargo-type-column {
+        padding: 6px 4px;
+        min-height: 35px;
     }
     
-    .control-buttons-compact {
+    .cargo-image-placeholder {
+        width: 25px;
+        height: 25px;
+    }
+    
+    .cargo-image {
+        width: 20px;
+        height: 20px;
+    }
+    
+    .cargo-type-column span {
+        font-size: 10px;
+    }
+    
+    .photo-container-mini {
+        width: 45px;
+        height: 45px;
         padding: 6px;
     }
     
-    .control-btn-compact {
-        padding: 8px 10px;
-        font-size: 11px;
-        min-width: 45px;
+    .control-item-compact {
+        padding: 4px;
     }
     
-    .control-value-compact {
-        font-size: 14px;
-        min-width: 40px;
-    }
-    
-    .btn-create,
-    .btn-save {
-        padding: 12px;
-        font-size: 13px;
-    }
-    
-    .btn-send-main {
-        padding: 15px;
-        font-size: 14px;
-    }
-}
-
-@media (max-width: 480px) {
-    .controls-stack {
-        gap: 12px;
-    }
-    
-    .control-item label {
-        font-size: 12px;
-    }
-    
-    .control-buttons-compact {
-        gap: 6px;
-    }
-    
-    .control-btn-compact {
-        padding: 6px 8px;
+    .control-item-compact label {
         font-size: 10px;
         min-width: 40px;
     }
     
-    .control-value-compact {
-        font-size: 13px;
-        min-width: 35px;
+    .control-btn-mini {
+        padding: 4px 6px;
+        font-size: 9px;
+        min-width: 22px;
+    }
+    
+    .control-value-mini {
+        font-size: 11px;
+        min-width: 25px;
+    }
+    
+    .btn-save-mini,
+    .btn-send-mini {
+        padding: 8px;
+        font-size: 11px;
+    }
+    
+    .stats-mini {
+        padding: 8px;
+    }
+    
+    .stat-item {
+        font-size: 10px;
     }
 }
 
 /* Планшеты */
-@media (min-width: 769px) and (max-width: 1024px) {
+@media (min-width: 768px) and (max-width: 1024px) {
     .container {
-        max-width: 700px;
+        max-width: 500px;
         margin: 0 auto;
     }
 }
