@@ -8,6 +8,7 @@ let currentDimensions = {
 let currentWeight = 1;
 let currentPhoto = null;
 let cargoList = [];
+let currentCargoId = null;
 
 // Стандартные размеры паллетов
 const palletSizes = {
@@ -35,7 +36,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // Выбираем европаллет по умолчанию
     document.querySelector('.cargo-type-compact[data-type="euro-pallet"]').classList.add('selected');
     setPalletDimensions('euro-pallet');
-    updateControlsVisibility();
 });
 
 // Инициализация выбора типа груза
@@ -50,35 +50,15 @@ function initCargoTypeSelection() {
             currentCargoType = this.getAttribute('data-type');
             
             // Устанавливаем стандартные размеры
-            if (currentCargoType === 'euro-pallet' || currentCargoType === 'american-pallet') {
-                setPalletDimensions(currentCargoType);
-            } else {
-                setDefaultDimensions(currentCargoType);
-            }
-            
-            // Обновляем видимость контролов
-            updateControlsVisibility();
+            setPalletDimensions(currentCargoType);
             
             // Сбрасываем фото при смене типа груза
             resetPhoto();
+            
+            // Сбрасываем текущий ID (создаем новый груз)
+            currentCargoId = null;
         });
     });
-}
-
-// Обновить видимость контролов длины и ширины
-function updateControlsVisibility() {
-    const lengthControl = document.getElementById('lengthControl');
-    const widthControl = document.getElementById('widthControl');
-    
-    // Для паллетов скрываем длину и ширину (они фиксированные)
-    if (currentCargoType === 'euro-pallet' || currentCargoType === 'american-pallet') {
-        lengthControl.classList.add('hidden');
-        widthControl.classList.add('hidden');
-    } else {
-        // Для коробок и нестандартного груза показываем длину и ширину
-        lengthControl.classList.remove('hidden');
-        widthControl.classList.remove('hidden');
-    }
 }
 
 // Установка размеров для паллетов
@@ -86,19 +66,10 @@ function setPalletDimensions(palletType) {
     const sizes = palletSizes[palletType];
     currentDimensions.length = sizes.length;
     currentDimensions.width = sizes.width;
-    currentDimensions.height = currentDimensions.height || 30;
+    currentDimensions.height = sizes.height || 30;
     
     // Обновляем отображение всех размеров
     updateAllDimensionsDisplay();
-}
-
-// Установка размеров по умолчанию
-function setDefaultDimensions(cargoType) {
-    const sizes = palletSizes[cargoType];
-    if (sizes) {
-        currentDimensions = { ...sizes };
-        updateAllDimensionsDisplay();
-    }
 }
 
 // Обновить отображение всех размеров
@@ -108,7 +79,7 @@ function updateAllDimensionsDisplay() {
     document.getElementById('heightValue').textContent = currentDimensions.height;
 }
 
-// Изменение веса
+// Изменение веса (шаг 10)
 function changeWeight(change) {
     const newWeight = currentWeight + change;
     if (newWeight >= 1 && newWeight <= 10000) {
@@ -117,7 +88,7 @@ function changeWeight(change) {
     }
 }
 
-// Изменение размеров (теперь можно устанавливать 0)
+// Изменение размеров (шаг 10)
 function changeDimension(dimension, change) {
     let newValue = currentDimensions[dimension] + change;
     
@@ -134,6 +105,50 @@ function changeDimension(dimension, change) {
             document.getElementById('heightValue').textContent = newValue;
         }
     }
+}
+
+// Создать новое место
+function createCargo() {
+    // Сбрасываем текущие настройки для нового груза
+    resetCurrentCargo();
+    currentCargoId = null;
+    alert('Готово к созданию нового места! Настройте параметры и нажмите "Сохранить"');
+}
+
+// Сохранить груз
+function saveCargo() {
+    // Проверяем, что хотя бы один размер не равен 0
+    if (currentDimensions.length === 0 && currentDimensions.width === 0 && currentDimensions.height === 0) {
+        alert('Укажите хотя бы один размер груза!');
+        return;
+    }
+    
+    const cargo = {
+        id: currentCargoId || Date.now(),
+        type: currentCargoType,
+        weight: currentWeight,
+        dimensions: {...currentDimensions},
+        photo: currentPhoto,
+        timestamp: new Date().toLocaleString('ru-RU')
+    };
+    
+    if (currentCargoId) {
+        // Обновляем существующий груз
+        const index = cargoList.findIndex(c => c.id === currentCargoId);
+        if (index !== -1) {
+            cargoList[index] = cargo;
+        }
+    } else {
+        // Добавляем новый груз
+        cargoList.push(cargo);
+    }
+    
+    saveCargoList();
+    updateCargoCount();
+    updateTotals();
+    
+    alert(currentCargoId ? 'Груз обновлен!' : 'Груз сохранен!');
+    currentCargoId = null;
 }
 
 // Сделать фото
@@ -169,34 +184,6 @@ function resetPhoto() {
     document.getElementById('photoInput').value = '';
 }
 
-// Добавить груз в список
-function addCargo() {
-    // Проверяем, что хотя бы один размер не равен 0
-    if (currentDimensions.length === 0 && currentDimensions.width === 0 && currentDimensions.height === 0) {
-        alert('Укажите хотя бы один размер груза!');
-        return;
-    }
-    
-    const cargo = {
-        id: Date.now(),
-        type: currentCargoType,
-        weight: currentWeight,
-        dimensions: {...currentDimensions},
-        photo: currentPhoto,
-        timestamp: new Date().toLocaleString('ru-RU')
-    };
-    
-    cargoList.push(cargo);
-    saveCargoList();
-    updateCargoCount();
-    updateTotals();
-    
-    // Сбрасываем текущие настройки для нового груза
-    resetCurrentCargo();
-    
-    alert('Груз добавлен!');
-}
-
 // Сброс текущих настроек
 function resetCurrentCargo() {
     currentWeight = 1;
@@ -204,11 +191,7 @@ function resetCurrentCargo() {
     resetPhoto();
     
     // Возвращаем стандартные размеры для текущего типа
-    if (currentCargoType === 'euro-pallet' || currentCargoType === 'american-pallet') {
-        setPalletDimensions(currentCargoType);
-    } else {
-        setDefaultDimensions(currentCargoType);
-    }
+    setPalletDimensions(currentCargoType);
 }
 
 // Удалить груз из списка
@@ -218,6 +201,10 @@ function removeCargo(cargoId) {
     updateCargoCount();
     updateTotals();
     renderCargoListModal();
+    
+    if (currentCargoId === cargoId) {
+        currentCargoId = null;
+    }
 }
 
 // Сохранить список грузов
@@ -236,6 +223,7 @@ function loadCargoList() {
 // Обновить счетчик грузов
 function updateCargoCount() {
     document.getElementById('cargoCount').textContent = cargoList.length;
+    document.getElementById('modalCargoCount').textContent = cargoList.length;
 }
 
 // Обновить итоговые показатели
@@ -299,9 +287,11 @@ function renderCargoListModal() {
                 </div>
             </div>
             ${cargo.photo ? `<img src="${cargo.photo}" class="cargo-photo-preview" alt="Фото груза">` : ''}
-            <button class="remove-cargo" onclick="removeCargo(${cargo.id})">
-                🗑️ Удалить этот груз
-            </button>
+            <div class="cargo-actions">
+                <button class="remove-cargo" onclick="removeCargo(${cargo.id})">
+                    🗑️ Удалить
+                </button>
+            </div>
         </div>
     `).join('');
 }
@@ -329,13 +319,14 @@ function sendToOperator() {
     // Здесь будет логика отправки данных оператору
     console.log('Данные для отправки оператору:', shipmentData);
     
-    alert(`Данные отправлены оператору!\nВсего грузов: ${cargoList.length}\nОбщий вес: ${totalWeight} кг\nОбщий объем: ${totalVolume.toFixed(3)} м³`);
+    alert(`Данные отправлены оператору!\nВсего мест: ${cargoList.length}\nОбщая масса: ${totalWeight} кг\nОбщий объем: ${totalVolume.toFixed(3)} м³`);
     
     // Очищаем список после отправки
     cargoList = [];
     saveCargoList();
     updateCargoCount();
     updateTotals();
+    currentCargoId = null;
 }
 
 // Получить название типа груза
@@ -356,3 +347,8 @@ window.addEventListener('click', function(e) {
         closeCargoListModal();
     }
 });
+
+// Предотвращение масштабирования при двойном тапе
+document.addEventListener('dblclick', function(e) {
+    e.preventDefault();
+}, { passive: false });
