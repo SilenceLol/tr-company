@@ -134,6 +134,14 @@ h1 {
     object-fit: contain;
 }
 
+.cargo-icon-mini {
+    font-size: 16px;
+    min-width: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 .cargo-type-column span {
     font-size: 11px;
     font-weight: 600;
@@ -617,6 +625,10 @@ h1 {
     .cargo-image {
         width: 20px;
         height: 20px;
+    }
+    
+    .cargo-icon-mini {
+        font-size: 14px;
     }
     
     .cargo-type-column span {
