@@ -5,52 +5,121 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NORD WHEEL - Авторизация</title>
     <link rel="stylesheet" href="styles.css">
-    <script src="https://unpkg.com/html5-qrcode/minified/html5-qrcode.min.js"></script>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <div class="logo">
-                <img src="logonwnew.png" alt="NORD WHEEL" class="logo-image" onerror="this.style.display='none'">
-                <span class="logo-text">NORD WHEEL</span>
-            </div>
-        </header>
+<div class="container">
+    <header>
+        <div class="logo">
+            <img src="logonwnew.png" alt="NORD WHEEL" class="logo-image" onerror="this.style.display='none'">
+            <span class="logo-text">NORD WHEEL</span>
+        </div>
+    </header>
 
-        <main>
-            <div class="auth-container">
-                <h1>Авторизация</h1>
-                
-                <div class="auth-card">
-                    <div class="qr-scanner-section">
-                        <div id="qr-reader" class="qr-reader"></div>
-                        <div class="scanner-instructions">
-                            <p>Наведите камеру на QR-код</p>
-                        </div>
+    <main>
+        <div class="auth-container">
+            <h1>Авторизация</h1>
+
+            <div class="auth-card">
+                <div class="qr-scanner-section">
+                    <div id="qr-reader" class="qr-reader">
+                        <div class="scanner-loading">Загрузка сканера QR...</div>
                     </div>
-
-                    <div class="manual-auth-section">
-                        <h3>Или введите код</h3>
-                        <div class="manual-input">
-                            <input type="text" id="employeeCode" placeholder="Код" maxlength="10">
-                            <button class="btn-auth" onclick="manualAuth()">Войти</button>
-                        </div>
-                    </div>
-
-                    <div class="auth-status" id="authStatus">
-                        <!-- Статус авторизации будет здесь -->
+                    <div class="scanner-instructions">
+                        <p>Наведите камеру на QR-код</p>
+                        <p class="scanner-hint" id="scannerHint">Идет загрузка сканера...</p>
                     </div>
                 </div>
 
-                <div class="demo-info">
-                    <h4>Демо-коды:</h4>
-                    <div class="demo-codes">
-                        <div class="demo-code" onclick="useDemoCode('EMP001')">EMP001</div>
+                <div class="manual-auth-section">
+                    <h3>Или введите код</h3>
+                    <div class="manual-input">
+                        <input type="text" id="employeeCode" placeholder="Код (например: EMP001)" maxlength="10">
+                        <button class="btn-auth" onclick="manualAuth()">Войти</button>
                     </div>
                 </div>
-            </div>
-        </main>
-    </div>
 
-    <script src="auth.js"></script>
+                <div class="auth-status" id="authStatus">
+                    <!-- Статус авторизации будет здесь -->
+                </div>
+            </div>
+
+            <div class="demo-info">
+                <h4>Демо-коды для тестирования:</h4>
+                <div class="demo-codes">
+                    <div class="demo-code" onclick="useDemoCode('EMP001')">EMP001 - Иванов А.</div>
+                    <div class="demo-code" onclick="useDemoCode('EMP002')">EMP002 - Петрова М.</div>
+                    <div class="demo-code" onclick="useDemoCode('EMP003')">EMP003 - Сидоров Д.</div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<!-- Загрузка библиотеки с резервными источниками -->
+<script>
+    function loadScript(src, onSuccess, onError) {
+        const script = document.createElement('script');
+        script.src = src;
+        script.onload = onSuccess;
+        script.onerror = onError;
+        document.head.appendChild(script);
+    }
+
+    // Пробуем загрузить из разных источников
+    loadScript(
+        'html5-qrcode.min.js',
+        function() {
+            console.log('QR scanner loaded from local file');
+            // После загрузки библиотеки загружаем основной скрипт
+            loadMainScript();
+        },
+        function() {
+            console.log('Local QR scanner not found, trying CDN...');
+            loadScript(
+                'https://unpkg.com/html5-qrcode@2.3.8/minified/html5-qrcode.min.js',
+                function() {
+                    console.log('QR scanner loaded from CDN');
+                    loadMainScript();
+                },
+                function() {
+                    console.log('CDN failed, trying alternative CDN...');
+                    loadScript(
+                        'https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/minified/html5-qrcode.min.js',
+                        function() {
+                            console.log('QR scanner loaded from alternative CDN');
+                            loadMainScript();
+                        },
+                        function() {
+                            console.error('All QR scanner sources failed');
+                            showScannerError('Не удалось загрузить сканер QR-кодов. Используйте ручной ввод.');
+                        }
+                    );
+                }
+            );
+        }
+    );
+
+    function loadMainScript() {
+        const script = document.createElement('script');
+        script.src = 'auth.js';
+        document.body.appendChild(script);
+    }
+
+    function showScannerError(message) {
+        const qrReader = document.getElementById('qr-reader');
+        const scannerHint = document.getElementById('scannerHint');
+        if (qrReader) {
+            qrReader.innerHTML = `
+                    <div class="scanner-error">
+                        <div class="error-icon">⚠️</div>
+                        <p>${message}</p>
+                    </div>
+                `;
+        }
+        if (scannerHint) {
+            scannerHint.textContent = 'Сканер недоступен';
+        }
+    }
+</script>
 </body>
 </html>
