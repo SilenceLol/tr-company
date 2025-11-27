@@ -1134,3 +1134,97 @@ h1 {
 #qr-reader__camera_selection {
     display: none !important;
 }
+
+.qr-reader-simple {
+    width: 100%;
+    height: 200px;
+    border: 2px dashed #3498db;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+    position: relative;
+    overflow: hidden;
+}
+
+.scanner-placeholder {
+    text-align: center;
+    padding: 20px;
+    color: #666;
+}
+
+.placeholder-icon {
+    font-size: 48px;
+    margin-bottom: 10px;
+}
+
+.scanner-placeholder h3 {
+    margin: 10px 0;
+    color: #2c3e50;
+    font-size: 16px;
+}
+
+.scanner-placeholder p {
+    margin: 5px 0;
+    font-size: 12px;
+    line-height: 1.4;
+}
+
+.scanner-alternative {
+    margin-top: 15px;
+}
+
+.btn-alternative {
+    background: linear-gradient(135deg, #3498db, #2980b9);
+    color: white;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-alternative:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(52, 152, 219, 0.3);
+}
+
+.input-hint {
+    font-size: 11px;
+    color: #666;
+    text-align: center;
+    margin-top: 5px;
+    font-style: italic;
+}
+
+/* Адаптивность для упрощенного сканера */
+@media (max-width: 320px) {
+    .qr-reader-simple {
+        height: 180px;
+    }
+
+    .scanner-placeholder {
+        padding: 15px;
+    }
+
+    .placeholder-icon {
+        font-size: 36px;
+    }
+
+    .scanner-placeholder h3 {
+        font-size: 14px;
+    }
+
+    .scanner-placeholder p {
+        font-size: 11px;
+    }
+
+    .btn-alternative {
+        padding: 8px 12px;
+        font-size: 12px;
+    }
+}
