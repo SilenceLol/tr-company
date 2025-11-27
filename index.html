@@ -5,52 +5,86 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NORD WHEEL - Авторизация</title>
     <link rel="stylesheet" href="styles.css">
-    <script src="https://unpkg.com/html5-qrcode/minified/html5-qrcode.min.js"></script>
+    <script src="jsQR.js"></script>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <div class="logo">
-                <img src="logonwnew.png" alt="NORD WHEEL" class="logo-image" onerror="this.style.display='none'">
-                <span class="logo-text">NORD WHEEL</span>
-            </div>
-        </header>
+<div class="container">
+    <header>
+        <div class="logo">
+            <img src="logonwnew.png" alt="NORD WHEEL" class="logo-image" onerror="this.style.display='none'">
+            <span class="logo-text">NORD WHEEL</span>
+        </div>
+    </header>
 
-        <main>
-            <div class="auth-container">
-                <h1>Авторизация</h1>
-                
-                <div class="auth-card">
-                    <div class="qr-scanner-section">
-                        <div id="qr-reader" class="qr-reader"></div>
-                        <div class="scanner-instructions">
-                            <p>Наведите камеру на QR-код</p>
+    <main>
+        <div class="auth-container">
+            <h1>Авторизация</h1>
+
+            <div class="auth-card">
+                <div class="qr-scanner-section">
+                    <div id="qr-reader" class="qr-reader-simple">
+                        <div id="scannerPlaceholder" class="scanner-placeholder">
+                            <div class="placeholder-icon">📱</div>
+                            <h3>Сканирование QR-кодов</h3>
+                            <p>Для сканирования QR-кодов используйте камеру вашего устройства</p>
+                            <div class="scanner-alternative">
+                                <button class="btn-alternative" onclick="startQRScanner()">
+                                    📷 Запустить сканер QR
+                                </button>
+                            </div>
+                        </div>
+                        <div id="cameraView" class="camera-view" style="display: none;">
+                            <video id="cameraVideo" autoplay playsinline></video>
+                            <canvas id="qrCanvas" style="display: none;"></canvas>
+                            <div class="camera-overlay">
+                                <div class="scanner-frame"></div>
+                                <div class="scanner-line"></div>
+                            </div>
+                            <div class="scanner-result" id="scannerResult"></div>
+                            <div class="camera-controls">
+                                <button class="btn-camera secondary" onclick="stopQRScanner()">❌ Остановить</button>
+                            </div>
                         </div>
                     </div>
-
-                    <div class="manual-auth-section">
-                        <h3>Или введите код</h3>
-                        <div class="manual-input">
-                            <input type="text" id="employeeCode" placeholder="Код" maxlength="10">
-                            <button class="btn-auth" onclick="manualAuth()">Войти</button>
-                        </div>
-                    </div>
-
-                    <div class="auth-status" id="authStatus">
-                        <!-- Статус авторизации будет здесь -->
+                    <div class="scanner-instructions">
+                        <p id="scannerHint">Или используйте ручной ввод кода ниже</p>
                     </div>
                 </div>
 
-                <div class="demo-info">
-                    <h4>Демо-коды:</h4>
-                    <div class="demo-codes">
-                        <div class="demo-code" onclick="useDemoCode('EMP001')">EMP001</div>
+                <div class="manual-auth-section">
+                    <h3>Введите код сотрудника</h3>
+                    <div class="manual-input">
+                        <input type="text" id="employeeCode" placeholder="EMP001" maxlength="10">
+                        <button class="btn-auth" onclick="manualAuth()">Войти</button>
+                    </div>
+                    <div class="input-hint">
+                        Формат: EMP + 3 цифры (например: EMP001)
+                    </div>
+                </div>
+
+                <div class="auth-status" id="authStatus">
+                    <!-- Статус авторизации будет здесь -->
+                </div>
+            </div>
+
+            <div class="demo-info">
+                <h4>Демо-коды для тестирования:</h4>
+                <div class="demo-codes">
+                    <div class="demo-code" onclick="useDemoCode('EMP001')">
+                        <strong>EMP001</strong><br>Иванов Алексей
+                    </div>
+                    <div class="demo-code" onclick="useDemoCode('EMP002')">
+                        <strong>EMP002</strong><br>Петрова Мария
+                    </div>
+                    <div class="demo-code" onclick="useDemoCode('EMP003')">
+                        <strong>EMP003</strong><br>Сидоров Дмитрий
                     </div>
                 </div>
             </div>
-        </main>
-    </div>
+        </div>
+    </main>
+</div>
 
-    <script src="auth.js"></script>
+<script src="auth-qr.js"></script>
 </body>
 </html>
