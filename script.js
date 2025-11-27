@@ -74,6 +74,7 @@ function setPalletDimensions(palletType) {
     // Обновляем отображение всех размеров
     updateAllDimensionsDisplay();
     document.getElementById('weight').textContent = currentWeight;
+    updateSaveButtonState();
 }
 
 // Обновить отображение всех размеров
@@ -209,6 +210,8 @@ function saveCargo() {
         timestamp: new Date().toLocaleString('ru-RU')
     };
     
+    let isNewCargo = false;
+    
     if (currentCargoId) {
         // Обновляем существующий груз
         const index = cargoList.findIndex(c => c.id === currentCargoId);
@@ -220,15 +223,18 @@ function saveCargo() {
         // Добавляем новый груз
         cargoList.push(cargo);
         showTempAlert('Груз сохранен!', 1500);
+        isNewCargo = true;
     }
     
     saveCargoList();
     updateCargoCount();
     updateTotals();
     
-    // Сбрасываем текущий груз для создания нового
-    resetCurrentCargo();
-    currentCargoId = null;
+    // Сбрасываем текущий груз для создания нового ТОЛЬКО если это был новый груз
+    if (isNewCargo) {
+        resetCurrentCargo();
+        currentCargoId = null;
+    }
 }
 
 // Сделать фото
@@ -270,11 +276,27 @@ function resetPhoto() {
 
 // Сброс текущих настроек
 function resetCurrentCargo() {
+    // НЕ сбрасываем currentCargoType и currentCargoId при обычном сбросе
     currentWeight = 0;
     currentDimensions = { length: 0, width: 0, height: 0 };
     document.getElementById('weight').textContent = currentWeight;
     updateAllDimensionsDisplay();
     resetPhoto();
+    updateSaveButtonState();
+}
+
+// Полный сброс для нового груза
+function resetForNewCargo() {
+    currentCargoType = null;
+    currentCargoId = null;
+    resetCurrentCargo();
+    
+    // Снимаем выделение с типа груза
+    document.querySelectorAll('.cargo-type-column').forEach(type => {
+        type.classList.remove('selected');
+    });
+    
+    updateControlsState();
     updateSaveButtonState();
 }
 
@@ -302,6 +324,11 @@ function removeCargo(cargoId) {
         // Перерисовываем модальное окно, если оно открыто
         if (document.getElementById('cargoListModal').style.display === 'block') {
             renderCargoListModal();
+            
+            // Если грузов больше нет, закрываем модальное окно
+            if (cargoList.length === 0) {
+                closeCargoListModal();
+            }
         }
         
         showTempAlert('Груз удален!', 1500);
@@ -478,7 +505,7 @@ function sendToOperator() {
     saveCargoList();
     updateCargoCount();
     updateTotals();
-    currentCargoId = null;
+    resetForNewCargo();
 }
 
 // Получить название типа груза
