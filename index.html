@@ -18,21 +18,20 @@
 
         <main>
             <div class="auth-container">
-                <h1>Авторизация сотрудника</h1>
+                <h1>Авторизация</h1>
                 
                 <div class="auth-card">
                     <div class="qr-scanner-section">
                         <div id="qr-reader" class="qr-reader"></div>
                         <div class="scanner-instructions">
                             <p>Наведите камеру на QR-код</p>
-                            <p>Автоматическое сканирование</p>
                         </div>
                     </div>
 
                     <div class="manual-auth-section">
-                        <h3>Или введите код вручную</h3>
+                        <h3>Или введите код</h3>
                         <div class="manual-input">
-                            <input type="text" id="employeeCode" placeholder="Код сотрудника" maxlength="10">
+                            <input type="text" id="employeeCode" placeholder="Код" maxlength="10">
                             <button class="btn-auth" onclick="manualAuth()">Войти</button>
                         </div>
                     </div>
@@ -43,9 +42,9 @@
                 </div>
 
                 <div class="demo-info">
-                    <h4>Демо-коды для тестирования:</h4>
+                    <h4>Демо-коды:</h4>
                     <div class="demo-codes">
-                        <div class="demo-code" onclick="useDemoCode('EMP001')">EMP001 - ЛеонтьевД</div>
+                        <div class="demo-code" onclick="useDemoCode('EMP001')">EMP001</div>
                     </div>
                 </div>
             </div>
