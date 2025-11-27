@@ -1,6 +1,9 @@
-// Упрощенная версия авторизации для NORD WHEEL
+// Упрощенная версия авторизации для NORD WHEEL с камерой
+let cameraStream = null;
+let isCameraActive = false;
+
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('NORD WHEEL Auth - Simple version loaded');
+    console.log('NORD WHEEL Auth - Camera version loaded');
 
     // Проверяем, есть ли активная сессия
     checkExistingSession();
@@ -13,15 +16,12 @@ document.addEventListener('DOMContentLoaded', function() {
         // Автозаполнение "EMP" при вводе
         codeInput.addEventListener('input', function(e) {
             let value = e.target.value.toUpperCase();
-            // Удаляем все небуквенные и нецифровые символы
             value = value.replace(/[^A-Z0-9]/g, '');
 
-            // Автоматически добавляем EMP если ввод начинается с цифр
             if (/^\d/.test(value) && value.length <= 3) {
                 value = 'EMP' + value;
             }
 
-            // Ограничиваем длину
             if (value.length > 6) {
                 value = value.substring(0, 6);
             }
@@ -35,11 +35,187 @@ document.addEventListener('DOMContentLoaded', function() {
                 manualAuth();
             }
         });
+    }
 
-        // Валидация при потере фокуса
-        codeInput.addEventListener('blur', function(e) {
-            validateEmployeeCode(e.target.value);
+    // Проверяем поддержку камеры
+    checkCameraSupport();
+});
+
+// Проверка поддержки камеры
+function checkCameraSupport() {
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        const scannerHint = document.getElementById('scannerHint');
+        if (scannerHint) {
+            scannerHint.innerHTML = 'Камера не поддерживается вашим браузером. Используйте ручной ввод.';
+        }
+        return false;
+    }
+    return true;
+}
+
+// Открытие камеры устройства
+async function openCamera() {
+    if (!checkCameraSupport()) {
+        showAuthStatus('Ваш браузер не поддерживает камеру', 'error');
+        return;
+    }
+
+    if (isCameraActive) {
+        return; // Камера уже активна
+    }
+
+    showAuthStatus('Запрос доступа к камере...', 'loading');
+
+    try {
+        // Получаем доступ к камере
+        cameraStream = await navigator.mediaDevices.getUserMedia({
+            video: {
+                facingMode: 'environment', // Предпочтительно задняя камера
+                width: { ideal: 1280 },
+                height: { ideal: 720 }
+            },
+            audio: false
         });
+
+        // Показываем видео поток
+        const video = document.getElementById('cameraVideo');
+        const scannerPlaceholder = document.getElementById('scannerPlaceholder');
+        const cameraView = document.getElementById('cameraView');
+        const qrReader = document.getElementById('qr-reader');
+
+        if (video && scannerPlaceholder && cameraView && qrReader) {
+            video.srcObject = cameraStream;
+            scannerPlaceholder.style.display = 'none';
+            cameraView.style.display = 'block';
+            qrReader.classList.add('camera-active');
+
+            isCameraActive = true;
+
+            showAuthStatus('Камера активна. Наведите на QR-код и сфотографируйте', 'success');
+
+            // Обновляем подсказку
+            const scannerHint = document.getElementById('scannerHint');
+            if (scannerHint) {
+                scannerHint.textContent = 'Сфотографируйте QR-код или используйте ручной ввод';
+            }
+        }
+
+    } catch (error) {
+        console.error('Camera error:', error);
+        handleCameraError(error);
+    }
+}
+
+// Закрытие камеры
+function closeCamera() {
+    if (cameraStream) {
+        cameraStream.getTracks().forEach(track => {
+            track.stop();
+        });
+        cameraStream = null;
+    }
+
+    const video = document.getElementById('cameraVideo');
+    const scannerPlaceholder = document.getElementById('scannerPlaceholder');
+    const cameraView = document.getElementById('cameraView');
+    const qrReader = document.getElementById('qr-reader');
+
+    if (video && scannerPlaceholder && cameraView && qrReader) {
+        video.srcObject = null;
+        scannerPlaceholder.style.display = 'block';
+        cameraView.style.display = 'none';
+        qrReader.classList.remove('camera-active');
+
+        isCameraActive = false;
+
+        showAuthStatus('Камера закрыта', 'loading');
+
+        // Восстанавливаем подсказку
+        const scannerHint = document.getElementById('scannerHint');
+        if (scannerHint) {
+            scannerHint.textContent = 'Или используйте ручной ввод кода ниже';
+        }
+    }
+}
+
+// Сделать фотографию
+function takePicture() {
+    if (!isCameraActive || !cameraStream) {
+        showAuthStatus('Камера не активна', 'error');
+        return;
+    }
+
+    const video = document.getElementById('cameraVideo');
+    const canvas = document.getElementById('photoCanvas');
+    const context = canvas.getContext('2d');
+
+    // Устанавливаем размеры canvas как у видео
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+
+    // Рисуем текущий кадр видео на canvas
+    context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+    // Получаем data URL изображения
+    const photoDataUrl = canvas.toDataURL('image/jpeg', 0.8);
+
+    showAuthStatus('Фото сделано! Анализируем QR-код...', 'loading');
+
+    // В упрощенной версии мы не можем распознать QR-код без библиотеки,
+    // поэтому предлагаем пользователю ввести код вручную
+    setTimeout(() => {
+        showAuthStatus('Введите код с QR-кода вручную', 'success');
+        closeCamera();
+
+        // Фокус на поле ввода
+        const codeInput = document.getElementById('employeeCode');
+        if (codeInput) {
+            codeInput.focus();
+        }
+    }, 2000);
+
+    // Здесь можно добавить логику для отправки фото на сервер для распознавания QR-кода
+    // или подключить библиотеку для распознавания на клиенте
+}
+
+// Обработка ошибок камеры
+function handleCameraError(error) {
+    let errorMessage = 'Не удалось получить доступ к камере';
+
+    if (error.name === 'NotAllowedError') {
+        errorMessage = 'Доступ к камере запрещен. Разрешите доступ в настройках браузера';
+    } else if (error.name === 'NotFoundError') {
+        errorMessage = 'Камера не найдена на устройстве';
+    } else if (error.name === 'NotSupportedError') {
+        errorMessage = 'Браузер не поддерживает доступ к камере';
+    } else if (error.name === 'NotReadableError') {
+        errorMessage = 'Камера уже используется другим приложением';
+    } else if (error.name === 'OverconstrainedError') {
+        errorMessage = 'Невозможно использовать запрошенные настройки камеры';
+    }
+
+    showAuthStatus(errorMessage, 'error');
+
+    // Обновляем подсказку
+    const scannerHint = document.getElementById('scannerHint');
+    if (scannerHint) {
+        scannerHint.textContent = 'Используйте ручной ввод кода';
+    }
+}
+
+// Автоматическое закрытие камеры при уходе со страницы
+window.addEventListener('beforeunload', function() {
+    if (isCameraActive) {
+        closeCamera();
+    }
+});
+
+// Обработка изменения видимости страницы
+document.addEventListener('visibilitychange', function() {
+    if (document.hidden && isCameraActive) {
+        // Страница скрыта - закрываем камеру для экономии ресурсов
+        closeCamera();
+        showAuthStatus('Камера закрыта из-за неактивности страницы', 'loading');
     }
 });
 
@@ -53,76 +229,17 @@ function checkExistingSession() {
             const currentTime = new Date();
             const hoursDiff = (currentTime - loginTime) / (1000 * 60 * 60);
 
-            // Если сессия активна менее 8 часов, показываем информацию
             if (hoursDiff < 8) {
                 showAuthStatus(`Активна сессия: ${employee.name}`, 'loading');
                 setTimeout(() => {
                     showAuthStatus('Нажмите "Войти" для продолжения', 'loading');
                 }, 2000);
             } else {
-                // Сессия истекла
                 localStorage.removeItem('employeeAuth');
             }
         } catch (e) {
             localStorage.removeItem('employeeAuth');
         }
-    }
-}
-
-// Валидация кода сотрудника
-function validateEmployeeCode(code) {
-    if (!code) return true;
-
-    const cleanCode = code.trim().toUpperCase();
-    if (!cleanCode.match(/^EMP\d{3}$/)) {
-        showAuthStatus('Неверный формат. Используйте: EMP001', 'error');
-        return false;
-    }
-
-    showAuthStatus('Формат кода верный', 'success');
-    setTimeout(() => {
-        const statusElement = document.getElementById('authStatus');
-        if (statusElement) {
-            statusElement.textContent = '';
-            statusElement.className = 'auth-status';
-        }
-    }, 2000);
-
-    return true;
-}
-
-// Открытие камеры устройства
-function openCamera() {
-    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-        showAuthStatus('Запрос доступа к камере...', 'loading');
-
-        navigator.mediaDevices.getUserMedia({ video: true })
-            .then(function(stream) {
-                showAuthStatus('Камера доступна! Сфотографируйте QR-код', 'success');
-
-                // Здесь можно добавить логику для обработки фото с QR-кодом
-                // В упрощенной версии просто закрываем камеру и предлагаем ручной ввод
-                setTimeout(() => {
-                    stream.getTracks().forEach(track => track.stop());
-                    showAuthStatus('Сфотографируйте QR-код и введите код вручную', 'loading');
-                }, 3000);
-            })
-            .catch(function(error) {
-                console.error('Camera error:', error);
-                let errorMessage = 'Не удалось получить доступ к камере';
-
-                if (error.name === 'NotAllowedError') {
-                    errorMessage = 'Доступ к камере запрещен. Разрешите доступ в настройках браузера';
-                } else if (error.name === 'NotFoundError') {
-                    errorMessage = 'Камера не найдена на устройстве';
-                } else if (error.name === 'NotSupportedError') {
-                    errorMessage = 'Браузер не поддерживает доступ к камере';
-                }
-
-                showAuthStatus(errorMessage, 'error');
-            });
-    } else {
-        showAuthStatus('Ваш браузер не поддерживает доступ к камере', 'error');
     }
 }
 
@@ -159,7 +276,6 @@ function useDemoCode(code) {
 function authenticateEmployee(employeeCode) {
     showAuthStatus('Проверка кода...', 'loading');
 
-    // Имитация проверки кода (в реальном приложении здесь был бы запрос к серверу)
     setTimeout(() => {
         const demoEmployees = {
             'EMP001': {
@@ -185,21 +301,16 @@ function authenticateEmployee(employeeCode) {
         const employee = demoEmployees[employeeCode];
 
         if (employee) {
-            // Добавляем информацию о сессии
             employee.loginTime = new Date().toISOString();
             employee.loginTimeDisplay = new Date().toLocaleString('ru-RU');
             employee.sessionId = 'SESS_' + Date.now();
 
-            // Сохраняем данные авторизации
             localStorage.setItem('employeeAuth', JSON.stringify(employee));
 
             showAuthStatus(`Успешный вход! Добро пожаловать, ${employee.name}`, 'success');
 
-            // Показываем детали перед перенаправлением
             setTimeout(() => {
                 showAuthStatus(`Перенаправление в систему...`, 'loading');
-
-                // Перенаправляем на главную страницу
                 setTimeout(() => {
                     window.location.href = 'cargo.html';
                 }, 1500);
@@ -207,8 +318,6 @@ function authenticateEmployee(employeeCode) {
 
         } else {
             showAuthStatus('Код сотрудника не найден в системе', 'error');
-
-            // Сбрасываем поле ввода
             const codeInput = document.getElementById('employeeCode');
             codeInput.focus();
             codeInput.select();
@@ -223,7 +332,6 @@ function showAuthStatus(message, type) {
         statusElement.textContent = message;
         statusElement.className = `auth-status ${type}`;
 
-        // Автоскрытие сообщений об ошибках и успехах
         if (type === 'error' || type === 'success') {
             setTimeout(() => {
                 if (statusElement.textContent === message) {
@@ -233,14 +341,10 @@ function showAuthStatus(message, type) {
             }, type === 'error' ? 5000 : 3000);
         }
     }
-
-    // Логируем в консоль
     console.log(`Auth Status [${type}]: ${message}`);
 }
 
-// ==================== ФУНКЦИИ ДЛЯ CARGO.HTML ====================
-
-// Проверка авторизации для cargo.html
+// Функции для cargo.html
 function checkAuth() {
     const authData = localStorage.getItem('employeeAuth');
 
@@ -255,7 +359,6 @@ function checkAuth() {
         const currentTime = new Date();
         const hoursDiff = (currentTime - loginTime) / (1000 * 60 * 60);
 
-        // Авторизация действительна 8 часов
         if (hoursDiff >= 8) {
             localStorage.removeItem('employeeAuth');
             window.location.href = 'index.html';
@@ -270,7 +373,6 @@ function checkAuth() {
     }
 }
 
-// Обновление информации о сотруднике
 function updateEmployeeInfo() {
     const authData = localStorage.getItem('employeeAuth');
 
@@ -287,7 +389,6 @@ function updateEmployeeInfo() {
     }
 }
 
-// Выход из системы
 function logout() {
     if (confirm('Вы уверены, что хотите выйти из системы?')) {
         const authData = localStorage.getItem('employeeAuth');
@@ -301,7 +402,7 @@ function logout() {
         }
 
         localStorage.removeItem('employeeAuth');
-        localStorage.removeItem('cargoList'); // Очищаем данные грузов при выходе
+        localStorage.removeItem('cargoList');
         window.location.href = 'index.html';
     }
 }
@@ -310,6 +411,8 @@ function logout() {
 window.manualAuth = manualAuth;
 window.useDemoCode = useDemoCode;
 window.openCamera = openCamera;
+window.closeCamera = closeCamera;
+window.takePicture = takePicture;
 window.logout = logout;
 
-console.log('NORD WHEEL Simple Auth initialized successfully');
+console.log('NORD WHEEL Camera Auth initialized successfully');

@@ -21,8 +21,8 @@
 
             <div class="auth-card">
                 <div class="qr-scanner-section">
-                    <div class="qr-reader-simple">
-                        <div class="scanner-placeholder">
+                    <div id="qr-reader" class="qr-reader-simple">
+                        <div id="scannerPlaceholder" class="scanner-placeholder">
                             <div class="placeholder-icon">📱</div>
                             <h3>Сканирование QR-кодов</h3>
                             <p>Для сканирования QR-кодов используйте камеру вашего устройства</p>
@@ -32,9 +32,21 @@
                                 </button>
                             </div>
                         </div>
+                        <div id="cameraView" class="camera-view" style="display: none;">
+                            <video id="cameraVideo" autoplay playsinline></video>
+                            <div class="camera-overlay">
+                                <div class="scanner-frame"></div>
+                                <div class="scanner-line"></div>
+                            </div>
+                            <div class="camera-controls">
+                                <button class="btn-camera" onclick="takePicture()">📸 Сфотографировать</button>
+                                <button class="btn-camera secondary" onclick="closeCamera()">❌ Закрыть</button>
+                            </div>
+                        </div>
+                        <canvas id="photoCanvas" style="display: none;"></canvas>
                     </div>
                     <div class="scanner-instructions">
-                        <p>Или используйте ручной ввод кода ниже</p>
+                        <p id="scannerHint">Или используйте ручной ввод кода ниже</p>
                     </div>
                 </div>
 
