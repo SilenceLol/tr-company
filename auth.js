@@ -1,158 +1,246 @@
-// База данных сотрудников (временная, позже заменится на реальную)
-const employees = {
-    'EMP001': { name: 'Леонтьев Дмитрий' }
-};
+// ==================== АВТОРИЗАЦИЯ И QR СКАНЕР ====================
 
-let html5QrcodeScanner = null;
+// Глобальные переменные для сканера QR
+let html5QrCode = null;
+let qrScannerActive = false;
 
-// Инициализация при загрузке страницы
+// Инициализация при загрузке страницы авторизации
 document.addEventListener('DOMContentLoaded', function() {
-    initQRScanner();
-    
-    // Проверяем, не авторизован ли уже пользователь
-    checkExistingAuth();
+    // Проверяем, находимся ли мы на странице авторизации
+    if (document.querySelector('.auth-container')) {
+        initQRScanner();
+
+        // Автоматически запускаем сканер при загрузке страницы
+        setTimeout(startQRScanner, 1000);
+    }
+
+    // Проверяем, находимся ли мы на странице грузов
+    if (document.querySelector('.app-container')) {
+        initCargoPage();
+    }
 });
 
-// Инициализация QR-сканера
+// Инициализация QR сканера
 function initQRScanner() {
-    html5QrcodeScanner = new Html5QrcodeScanner(
-        "qr-reader", 
-        { 
-            fps: 10, 
-            qrbox: { width: 120, height: 120 }, // Минимальный размер
-            supportedScanTypes: [Html5QrcodeScanType.SCAN_TYPE_QR_CODE]
-        },
-        false
-    );
+    const qrReader = document.getElementById('qr-reader');
 
-    html5QrcodeScanner.render(onScanSuccess, onScanFailure);
+    if (!qrReader) {
+        console.log('QR reader element not found');
+        return;
+    }
+
+    try {
+        // Создаем сканер
+        html5QrCode = new Html5Qrcode("qr-reader");
+        console.log('QR scanner initialized');
+
+        // Добавляем инструкции
+        qrReader.innerHTML = `
+            <div class="scanner-overlay">
+                <div class="scanner-frame"></div>
+                <div class="scanner-line"></div>
+            </div>
+            <div class="scanner-instructions">
+                <p>Наведите камеру на QR-код</p>
+                <p class="scanner-hint">Камера запустится автоматически</p>
+            </div>
+        `;
+
+    } catch (error) {
+        console.error('Error initializing QR scanner:', error);
+        showQRScannerError('Ошибка инициализации сканера');
+    }
 }
 
-// Успешное сканирование QR-кода
-function onScanSuccess(decodedText, decodedResult) {
-    console.log(`Отсканирован код: ${decodedText}`);
-    
-    // Останавливаем сканер после успешного сканирования
-    html5QrcodeScanner.clear();
-    
-    // Проверяем сотрудника
-    checkEmployeeAuth(decodedText.trim());
-}
+// Запуск сканера QR
+async function startQRScanner() {
+    if (!html5QrCode || qrScannerActive) {
+        return;
+    }
 
-// Ошибка сканирования
-function onScanFailure(error) {
-    // Ошибки сканирования игнорируем - это нормально
-}
+    const qrReader = document.getElementById('qr-reader');
+    const statusElement = document.getElementById('authStatus');
 
-// Проверка авторизации сотрудника
-function checkEmployeeAuth(employeeCode) {
-    showAuthStatus('Проверка...', 'loading');
-    
-    // Имитация задержки проверки
-    setTimeout(() => {
-        const employee = employees[employeeCode];
-        
-        if (employee) {
-            // Сотрудник найден
-            showAuthStatus(`Добро пожаловать, ${employee.name}!`, 'success');
-            
-            // Сохраняем данные авторизации
-            saveAuthData(employeeCode, employee);
-            
-            // Переходим на страницу грузов через 1.5 секунды
-            setTimeout(() => {
-                window.location.href = 'cargo.html';
-            }, 1500);
-            
-        } else {
-            // Сотрудник не найден
-            showAuthStatus('Сотрудник не найден!', 'error');
-            
-            // Перезапускаем сканер через 2 секунды
-            setTimeout(() => {
-                initQRScanner();
-                showAuthStatus('Наведите камеру на QR-код', '');
-            }, 2000);
+    try {
+        // Очищаем предыдущий статус
+        if (statusElement) {
+            statusElement.textContent = '';
+            statusElement.className = 'auth-status';
         }
-    }, 800);
+
+        // Конфигурация сканера
+        const config = {
+            fps: 10,
+            qrbox: { width: 250, height: 150 },
+            aspectRatio: 1.0
+        };
+
+        // Запускаем сканирование
+        await html5QrCode.start(
+            { facingMode: "environment" },
+            config,
+            onQRScanSuccess,
+            onQRScanFailure
+        );
+
+        qrScannerActive = true;
+        console.log('QR scanner started');
+
+        // Обновляем интерфейс
+        updateScannerUI(true);
+
+    } catch (error) {
+        console.error('Error starting QR scanner:', error);
+        handleScannerError(error);
+    }
+}
+
+// Остановка сканера QR
+async function stopQRScanner() {
+    if (!html5QrCode || !qrScannerActive) {
+        return;
+    }
+
+    try {
+        await html5QrCode.stop();
+        qrScannerActive = false;
+        console.log('QR scanner stopped');
+
+        // Обновляем интерфейс
+        updateScannerUI(false);
+
+    } catch (error) {
+        console.error('Error stopping QR scanner:', error);
+    }
+}
+
+// Успешное сканирование QR
+function onQRScanSuccess(decodedText, decodedResult) {
+    console.log('QR scan success:', decodedText);
+
+    // Показываем статус сканирования
+    const statusElement = document.getElementById('authStatus');
+    if (statusElement) {
+        statusElement.textContent = 'QR-код распознан! Обработка...';
+        statusElement.className = 'auth-status loading';
+    }
+
+    // Останавливаем сканер после успешного сканирования
+    stopQRScanner();
+
+    // Обрабатываем отсканированный код
+    processScannedCode(decodedText);
+}
+
+// Неудачное сканирование QR
+function onQRScanFailure(error) {
+    // Это нормально - функция вызывается постоянно при отсутствии QR-кода
+}
+
+// Обработка отсканированного кода
+function processScannedCode(code) {
+    console.log('Processing scanned code:', code);
+
+    // Очищаем код от возможных пробелов
+    const cleanCode = code.trim();
+
+    // Проверяем формат кода (должен быть EMP001 и т.д.)
+    if (!cleanCode.match(/^EMP\d{3,}$/i)) {
+        showAuthStatus('Ошибка: Неверный формат QR-кода', 'error');
+
+        // Перезапускаем сканер через 2 секунды
+        setTimeout(startQRScanner, 2000);
+        return;
+    }
+
+    // Используем тот же механизм авторизации что и для ручного ввода
+    authenticateEmployee(cleanCode.toUpperCase());
+}
+
+// Обработка ошибок сканера
+function handleScannerError(error) {
+    console.error('Scanner error:', error);
+
+    let errorMessage = 'Ошибка доступа к камере';
+
+    if (error.includes('NotAllowedError')) {
+        errorMessage = 'Доступ к камере запрещен. Разрешите доступ в настройках браузера';
+    } else if (error.includes('NotFoundError')) {
+        errorMessage = 'Камера не найдена';
+    } else if (error.includes('NotSupportedError')) {
+        errorMessage = 'Браузер не поддерживает сканирование QR-кодов';
+    } else if (error.includes('NotReadableError')) {
+        errorMessage = 'Камера уже используется другим приложением';
+    }
+
+    showQRScannerError(errorMessage);
+}
+
+// Показать ошибку сканера
+function showQRScannerError(message) {
+    const qrReader = document.getElementById('qr-reader');
+    if (qrReader) {
+        qrReader.innerHTML = `
+            <div class="scanner-error">
+                <div class="error-icon">📷</div>
+                <p>${message}</p>
+                <button class="btn-retry" onclick="retryQRScanner()">Повторить</button>
+            </div>
+        `;
+    }
+}
+
+// Повторная попытка запуска сканера
+function retryQRScanner() {
+    const qrReader = document.getElementById('qr-reader');
+    if (qrReader) {
+        qrReader.innerHTML = '<div class="scanner-loading">Запуск камеры...</div>';
+    }
+
+    setTimeout(startQRScanner, 500);
+}
+
+// Обновление интерфейса сканера
+function updateScannerUI(isActive) {
+    const qrReader = document.getElementById('qr-reader');
+    const instructions = document.querySelector('.scanner-instructions');
+
+    if (!qrReader) return;
+
+    if (isActive) {
+        qrReader.classList.add('active');
+        if (instructions) {
+            const hint = instructions.querySelector('.scanner-hint');
+            if (hint) {
+                hint.textContent = 'Сканирование...';
+            }
+        }
+    } else {
+        qrReader.classList.remove('active');
+    }
 }
 
 // Ручная авторизация по коду
 function manualAuth() {
-    const employeeCode = document.getElementById('employeeCode').value.trim().toUpperCase();
-    
-    if (!employeeCode) {
-        showAuthStatus('Введите код', 'error');
+    const codeInput = document.getElementById('employeeCode');
+    const code = codeInput.value.trim();
+
+    if (!code) {
+        showAuthStatus('Введите код сотрудника', 'error');
         return;
     }
-    
-    checkEmployeeAuth(employeeCode);
-}
 
-// Использование демо-кода
-function useDemoCode(code) {
-    document.getElementById('employeeCode').value = code;
-    manualAuth();
-}
-
-// Показать статус авторизации
-function showAuthStatus(message, type) {
-    const statusElement = document.getElementById('authStatus');
-    statusElement.textContent = message;
-    statusElement.className = 'auth-status';
-    
-    if (type) {
-        statusElement.classList.add(type);
+    if (!code.match(/^EMP\d{3,}$/i)) {
+        showAuthStatus('Неверный формат кода. Пример: EMP001', 'error');
+        return;
     }
-}
 
-// Сохранить данные авторизации
-function saveAuthData(employeeCode, employeeData) {
-    const authData = {
-        code: employeeCode,
-        name: employeeData.name,
-        loginTime: new Date().toLocaleString('ru-RU')
-    };
-    
-    localStorage.setItem('employeeAuth', JSON.stringify(authData));
-}
-
-// Проверить существующую авторизацию
-function checkExistingAuth() {
-    const authData = localStorage.getItem('employeeAuth');
-    
-    if (authData) {
-        const employee = JSON.parse(authData);
-        const loginTime = new Date(employee.loginTime);
-        const currentTime = new Date();
-        const hoursDiff = (currentTime - loginTime) / (1000 * 60 * 60);
-        
-        // Авторизация действительна 8 часов
-        if (hoursDiff < 8) {
-            showAuthStatus(`Авторизован: ${employee.name}`, 'success');
-            
-            // Добавляем кнопку перехода
-            const statusElement = document.getElementById('authStatus');
-            const continueButton = document.createElement('button');
-            continueButton.textContent = 'Продолжить';
-            continueButton.className = 'btn-auth';
-            continueButton.style.marginTop = '6px';
-            continueButton.style.fontSize = '11px';
-            continueButton.style.padding = '6px 10px';
-            continueButton.onclick = function() {
-                window.location.href = 'cargo.html';
-            };
-            statusElement.appendChild(continueButton);
-        } else {
-            // Авторизация истекла
-            localStorage.removeItem('employeeAuth');
-        }
+    // Останавливаем сканер при ручном вводе
+    if (qrScannerActive) {
+        stopQRScanner();
     }
+
+    authenticateEmployee(code.toUpperCase());
 }
 
-// Выход из системы (будет вызываться со страницы грузов)
-function logout() {
-    localStorage.removeItem('employeeAuth');
-    localStorage.removeItem('cargoList'); // Очищаем данные грузов при выходе
-    window.location.href = 'index.html';
-}
+// Использование демо-к

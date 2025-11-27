@@ -30,7 +30,7 @@ body {
 }
 
 header {
-    background: #2c3e50;
+    background: #b5b5b5;
     padding: 8px 12px;
     display: flex;
     justify-content: center;
@@ -134,7 +134,7 @@ h1 {
 
 .qr-reader {
     width: 100%;
-    height: 150px;
+    height: 200px;
     border: 2px dashed #3498db;
     border-radius: 8px;
     margin-bottom: 8px;
@@ -146,14 +146,108 @@ h1 {
     overflow: hidden;
 }
 
+.qr-reader.active {
+    border-color: #27ae60;
+    border-style: solid;
+}
+
+.scanner-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.scanner-frame {
+    width: 200px;
+    height: 200px;
+    border: 2px solid #3498db;
+    border-radius: 8px;
+    position: relative;
+    animation: scanner-pulse 2s infinite;
+}
+
+.scanner-line {
+    position: absolute;
+    top: 0;
+    left: 10%;
+    width: 80%;
+    height: 2px;
+    background: #3498db;
+    animation: scanner-line 2s infinite;
+}
+
+@keyframes scanner-pulse {
+    0% { border-color: #3498db; }
+    50% { border-color: #27ae60; }
+    100% { border-color: #3498db; }
+}
+
+@keyframes scanner-line {
+    0% { top: 0; }
+    50% { top: 100%; }
+    100% { top: 0; }
+}
+
 .scanner-instructions {
     color: #666;
     font-size: 12px;
     line-height: 1.3;
+    text-align: center;
+    margin-top: 120px;
 }
 
 .scanner-instructions p {
     margin: 2px 0;
+}
+
+.scanner-hint {
+    color: #3498db;
+    font-weight: 600;
+}
+
+.scanner-error {
+    text-align: center;
+    padding: 20px;
+    color: #666;
+}
+
+.error-icon {
+    font-size: 40px;
+    margin-bottom: 10px;
+}
+
+.scanner-error p {
+    margin-bottom: 15px;
+    font-size: 14px;
+}
+
+.btn-retry {
+    background: #3498db;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background 0.3s ease;
+}
+
+.btn-retry:hover {
+    background: #2980b9;
+}
+
+.scanner-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    color: #666;
+    font-size: 14px;
 }
 
 .manual-auth-section {
@@ -851,134 +945,144 @@ h1 {
     .app-container {
         padding: 8px;
     }
-    
+
     .auth-container {
         padding: 8px;
         gap: 8px;
     }
-    
+
     .auth-card {
         padding: 12px;
         max-width: 300px;
     }
-    
+
     .qr-reader {
-        height: 130px;
+        height: 180px;
     }
-    
+
+    .scanner-frame {
+        width: 180px;
+        height: 180px;
+    }
+
+    .scanner-instructions {
+        margin-top: 100px;
+        font-size: 11px;
+    }
+
     .manual-input {
         flex-direction: column;
         gap: 5px;
     }
-    
+
     .demo-codes {
         grid-template-columns: 1fr;
         gap: 4px;
     }
-    
+
     .demo-code {
         padding: 6px 4px;
         font-size: 10px;
     }
-    
+
     .scanner-instructions {
         font-size: 11px;
     }
-    
+
     h1 {
         font-size: 1.1em;
         margin-bottom: 8px;
     }
-    
+
     .main-layout {
         gap: 8px;
     }
-    
+
     .cargo-type-column {
         padding: 6px 4px;
         min-height: 35px;
     }
-    
+
     .cargo-image-placeholder {
         width: 25px;
         height: 25px;
     }
-    
+
     .cargo-image {
         width: 20px;
         height: 20px;
     }
-    
+
     .cargo-icon-mini {
         font-size: 14px;
     }
-    
+
     .cargo-type-column span {
         font-size: 10px;
     }
-    
+
     .photo-container-mini {
         width: 45px;
         height: 45px;
         padding: 6px;
     }
-    
+
     .control-item-compact {
         padding: 4px;
     }
-    
+
     .control-item-compact label {
         font-size: 10px;
         min-width: 40px;
     }
-    
+
     .control-btn-mini {
         padding: 4px 6px;
         font-size: 9px;
         min-width: 22px;
     }
-    
+
     .control-value-mini {
         font-size: 11px;
         min-width: 25px;
     }
-    
+
     .btn-save-mini,
     .btn-send-mini {
         padding: 8px;
         font-size: 11px;
     }
-    
+
     .stats-mini {
         padding: 8px;
     }
-    
+
     .clickable-stat {
         padding: 10px 12px;
         margin: -4px -6px 2px -6px;
     }
-    
+
     .clickable-stat::before {
         font-size: 14px;
         margin-right: 6px;
     }
-    
+
     .clickable-stat::after {
         font-size: 9px;
         margin-left: 6px;
         content: "Список";
     }
-    
+
     .clickable-stat .stat-label {
         font-size: 12px;
     }
-    
+
     .clickable-stat .stat-value {
         font-size: 12px;
         padding: 4px 10px;
         min-width: 35px;
     }
-    
+
     .stat-item {
         font-size: 10px;
     }
@@ -995,11 +1099,20 @@ h1 {
     .auth-container {
         padding-top: 5px;
     }
-    
+
     .qr-reader {
-        height: 120px;
+        height: 150px;
     }
-    
+
+    .scanner-frame {
+        width: 150px;
+        height: 150px;
+    }
+
+    .scanner-instructions {
+        margin-top: 80px;
+    }
+
     .demo-info {
         padding: 8px;
     }
@@ -1011,4 +1124,13 @@ h1 {
         max-width: 500px;
         margin: 0 auto;
     }
+}
+
+/* Скрываем внутренние элементы сканера */
+#qr-reader__dashboard {
+    display: none !important;
+}
+
+#qr-reader__camera_selection {
+    display: none !important;
 }
