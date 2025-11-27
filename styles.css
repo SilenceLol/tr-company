@@ -1377,3 +1377,72 @@ h1 {
     font-size: 12px;
     z-index: 10;
 }
+
+/* Стили для результатов сканирования */
+.scanner-result {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 15px;
+    border-radius: 10px;
+    text-align: center;
+    min-width: 250px;
+    z-index: 10;
+    backdrop-filter: blur(10px);
+}
+
+.scanner-result.success {
+    background: rgba(39, 174, 96, 0.9);
+}
+
+.scanner-result.error {
+    background: rgba(231, 76, 60, 0.9);
+}
+
+.scanner-result.scanning {
+    background: rgba(52, 152, 219, 0.9);
+}
+
+.result-icon {
+    font-size: 24px;
+    margin-bottom: 8px;
+}
+
+.result-text {
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+.scanning {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    font-size: 16px;
+}
+
+/* Анимация сканирования */
+@keyframes scanning-pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
+
+.scanning {
+    animation: scanning-pulse 1.5s infinite;
+}
+
+/* Адаптивность для результатов */
+@media (max-width: 320px) {
+    .scanner-result {
+        min-width: 200px;
+        padding: 10px;
+    }
+
+    .result-text {
+        font-size: 12px;
+    }
+}

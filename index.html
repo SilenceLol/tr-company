@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NORD WHEEL - Авторизация</title>
     <link rel="stylesheet" href="styles.css">
+    <script src="jsQR.js"></script>
 </head>
 <body>
 <div class="container">
@@ -27,23 +28,23 @@
                             <h3>Сканирование QR-кодов</h3>
                             <p>Для сканирования QR-кодов используйте камеру вашего устройства</p>
                             <div class="scanner-alternative">
-                                <button class="btn-alternative" onclick="openCamera()">
-                                    📷 Открыть камеру
+                                <button class="btn-alternative" onclick="startQRScanner()">
+                                    📷 Запустить сканер QR
                                 </button>
                             </div>
                         </div>
                         <div id="cameraView" class="camera-view" style="display: none;">
                             <video id="cameraVideo" autoplay playsinline></video>
+                            <canvas id="qrCanvas" style="display: none;"></canvas>
                             <div class="camera-overlay">
                                 <div class="scanner-frame"></div>
                                 <div class="scanner-line"></div>
                             </div>
+                            <div class="scanner-result" id="scannerResult"></div>
                             <div class="camera-controls">
-                                <button class="btn-camera" onclick="takePicture()">📸 Сфотографировать</button>
-                                <button class="btn-camera secondary" onclick="closeCamera()">❌ Закрыть</button>
+                                <button class="btn-camera secondary" onclick="stopQRScanner()">❌ Остановить</button>
                             </div>
                         </div>
-                        <canvas id="photoCanvas" style="display: none;"></canvas>
                     </div>
                     <div class="scanner-instructions">
                         <p id="scannerHint">Или используйте ручной ввод кода ниже</p>
@@ -53,8 +54,7 @@
                 <div class="manual-auth-section">
                     <h3>Введите код сотрудника</h3>
                     <div class="manual-input">
-                        <input type="text" id="employeeCode" placeholder="EMP001" maxlength="10"
-                               pattern="EMP\d{3}" title="Формат: EMP001, EMP002 и т.д.">
+                        <input type="text" id="employeeCode" placeholder="EMP001" maxlength="10">
                         <button class="btn-auth" onclick="manualAuth()">Войти</button>
                     </div>
                     <div class="input-hint">
@@ -85,6 +85,6 @@
     </main>
 </div>
 
-<script src="auth-simple.js"></script>
+<script src="auth-qr.js"></script>
 </body>
 </html>
