@@ -19,7 +19,7 @@ function initQRScanner() {
         "qr-reader", 
         { 
             fps: 10, 
-            qrbox: { width: 250, height: 250 },
+            qrbox: { width: 120, height: 120 }, // Минимальный размер
             supportedScanTypes: [Html5QrcodeScanType.SCAN_TYPE_QR_CODE]
         },
         false
@@ -46,7 +46,7 @@ function onScanFailure(error) {
 
 // Проверка авторизации сотрудника
 function checkEmployeeAuth(employeeCode) {
-    showAuthStatus('Проверка сотрудника...', 'loading');
+    showAuthStatus('Проверка...', 'loading');
     
     // Имитация задержки проверки
     setTimeout(() => {
@@ -66,7 +66,7 @@ function checkEmployeeAuth(employeeCode) {
             
         } else {
             // Сотрудник не найден
-            showAuthStatus('Сотрудник не найден! Проверьте QR-код.', 'error');
+            showAuthStatus('Сотрудник не найден!', 'error');
             
             // Перезапускаем сканер через 2 секунды
             setTimeout(() => {
@@ -74,7 +74,7 @@ function checkEmployeeAuth(employeeCode) {
                 showAuthStatus('Наведите камеру на QR-код', '');
             }, 2000);
         }
-    }, 1000);
+    }, 800);
 }
 
 // Ручная авторизация по коду
@@ -82,7 +82,7 @@ function manualAuth() {
     const employeeCode = document.getElementById('employeeCode').value.trim().toUpperCase();
     
     if (!employeeCode) {
-        showAuthStatus('Введите код сотрудника', 'error');
+        showAuthStatus('Введите код', 'error');
         return;
     }
     
@@ -127,16 +127,18 @@ function checkExistingAuth() {
         const currentTime = new Date();
         const hoursDiff = (currentTime - loginTime) / (1000 * 60 * 60);
         
-        // Авторизация действительна 12 часов
-        if (hoursDiff < 12) {
+        // Авторизация действительна 8 часов
+        if (hoursDiff < 8) {
             showAuthStatus(`Авторизован: ${employee.name}`, 'success');
             
             // Добавляем кнопку перехода
             const statusElement = document.getElementById('authStatus');
             const continueButton = document.createElement('button');
-            continueButton.textContent = 'Продолжить работу';
+            continueButton.textContent = 'Продолжить';
             continueButton.className = 'btn-auth';
-            continueButton.style.marginTop = '10px';
+            continueButton.style.marginTop = '6px';
+            continueButton.style.fontSize = '11px';
+            continueButton.style.padding = '6px 10px';
             continueButton.onclick = function() {
                 window.location.href = 'cargo.html';
             };
