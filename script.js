@@ -28,12 +28,10 @@ const cargoIcons = {
 
 // Инициализация при загрузке страницы
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('Инициализация приложения...');
     initCargoTypeSelection();
     loadCargoList();
-    updateCargoCount();
-    updateTotals();
-    updateSaveButtonState();
-    updateControlsState();
+    updateAllDisplays();
 });
 
 // Инициализация выбора типа груза
@@ -46,6 +44,7 @@ function initCargoTypeSelection() {
             this.classList.add('selected');
             
             currentCargoType = this.getAttribute('data-type');
+            console.log('Выбран тип груза:', currentCargoType);
             
             // Устанавливаем стандартные размеры
             setPalletDimensions(currentCargoType);
@@ -82,8 +81,6 @@ function updateAllDimensionsDisplay() {
     document.getElementById('lengthValue').textContent = currentDimensions.length;
     document.getElementById('widthValue').textContent = currentDimensions.width;
     document.getElementById('heightValue').textContent = currentDimensions.height;
-    
-    // Обновляем состояние кнопки сохранения
     updateSaveButtonState();
 }
 
@@ -98,7 +95,6 @@ function updateControlsState() {
         control.style.cursor = isActive ? 'pointer' : 'not-allowed';
     });
     
-    // Также обновляем поле веса
     const weightElement = document.getElementById('weight');
     if (weightElement) {
         weightElement.style.opacity = isActive ? '1' : '0.5';
@@ -137,11 +133,9 @@ function changeDimension(dimension, change) {
     
     let newValue = currentDimensions[dimension] + change;
     
-    // Разрешаем значения от 0 до 1000
     if (newValue >= 0 && newValue <= 1000) {
         currentDimensions[dimension] = newValue;
         
-        // Обновляем отображение соответствующего размера
         if (dimension === 'length') {
             document.getElementById('lengthValue').textContent = newValue;
         } else if (dimension === 'width') {
@@ -156,7 +150,6 @@ function changeDimension(dimension, change) {
 
 // Показать временное уведомление
 function showTempAlert(message, duration = 2000) {
-    // Создаем элемент уведомления
     const alertDiv = document.createElement('div');
     alertDiv.textContent = message;
     alertDiv.style.cssText = `
@@ -177,7 +170,6 @@ function showTempAlert(message, duration = 2000) {
     
     document.body.appendChild(alertDiv);
     
-    // Автоматически удаляем через указанное время
     setTimeout(() => {
         if (alertDiv.parentNode) {
             alertDiv.parentNode.removeChild(alertDiv);
@@ -187,12 +179,13 @@ function showTempAlert(message, duration = 2000) {
 
 // Сохранить груз
 function saveCargo() {
+    console.log('Сохранение груза...', { currentCargoType, currentWeight, currentDimensions, hasPhoto: !!currentPhoto });
+    
     if (!currentCargoType) {
         showTempAlert('Сначала выберите тип груза!', 2000);
         return;
     }
     
-    // Проверяем, что вес и хотя бы один размер не равен 0
     if (currentWeight === 0) {
         showTempAlert('Укажите вес груза!', 2000);
         return;
@@ -203,14 +196,17 @@ function saveCargo() {
         return;
     }
     
+    // Создаем объект груза БЕЗ фотографии (сохраняем только ссылку если есть)
     const cargo = {
         id: currentCargoId || Date.now(),
         type: currentCargoType,
         weight: currentWeight,
         dimensions: {...currentDimensions},
-        photo: currentPhoto,
+        photo: currentPhoto, // Сохраняем как data URL
         timestamp: new Date().toLocaleString('ru-RU')
     };
+    
+    console.log('Создан груз:', cargo);
     
     let isNewCargo = false;
     
@@ -224,15 +220,16 @@ function saveCargo() {
     } else {
         // Добавляем новый груз
         cargoList.push(cargo);
+        console.log('Добавлен новый груз. Всего грузов:', cargoList.length);
         showTempAlert('Груз сохранен!', 1500);
         isNewCargo = true;
     }
     
+    // Сохраняем и обновляем интерфейс
     saveCargoList();
-    updateCargoCount();
-    updateTotals();
+    updateAllDisplays();
     
-    // Сбрасываем текущий груз для создания нового ТОЛЬКО если это был новый груз
+    // Сбрасываем для нового груза только если это был новый груз
     if (isNewCargo) {
         resetCurrentCargo();
         currentCargoId = null;
@@ -261,6 +258,8 @@ document.getElementById('photoInput').addEventListener('change', function(e) {
             photoElement.src = currentPhoto;
             photoElement.style.display = 'block';
             placeholder.style.display = 'none';
+            
+            console.log('Фото загружено, размер:', currentPhoto.length, 'символов');
         };
         reader.readAsDataURL(file);
     }
@@ -278,7 +277,6 @@ function resetPhoto() {
 
 // Сброс текущих настроек
 function resetCurrentCargo() {
-    // НЕ сбрасываем currentCargoType при обычном сбросе, только параметры
     currentWeight = 0;
     currentDimensions = { length: 0, width: 0, height: 0 };
     currentPhoto = null;
@@ -291,30 +289,20 @@ function resetCurrentCargo() {
 
 // Удалить груз из списка
 function removeCargo(cargoId) {
-    // Преобразуем cargoId в число для сравнения
     cargoId = parseInt(cargoId);
-    
-    // Сохраняем исходную длину для проверки
     const originalLength = cargoList.length;
     
-    // Фильтруем массив, оставляя только грузы с другим ID
     cargoList = cargoList.filter(cargo => {
-        // Преобразуем ID груза в число для сравнения
         const cargoIdNum = typeof cargo.id === 'string' ? parseInt(cargo.id) : cargo.id;
         return cargoIdNum !== cargoId;
     });
     
-    // Проверяем, был ли груз действительно удален
     if (cargoList.length < originalLength) {
         saveCargoList();
-        updateCargoCount();
-        updateTotals();
+        updateAllDisplays();
         
-        // Перерисовываем модальное окно, если оно открыто
         if (document.getElementById('cargoListModal').style.display === 'block') {
             renderCargoListModal();
-            
-            // Если грузов больше нет, закрываем модальное окно
             if (cargoList.length === 0) {
                 closeCargoListModal();
             }
@@ -328,18 +316,45 @@ function removeCargo(cargoId) {
     }
 }
 
-// Сохранить список грузов
+// Сохранить список грузов (с обработкой больших фото)
 function saveCargoList() {
-    localStorage.setItem('cargoList', JSON.stringify(cargoList));
+    try {
+        // Ограничиваем размер фото для мобильных устройств
+        const cargoListToSave = cargoList.map(cargo => {
+            const cargoCopy = {...cargo};
+            // Если фото слишком большое, не сохраняем его
+            if (cargoCopy.photo && cargoCopy.photo.length > 100000) { // ~100KB
+                console.log('Фото слишком большое, не сохраняем');
+                cargoCopy.photo = null;
+            }
+            return cargoCopy;
+        });
+        
+        localStorage.setItem('cargoList', JSON.stringify(cargoListToSave));
+        console.log('Список грузов сохранен. Всего:', cargoListToSave.length);
+    } catch (e) {
+        console.error('Ошибка сохранения:', e);
+        // Пробуем сохранить без фото
+        try {
+            const cargoListWithoutPhotos = cargoList.map(cargo => ({
+                ...cargo,
+                photo: null
+            }));
+            localStorage.setItem('cargoList', JSON.stringify(cargoListWithoutPhotos));
+            console.log('Список сохранен без фото');
+        } catch (e2) {
+            console.error('Критическая ошибка сохранения:', e2);
+        }
+    }
 }
 
 // Загрузить список грузов
 function loadCargoList() {
-    const saved = localStorage.getItem('cargoList');
-    if (saved) {
-        try {
+    try {
+        const saved = localStorage.getItem('cargoList');
+        if (saved) {
             cargoList = JSON.parse(saved);
-            // Проверяем целостность данных и нормализуем ID
+            // Валидация и нормализация данных
             cargoList = cargoList.filter(cargo => 
                 cargo && 
                 cargo.id &&
@@ -351,24 +366,35 @@ function loadCargoList() {
                 typeof cargo.dimensions.height === 'number'
             ).map(cargo => ({
                 ...cargo,
-                // Нормализуем ID до числа
                 id: typeof cargo.id === 'string' ? parseInt(cargo.id) : cargo.id
             }));
-        } catch (e) {
-            console.error('Ошибка загрузки списка грузов:', e);
-            cargoList = [];
+            
+            console.log('Загружено грузов:', cargoList.length);
         }
+    } catch (e) {
+        console.error('Ошибка загрузки:', e);
+        cargoList = [];
     }
+}
+
+// Обновить все отображения
+function updateAllDisplays() {
+    updateCargoCount();
+    updateTotals();
+    updateSaveButtonState();
 }
 
 // Обновить счетчик грузов
 function updateCargoCount() {
     const count = cargoList.length;
+    console.log('Обновление счетчика грузов:', count);
+    
     const cargoCountElement = document.getElementById('cargoCount');
     const modalCargoCountElement = document.getElementById('modalCargoCount');
     
     if (cargoCountElement) {
         cargoCountElement.textContent = count;
+        console.log('Счетчик обновлен:', count);
     }
     if (modalCargoCountElement) {
         modalCargoCountElement.textContent = count;
@@ -378,8 +404,7 @@ function updateCargoCount() {
 // Обновить итоговые показатели
 function updateTotals() {
     const totalWeight = cargoList.reduce((sum, cargo) => {
-        const weight = cargo.weight || 0;
-        return sum + (isNaN(weight) ? 0 : weight);
+        return sum + (cargo.weight || 0);
     }, 0);
     
     const totalVolume = cargoList.reduce((sum, cargo) => {
@@ -388,10 +413,12 @@ function updateTotals() {
         const width = cargo.dimensions.width || 0;
         const height = cargo.dimensions.height || 0;
         const volume = (length * width * height) / 1000000;
-        return sum + (isNaN(volume) ? 0 : volume);
+        return sum + volume;
     }, 0);
     
-    // Обновляем основные показатели
+    console.log('Обновление итогов:', { totalWeight, totalVolume, грузов: cargoList.length });
+    
+    // Основные показатели
     const totalWeightElement = document.getElementById('totalWeight');
     const totalVolumeElement = document.getElementById('totalVolume');
     
@@ -402,7 +429,7 @@ function updateTotals() {
         totalVolumeElement.textContent = `${totalVolume.toFixed(3)} м³`;
     }
     
-    // Обновляем в модальном окне
+    // В модальном окне
     const modalTotalWeightElement = document.getElementById('modalTotalWeight');
     const modalTotalVolumeElement = document.getElementById('modalTotalVolume');
     
@@ -440,7 +467,6 @@ function renderCargoListModal() {
     }
     
     container.innerHTML = cargoList.map(cargo => {
-        // Нормализуем ID для использования в onclick
         const cargoId = typeof cargo.id === 'string' ? parseInt(cargo.id) : cargo.id;
         const length = cargo.dimensions.length || 0;
         const width = cargo.dimensions.width || 0;
@@ -493,23 +519,23 @@ function sendToOperator() {
     }, 0);
     
     const shipmentData = {
-        cargos: cargoList,
+        cargos: cargoList.map(cargo => ({
+            ...cargo,
+            photo: cargo.photo ? 'Есть фото' : 'Нет фото' // Не отправляем большие фото
+        })),
         totalWeight: totalWeight,
         totalVolume: parseFloat(totalVolume.toFixed(3)),
         timestamp: new Date().toLocaleString('ru-RU'),
         totalItems: cargoList.length
     };
     
-    // Здесь будет логика отправки данных оператору
-    console.log('Данные для отправки оператору:', shipmentData);
-    
+    console.log('Отправка оператору:', shipmentData);
     showTempAlert(`Данные отправлены оператору!\nМест: ${cargoList.length}\nМасса: ${totalWeight} кг\nОбъем: ${totalVolume.toFixed(3)} м³`, 3000);
     
-    // Очищаем список после отправки
+    // Очищаем список
     cargoList = [];
     saveCargoList();
-    updateCargoCount();
-    updateTotals();
+    updateAllDisplays();
     resetCurrentCargo();
     currentCargoId = null;
 }
