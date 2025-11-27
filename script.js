@@ -280,17 +280,36 @@ function resetCurrentCargo() {
 
 // Удалить груз из списка
 function removeCargo(cargoId) {
-    cargoList = cargoList.filter(cargo => cargo.id !== cargoId);
-    saveCargoList();
-    updateCargoCount();
-    updateTotals();
-    renderCargoListModal();
+    // Преобразуем cargoId в число для сравнения
+    cargoId = parseInt(cargoId);
+    
+    // Сохраняем исходную длину для проверки
+    const originalLength = cargoList.length;
+    
+    // Фильтруем массив, оставляя только грузы с другим ID
+    cargoList = cargoList.filter(cargo => {
+        // Преобразуем ID груза в число для сравнения
+        const cargoIdNum = typeof cargo.id === 'string' ? parseInt(cargo.id) : cargo.id;
+        return cargoIdNum !== cargoId;
+    });
+    
+    // Проверяем, был ли груз действительно удален
+    if (cargoList.length < originalLength) {
+        saveCargoList();
+        updateCargoCount();
+        updateTotals();
+        
+        // Перерисовываем модальное окно, если оно открыто
+        if (document.getElementById('cargoListModal').style.display === 'block') {
+            renderCargoListModal();
+        }
+        
+        showTempAlert('Груз удален!', 1500);
+    }
     
     if (currentCargoId === cargoId) {
         currentCargoId = null;
     }
-    
-    showTempAlert('Груз удален!', 1500);
 }
 
 // Сохранить список грузов
@@ -304,16 +323,21 @@ function loadCargoList() {
     if (saved) {
         try {
             cargoList = JSON.parse(saved);
-            // Проверяем целостность данных
+            // Проверяем целостность данных и нормализуем ID
             cargoList = cargoList.filter(cargo => 
                 cargo && 
-                cargo.weight && 
-                cargo.dimensions && 
+                cargo.id &&
+                cargo.type &&
                 typeof cargo.weight === 'number' &&
+                cargo.dimensions && 
                 typeof cargo.dimensions.length === 'number' &&
                 typeof cargo.dimensions.width === 'number' &&
                 typeof cargo.dimensions.height === 'number'
-            );
+            ).map(cargo => ({
+                ...cargo,
+                // Нормализуем ID до числа
+                id: typeof cargo.id === 'string' ? parseInt(cargo.id) : cargo.id
+            }));
         } catch (e) {
             console.error('Ошибка загрузки списка грузов:', e);
             cargoList = [];
@@ -325,18 +349,24 @@ function loadCargoList() {
 function updateCargoCount() {
     const count = cargoList.length;
     document.getElementById('cargoCount').textContent = count;
-    document.getElementById('modalCargoCount').textContent = count;
+    if (document.getElementById('modalCargoCount')) {
+        document.getElementById('modalCargoCount').textContent = count;
+    }
 }
 
 // Обновить итоговые показатели
 function updateTotals() {
     const totalWeight = cargoList.reduce((sum, cargo) => {
-        return sum + (cargo.weight || 0);
+        const weight = cargo.weight || 0;
+        return sum + (isNaN(weight) ? 0 : weight);
     }, 0);
     
     const totalVolume = cargoList.reduce((sum, cargo) => {
         if (!cargo.dimensions) return sum;
-        const volume = ((cargo.dimensions.length || 0) * (cargo.dimensions.width || 0) * (cargo.dimensions.height || 0)) / 1000000;
+        const length = cargo.dimensions.length || 0;
+        const width = cargo.dimensions.width || 0;
+        const height = cargo.dimensions.height || 0;
+        const volume = (length * width * height) / 1000000;
         return sum + (isNaN(volume) ? 0 : volume);
     }, 0);
     
@@ -344,8 +374,12 @@ function updateTotals() {
     document.getElementById('totalVolume').textContent = `${totalVolume.toFixed(3)} м³`;
     
     // Обновляем в модальном окне
-    document.getElementById('modalTotalWeight').textContent = `${totalWeight} кг`;
-    document.getElementById('modalTotalVolume').textContent = `${totalVolume.toFixed(3)} м³`;
+    if (document.getElementById('modalTotalWeight')) {
+        document.getElementById('modalTotalWeight').textContent = `${totalWeight} кг`;
+    }
+    if (document.getElementById('modalTotalVolume')) {
+        document.getElementById('modalTotalVolume').textContent = `${totalVolume.toFixed(3)} м³`;
+    }
 }
 
 // Показать модальное окно списка грузов
@@ -373,7 +407,15 @@ function renderCargoListModal() {
         return;
     }
     
-    container.innerHTML = cargoList.map(cargo => `
+    container.innerHTML = cargoList.map(cargo => {
+        // Нормализуем ID для использования в onclick
+        const cargoId = typeof cargo.id === 'string' ? parseInt(cargo.id) : cargo.id;
+        const length = cargo.dimensions.length || 0;
+        const width = cargo.dimensions.width || 0;
+        const height = cargo.dimensions.height || 0;
+        const volume = (length * width * height) / 1000000;
+        
+        return `
         <div class="cargo-list-item">
             <div class="cargo-list-header">
                 <div class="cargo-type-badge">
@@ -385,21 +427,22 @@ function renderCargoListModal() {
             <div class="cargo-details">
                 <div class="detail-item">
                     <span class="detail-label">Размеры:</span>
-                    <span class="detail-value">${cargo.dimensions.length || 0}×${cargo.dimensions.width || 0}×${cargo.dimensions.height || 0} см</span>
+                    <span class="detail-value">${length}×${width}×${height} см</span>
                 </div>
                 <div class="detail-item">
                     <span class="detail-label">Объем:</span>
-                    <span class="detail-value">${((cargo.dimensions.length || 0) * (cargo.dimensions.width || 0) * (cargo.dimensions.height || 0) / 1000000).toFixed(3)} м³</span>
+                    <span class="detail-value">${volume.toFixed(3)} м³</span>
                 </div>
             </div>
             ${cargo.photo ? `<img src="${cargo.photo}" class="cargo-photo-preview" alt="Фото груза">` : ''}
             <div class="cargo-actions">
-                <button class="remove-cargo" onclick="removeCargo(${cargo.id})">
+                <button class="remove-cargo" onclick="removeCargo(${cargoId})">
                     🗑️ Удалить
                 </button>
             </div>
         </div>
-    `).join('');
+        `;
+    }).join('');
 }
 
 // Отправить оператору
@@ -411,7 +454,10 @@ function sendToOperator() {
     
     const totalWeight = cargoList.reduce((sum, cargo) => sum + (cargo.weight || 0), 0);
     const totalVolume = cargoList.reduce((sum, cargo) => {
-        return sum + ((cargo.dimensions.length || 0) * (cargo.dimensions.width || 0) * (cargo.dimensions.height || 0)) / 1000000;
+        const length = cargo.dimensions.length || 0;
+        const width = cargo.dimensions.width || 0;
+        const height = cargo.dimensions.height || 0;
+        return sum + (length * width * height) / 1000000;
     }, 0);
     
     const shipmentData = {
