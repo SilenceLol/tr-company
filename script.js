@@ -112,9 +112,11 @@ function updateSaveButtonState() {
                     currentWeight > 0 && 
                     (currentDimensions.length > 0 || currentDimensions.width > 0 || currentDimensions.height > 0);
     
-    saveButton.disabled = !isActive;
-    saveButton.style.opacity = isActive ? '1' : '0.5';
-    saveButton.style.cursor = isActive ? 'pointer' : 'not-allowed';
+    if (saveButton) {
+        saveButton.disabled = !isActive;
+        saveButton.style.opacity = isActive ? '1' : '0.5';
+        saveButton.style.cursor = isActive ? 'pointer' : 'not-allowed';
+    }
 }
 
 // Изменение веса (шаг 1)
@@ -276,27 +278,14 @@ function resetPhoto() {
 
 // Сброс текущих настроек
 function resetCurrentCargo() {
-    // НЕ сбрасываем currentCargoType и currentCargoId при обычном сбросе
+    // НЕ сбрасываем currentCargoType при обычном сбросе, только параметры
     currentWeight = 0;
     currentDimensions = { length: 0, width: 0, height: 0 };
+    currentPhoto = null;
+    
     document.getElementById('weight').textContent = currentWeight;
     updateAllDimensionsDisplay();
     resetPhoto();
-    updateSaveButtonState();
-}
-
-// Полный сброс для нового груза
-function resetForNewCargo() {
-    currentCargoType = null;
-    currentCargoId = null;
-    resetCurrentCargo();
-    
-    // Снимаем выделение с типа груза
-    document.querySelectorAll('.cargo-type-column').forEach(type => {
-        type.classList.remove('selected');
-    });
-    
-    updateControlsState();
     updateSaveButtonState();
 }
 
@@ -375,9 +364,14 @@ function loadCargoList() {
 // Обновить счетчик грузов
 function updateCargoCount() {
     const count = cargoList.length;
-    document.getElementById('cargoCount').textContent = count;
-    if (document.getElementById('modalCargoCount')) {
-        document.getElementById('modalCargoCount').textContent = count;
+    const cargoCountElement = document.getElementById('cargoCount');
+    const modalCargoCountElement = document.getElementById('modalCargoCount');
+    
+    if (cargoCountElement) {
+        cargoCountElement.textContent = count;
+    }
+    if (modalCargoCountElement) {
+        modalCargoCountElement.textContent = count;
     }
 }
 
@@ -397,15 +391,26 @@ function updateTotals() {
         return sum + (isNaN(volume) ? 0 : volume);
     }, 0);
     
-    document.getElementById('totalWeight').textContent = `${totalWeight} кг`;
-    document.getElementById('totalVolume').textContent = `${totalVolume.toFixed(3)} м³`;
+    // Обновляем основные показатели
+    const totalWeightElement = document.getElementById('totalWeight');
+    const totalVolumeElement = document.getElementById('totalVolume');
+    
+    if (totalWeightElement) {
+        totalWeightElement.textContent = `${totalWeight} кг`;
+    }
+    if (totalVolumeElement) {
+        totalVolumeElement.textContent = `${totalVolume.toFixed(3)} м³`;
+    }
     
     // Обновляем в модальном окне
-    if (document.getElementById('modalTotalWeight')) {
-        document.getElementById('modalTotalWeight').textContent = `${totalWeight} кг`;
+    const modalTotalWeightElement = document.getElementById('modalTotalWeight');
+    const modalTotalVolumeElement = document.getElementById('modalTotalVolume');
+    
+    if (modalTotalWeightElement) {
+        modalTotalWeightElement.textContent = `${totalWeight} кг`;
     }
-    if (document.getElementById('modalTotalVolume')) {
-        document.getElementById('modalTotalVolume').textContent = `${totalVolume.toFixed(3)} м³`;
+    if (modalTotalVolumeElement) {
+        modalTotalVolumeElement.textContent = `${totalVolume.toFixed(3)} м³`;
     }
 }
 
@@ -505,7 +510,8 @@ function sendToOperator() {
     saveCargoList();
     updateCargoCount();
     updateTotals();
-    resetForNewCargo();
+    resetCurrentCargo();
+    currentCargoId = null;
 }
 
 // Получить название типа груза
