@@ -345,11 +345,11 @@ h1 {
 .clickable-stat {
     cursor: pointer;
     transition: all 0.3s ease;
-    padding: 10px 12px;
+    padding: 12px 14px;
     border-radius: 8px;
     margin: -6px -8px 4px -8px;
-    background: linear-gradient(135deg, rgba(255,255,255,0.15), rgba(255,255,255,0.1));
-    border: 1px solid rgba(255,255,255,0.3);
+    background: linear-gradient(135deg, rgba(255,255,255,0.2), rgba(255,255,255,0.1));
+    border: 2px solid rgba(255,255,255,0.4);
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -357,22 +357,30 @@ h1 {
 }
 
 .clickable-stat:hover {
-    background: linear-gradient(135deg, rgba(255,255,255,0.25), rgba(255,255,255,0.15));
+    background: linear-gradient(135deg, rgba(255,255,255,0.3), rgba(255,255,255,0.2));
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.4);
+    border-color: rgba(255,255,255,0.6);
 }
 
 .clickable-stat:active {
     transform: translateY(0);
-    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
 }
 
-/* Добавляем иконку списка */
+/* Добавляем иконку пальца и текст подсказки */
+.clickable-stat::before {
+    content: "👆";
+    font-size: 16px;
+    margin-right: 8px;
+}
+
 .clickable-stat::after {
-    content: "📃";
-    font-size: 14px;
-    opacity: 0.9;
+    content: "Посмотреть список";
+    font-size: 10px;
+    opacity: 0.8;
     margin-left: 8px;
+    font-weight: normal;
 }
 
 .stat-label {
@@ -388,16 +396,19 @@ h1 {
 .clickable-stat .stat-label {
     opacity: 1;
     font-weight: 700;
-    font-size: 12px;
+    font-size: 13px;
+    text-decoration: underline;
 }
 
 .clickable-stat .stat-value {
-    font-size: 13px;
-    background: rgba(255,255,255,0.25);
-    padding: 4px 10px;
-    border-radius: 15px;
-    border: 1px solid rgba(255,255,255,0.4);
+    font-size: 14px;
+    background: rgba(255,255,255,0.3);
+    padding: 6px 12px;
+    border-radius: 20px;
+    border: 2px solid rgba(255,255,255,0.5);
     font-weight: 800;
+    min-width: 40px;
+    text-align: center;
 }
 
 /* Мини-кнопка отправки */
@@ -710,22 +721,29 @@ h1 {
     }
     
     .clickable-stat {
-        padding: 8px 10px;
+        padding: 10px 12px;
         margin: -4px -6px 2px -6px;
     }
     
+    .clickable-stat::before {
+        font-size: 14px;
+        margin-right: 6px;
+    }
+    
     .clickable-stat::after {
-        font-size: 12px;
+        font-size: 9px;
         margin-left: 6px;
+        content: "Список";
     }
     
     .clickable-stat .stat-label {
-        font-size: 11px;
+        font-size: 12px;
     }
     
     .clickable-stat .stat-value {
         font-size: 12px;
-        padding: 3px 8px;
+        padding: 4px 10px;
+        min-width: 35px;
     }
     
     .stat-item {
