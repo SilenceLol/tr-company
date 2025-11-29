@@ -444,18 +444,6 @@ function authenticateEmployee(employeeCode) {
                 name: 'Иванов Алексей',
                 position: 'Старший кладовщик',
                 department: 'Склад №1'
-            },
-            'EMP002': {
-                id: 'EMP002',
-                name: 'Петрова Мария',
-                position: 'Оператор погрузчика',
-                department: 'Склад №2'
-            },
-            'EMP003': {
-                id: 'EMP003',
-                name: 'Сидоров Дмитрий',
-                position: 'Грузчик',
-                department: 'Отгрузка'
             }
         };
 
