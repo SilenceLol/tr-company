@@ -1,621 +1,518 @@
-// Проверка авторизации при загрузке страницы грузов
+// script.js - исправленная версия для cargo.html
 document.addEventListener('DOMContentLoaded', function() {
-    // Проверяем авторизацию
-    if (!checkAuth()) {
-        return;
-    }
+    console.log('NORD WHEEL - Замер грузов загружен');
     
-    // Продолжаем обычную инициализацию
-    initCargoTypeSelection();
-    loadCargoList();
-    updateAllDisplays();
+    // Инициализация переменных
+    window.currentCargoType = 'euro-pallet';
+    window.cargoList = JSON.parse(localStorage.getItem('cargoList')) || [];
+    window.currentWeight = 1;
+    window.currentDimensions = {
+        length: 120,
+        width: 80,
+        height: 30
+    };
     
-    // Обновляем информацию о сотруднике
+    // Инициализация интерфейса
+    initCargoTypes();
+    updateStats();
     updateEmployeeInfo();
+    setupWeightInput();
+    updateDimensionDisplays();
+    
+    // Инициализация фотографии
+    initPhotoInput();
+    
+    // Устанавливаем активный тип груза по умолчанию
+    setActiveCargoType('euro-pallet');
 });
 
-// Проверка авторизации
-function checkAuth() {
-    const authData = localStorage.getItem('employeeAuth');
-    
-    if (!authData) {
-        // Перенаправляем на страницу авторизации
-        window.location.href = 'index.html';
-        return false;
-    }
-    
-    try {
-        const employee = JSON.parse(authData);
-        const loginTime = new Date(employee.loginTime);
-        const currentTime = new Date();
-        const hoursDiff = (currentTime - loginTime) / (1000 * 60 * 60);
-        
-        // Авторизация действительна 8 часов
-        if (hoursDiff >= 8) {
-            localStorage.removeItem('employeeAuth');
-            window.location.href = 'index.html';
-            return false;
-        }
-        
-        return true;
-    } catch (e) {
-        window.location.href = 'index.html';
-        return false;
-    }
-}
-
-// Обновление информации о сотруднике
-function updateEmployeeInfo() {
-    const authData = localStorage.getItem('employeeAuth');
-    
-    if (authData) {
-        const employee = JSON.parse(authData);
-        document.getElementById('employeeName').textContent = employee.name;
-    }
-}
-
-// Выход из системы
-function logout() {
-    if (confirm('Вы уверены, что хотите выйти?')) {
-        localStorage.removeItem('employeeAuth');
-        window.location.href = 'index.html';
-    }
-}
-
-// Текущий выбранный тип груза и параметры
-let currentCargoType = null;
-let currentDimensions = {
-    length: 0,
-    width: 0,
-    height: 0
-};
-let currentWeight = 0;
-let currentPhoto = null;
-let cargoList = [];
-let currentCargoId = null;
-
-// Стандартные размеры паллетов
-const palletSizes = {
-    'euro-pallet': { length: 120, width: 80, height: 30 },
-    'american-pallet': { length: 120, width: 120, height: 30 },
-    'box': { length: 50, width: 40, height: 30 },
-    'non-standard': { length: 100, width: 50, height: 40 }
-};
-
-// Emoji для типов грузов (используются только в модальном окне)
-const cargoIcons = {
-    'euro-pallet': '🚛',
-    'american-pallet': '🚛', 
-    'box': '📦',
-    'non-standard': '📏'
-};
-
-// Инициализация выбора типа груза
-function initCargoTypeSelection() {
+// Инициализация типов грузов
+function initCargoTypes() {
     const cargoTypes = document.querySelectorAll('.cargo-type-column');
-    
     cargoTypes.forEach(type => {
         type.addEventListener('click', function() {
-            cargoTypes.forEach(t => t.classList.remove('selected'));
-            this.classList.add('selected');
-            
-            currentCargoType = this.getAttribute('data-type');
-            console.log('Выбран тип груза:', currentCargoType);
-            
-            // Устанавливаем стандартные размеры
-            setPalletDimensions(currentCargoType);
-            
-            // Сбрасываем фото при смене типа груза
-            resetPhoto();
-            
-            // Сбрасываем текущий ID (создаем новый груз)
-            currentCargoId = null;
-            
-            // Активируем контролы
-            updateControlsState();
-            updateSaveButtonState();
+            const typeValue = this.getAttribute('data-type');
+            setActiveCargoType(typeValue);
         });
     });
 }
 
-// Установка размеров для паллетов
-function setPalletDimensions(palletType) {
-    const sizes = palletSizes[palletType];
-    currentDimensions.length = sizes.length;
-    currentDimensions.width = sizes.width;
-    currentDimensions.height = sizes.height;
-    currentWeight = sizes.weight || 1;
-    
-    // Обновляем отображение всех размеров
-    updateAllDimensionsDisplay();
-    document.getElementById('weight').textContent = currentWeight;
-    updateSaveButtonState();
-}
-
-// Обновить отображение всех размеров
-function updateAllDimensionsDisplay() {
-    document.getElementById('lengthValue').textContent = currentDimensions.length;
-    document.getElementById('widthValue').textContent = currentDimensions.width;
-    document.getElementById('heightValue').textContent = currentDimensions.height;
-    updateSaveButtonState();
-}
-
-// Обновление состояния контролов (активны/неактивны)
-function updateControlsState() {
-    const controls = document.querySelectorAll('.control-buttons-mini button');
-    const isActive = currentCargoType !== null;
-    
-    controls.forEach(control => {
-        control.disabled = !isActive;
-        control.style.opacity = isActive ? '1' : '0.5';
-        control.style.cursor = isActive ? 'pointer' : 'not-allowed';
+// Установить активный тип груза
+function setActiveCargoType(type) {
+    // Убираем активный класс у всех
+    document.querySelectorAll('.cargo-type-column').forEach(t => {
+        t.classList.remove('active', 'selected');
     });
     
-    const weightElement = document.getElementById('weight');
-    if (weightElement) {
-        weightElement.style.opacity = isActive ? '1' : '0.5';
+    // Добавляем активный класс текущему
+    const activeType = document.querySelector(`[data-type="${type}"]`);
+    if (activeType) {
+        activeType.classList.add('active', 'selected');
     }
+    
+    window.currentCargoType = type;
+    
+    // Устанавливаем размеры по умолчанию в зависимости от типа
+    setDefaultDimensionsForType(type);
 }
 
-// Обновление состояния кнопки сохранения
-function updateSaveButtonState() {
-    const saveButton = document.querySelector('.btn-save-mini');
-    const isActive = currentCargoType !== null && 
-                    currentWeight > 0 && 
-                    (currentDimensions.length > 0 || currentDimensions.width > 0 || currentDimensions.height > 0);
-    
-    if (saveButton) {
-        saveButton.disabled = !isActive;
-        saveButton.style.opacity = isActive ? '1' : '0.5';
-        saveButton.style.cursor = isActive ? 'pointer' : 'not-allowed';
+// Установить размеры по умолчанию для типа груза
+function setDefaultDimensionsForType(type) {
+    switch(type) {
+        case 'euro-pallet':
+            window.currentDimensions = { length: 120, width: 80, height: 30 };
+            break;
+        case 'american-pallet':
+            window.currentDimensions = { length: 120, width: 100, height: 30 };
+            break;
+        case 'box':
+            window.currentDimensions = { length: 60, width: 40, height: 40 };
+            break;
+        case 'non-standard':
+            window.currentDimensions = { length: 100, width: 100, height: 100 };
+            break;
     }
+    updateDimensionDisplays();
 }
 
-// Изменение веса (шаг 1)
-function changeWeight(change) {
-    if (!currentCargoType) return;
-    
-    const newWeight = currentWeight + change;
-    if (newWeight >= 0 && newWeight <= 10000) {
-        currentWeight = newWeight;
-        document.getElementById('weight').textContent = currentWeight;
-        updateSaveButtonState();
-    }
-}
-
-// Изменение размеров (шаг 10)
-function changeDimension(dimension, change) {
-    if (!currentCargoType) return;
-    
-    let newValue = currentDimensions[dimension] + change;
-    
-    if (newValue >= 0 && newValue <= 1000) {
-        currentDimensions[dimension] = newValue;
+// Настройка поля ввода веса
+function setupWeightInput() {
+    const weightInput = document.getElementById('weightInput');
+    if (weightInput) {
+        weightInput.value = window.currentWeight;
         
-        if (dimension === 'length') {
-            document.getElementById('lengthValue').textContent = newValue;
-        } else if (dimension === 'width') {
-            document.getElementById('widthValue').textContent = newValue;
-        } else if (dimension === 'height') {
-            document.getElementById('heightValue').textContent = newValue;
-        }
+        weightInput.addEventListener('input', function() {
+            // Ограничиваем ввод только цифрами
+            this.value = this.value.replace(/[^0-9]/g, '');
+            
+            // Обновляем текущий вес
+            const weight = parseInt(this.value) || 1;
+            if (weight >= 1 && weight <= 10000) {
+                window.currentWeight = weight;
+            }
+        });
         
-        updateSaveButtonState();
+        weightInput.addEventListener('change', function() {
+            let weight = parseInt(this.value) || 1;
+            if (weight < 1) {
+                weight = 1;
+                this.value = weight;
+            } else if (weight > 10000) {
+                weight = 10000;
+                this.value = weight;
+            }
+            window.currentWeight = weight;
+        });
+        
+        weightInput.addEventListener('focus', function() {
+            this.select();
+        });
     }
 }
 
-// Показать временное уведомление
-function showTempAlert(message, duration = 2000) {
-    const alertDiv = document.createElement('div');
-    alertDiv.textContent = message;
-    alertDiv.style.cssText = `
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        background: rgba(0,0,0,0.8);
-        color: white;
-        padding: 15px 25px;
-        border-radius: 8px;
-        z-index: 10000;
-        font-size: 14px;
-        font-weight: bold;
-        text-align: center;
-        min-width: 200px;
-    `;
-    
-    document.body.appendChild(alertDiv);
-    
-    setTimeout(() => {
-        if (alertDiv.parentNode) {
-            alertDiv.parentNode.removeChild(alertDiv);
+// Функции для изменения размеров
+function changeDimension(dimension, delta) {
+    if (window.currentDimensions[dimension] !== undefined) {
+        let newValue = window.currentDimensions[dimension] + delta;
+        if (newValue >= 10) { // Минимальный размер 10 см
+            window.currentDimensions[dimension] = newValue;
+            updateDimensionDisplay(dimension);
         }
-    }, duration);
+    }
 }
 
-// Сохранить груз
+function updateDimensionDisplay(dimension) {
+    const element = document.getElementById(dimension + 'Value');
+    if (element) {
+        element.textContent = window.currentDimensions[dimension];
+    }
+}
+
+function updateDimensionDisplays() {
+    updateDimensionDisplay('length');
+    updateDimensionDisplay('width');
+    updateDimensionDisplay('height');
+}
+
+// Функция сохранения груза (работает с кнопкой Сохранить)
 function saveCargo() {
-    console.log('Сохранение груза...', { currentCargoType, currentWeight, currentDimensions, hasPhoto: !!currentPhoto });
+    // Получаем вес из поля ввода
+    const weightInput = document.getElementById('weightInput');
+    let weight = window.currentWeight;
     
-    if (!currentCargoType) {
-        showTempAlert('Сначала выберите тип груза!', 2000);
-        return;
+    if (weightInput) {
+        weight = parseInt(weightInput.value) || 1;
+        if (weight < 1) weight = 1;
+        if (weight > 10000) weight = 10000;
+        window.currentWeight = weight;
     }
     
-    if (currentWeight === 0) {
-        showTempAlert('Укажите вес груза!', 2000);
-        return;
-    }
+    // Вычисляем объем
+    const volume = (window.currentDimensions.length * 
+                    window.currentDimensions.width * 
+                    window.currentDimensions.height) / 1000000; // в м³
     
-    if (currentDimensions.length === 0 && currentDimensions.width === 0 && currentDimensions.height === 0) {
-        showTempAlert('Укажите хотя бы один размер груза!', 2000);
-        return;
-    }
-    
-    // Создаем объект груза БЕЗ фотографии (сохраняем только ссылку если есть)
+    // Создаем объект груза
     const cargo = {
-        id: currentCargoId || Date.now(),
-        type: currentCargoType,
-        weight: currentWeight,
-        dimensions: {...currentDimensions},
-        photo: currentPhoto, // Сохраняем как data URL
-        timestamp: new Date().toLocaleString('ru-RU')
+        id: Date.now(), // Уникальный ID на основе времени
+        type: window.currentCargoType,
+        typeName: getCargoTypeName(window.currentCargoType),
+        weight: weight,
+        length: window.currentDimensions.length,
+        width: window.currentDimensions.width,
+        height: window.currentDimensions.height,
+        volume: volume,
+        timestamp: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
+        photo: document.getElementById('cargoPhoto').src || null
     };
     
-    console.log('Создан груз:', cargo);
+    // Добавляем в список
+    window.cargoList.push(cargo);
     
-    let isNewCargo = false;
+    // Сохраняем в localStorage
+    localStorage.setItem('cargoList', JSON.stringify(window.cargoList));
     
-    if (currentCargoId) {
-        // Обновляем существующий груз
-        const index = cargoList.findIndex(c => c.id === currentCargoId);
-        if (index !== -1) {
-            cargoList[index] = cargo;
-            showTempAlert('Груз обновлен!', 1500);
-        }
-    } else {
-        // Добавляем новый груз
-        cargoList.push(cargo);
-        console.log('Добавлен новый груз. Всего грузов:', cargoList.length);
-        showTempAlert('Груз сохранен!', 1500);
-        isNewCargo = true;
+    // Обновляем статистику
+    updateStats();
+    
+    // Показываем уведомление
+    showNotification('Груз сохранен!');
+    
+    // Сбрасываем фото
+    resetPhoto();
+    
+    // Сбрасываем вес к минимальному значению
+    if (weightInput) {
+        weightInput.value = 1;
+        window.currentWeight = 1;
     }
     
-    // Сохраняем и обновляем интерфейс
-    saveCargoList();
-    updateAllDisplays();
+    // Сбрасываем размеры к значениям по умолчанию в зависимости от типа груза
+    setDefaultDimensionsForType(window.currentCargoType);
+}
+
+// Функция обновления статистики
+function updateStats() {
+    const cargoCount = document.getElementById('cargoCount');
+    const totalWeight = document.getElementById('totalWeight');
+    const totalVolume = document.getElementById('totalVolume');
     
-    // Сбрасываем для нового груза только если это был новый груз
-    if (isNewCargo) {
-        resetCurrentCargo();
-        currentCargoId = null;
+    if (!window.cargoList || window.cargoList.length === 0) {
+        if (cargoCount) cargoCount.textContent = '0';
+        if (totalWeight) totalWeight.textContent = '0 кг';
+        if (totalVolume) totalVolume.textContent = '0 м³';
+        return;
+    }
+    
+    // Вычисляем общий вес и объем
+    const sumWeight = window.cargoList.reduce((sum, cargo) => sum + cargo.weight, 0);
+    const sumVolume = window.cargoList.reduce((sum, cargo) => sum + cargo.volume, 0);
+    
+    if (cargoCount) cargoCount.textContent = window.cargoList.length;
+    if (totalWeight) totalWeight.textContent = sumWeight + ' кг';
+    if (totalVolume) totalVolume.textContent = sumVolume.toFixed(2) + ' м³';
+}
+
+// Функции для работы с фото
+function initPhotoInput() {
+    const photoInput = document.getElementById('photoInput');
+    if (photoInput) {
+        photoInput.addEventListener('change', function(e) {
+            if (e.target.files && e.target.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const photo = document.getElementById('cargoPhoto');
+                    const placeholder = document.getElementById('photoPlaceholder');
+                    
+                    photo.src = event.target.result;
+                    photo.style.display = 'block';
+                    placeholder.style.display = 'none';
+                };
+                reader.readAsDataURL(e.target.files[0]);
+            }
+        });
     }
 }
 
-// Сделать фото
 function takePhoto() {
-    if (!currentCargoType) {
-        showTempAlert('Сначала выберите тип груза!', 2000);
-        return;
-    }
     document.getElementById('photoInput').click();
 }
 
-// Обработка выбора фото
-document.getElementById('photoInput').addEventListener('change', function(e) {
-    const file = e.target.files[0];
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            currentPhoto = e.target.result;
-            const photoElement = document.getElementById('cargoPhoto');
-            const placeholder = document.getElementById('photoPlaceholder');
-            
-            photoElement.src = currentPhoto;
-            photoElement.style.display = 'block';
-            placeholder.style.display = 'none';
-            
-            console.log('Фото загружено, размер:', currentPhoto.length, 'символов');
-        };
-        reader.readAsDataURL(file);
-    }
-});
-
-// Сброс фото
 function resetPhoto() {
-    currentPhoto = null;
-    const photoElement = document.getElementById('cargoPhoto');
+    const photo = document.getElementById('cargoPhoto');
     const placeholder = document.getElementById('photoPlaceholder');
-    photoElement.style.display = 'none';
+    
+    photo.style.display = 'none';
+    photo.src = '';
     placeholder.style.display = 'flex';
-    document.getElementById('photoInput').value = '';
-}
-
-// Сброс текущих настроек
-function resetCurrentCargo() {
-    currentWeight = 0;
-    currentDimensions = { length: 0, width: 0, height: 0 };
-    currentPhoto = null;
     
-    document.getElementById('weight').textContent = currentWeight;
-    updateAllDimensionsDisplay();
-    resetPhoto();
-    updateSaveButtonState();
-}
-
-// Удалить груз из списка
-function removeCargo(cargoId) {
-    cargoId = parseInt(cargoId);
-    const originalLength = cargoList.length;
-    
-    cargoList = cargoList.filter(cargo => {
-        const cargoIdNum = typeof cargo.id === 'string' ? parseInt(cargo.id) : cargo.id;
-        return cargoIdNum !== cargoId;
-    });
-    
-    if (cargoList.length < originalLength) {
-        saveCargoList();
-        updateAllDisplays();
-        
-        if (document.getElementById('cargoListModal').style.display === 'block') {
-            renderCargoListModal();
-            if (cargoList.length === 0) {
-                closeCargoListModal();
-            }
-        }
-        
-        showTempAlert('Груз удален!', 1500);
-    }
-    
-    if (currentCargoId === cargoId) {
-        currentCargoId = null;
+    // Сбрасываем input файла
+    const photoInput = document.getElementById('photoInput');
+    if (photoInput) {
+        photoInput.value = '';
     }
 }
 
-// Сохранить список грузов (с обработкой больших фото)
-function saveCargoList() {
-    try {
-        // Ограничиваем размер фото для мобильных устройств
-        const cargoListToSave = cargoList.map(cargo => {
-            const cargoCopy = {...cargo};
-            // Если фото слишком большое, не сохраняем его
-            if (cargoCopy.photo && cargoCopy.photo.length > 100000) { // ~100KB
-                console.log('Фото слишком большое, не сохраняем');
-                cargoCopy.photo = null;
-            }
-            return cargoCopy;
-        });
-        
-        localStorage.setItem('cargoList', JSON.stringify(cargoListToSave));
-        console.log('Список грузов сохранен. Всего:', cargoListToSave.length);
-    } catch (e) {
-        console.error('Ошибка сохранения:', e);
-        // Пробуем сохранить без фото
-        try {
-            const cargoListWithoutPhotos = cargoList.map(cargo => ({
-                ...cargo,
-                photo: null
-            }));
-            localStorage.setItem('cargoList', JSON.stringify(cargoListWithoutPhotos));
-            console.log('Список сохранен без фото');
-        } catch (e2) {
-            console.error('Критическая ошибка сохранения:', e2);
-        }
-    }
-}
-
-// Загрузить список грузов
-function loadCargoList() {
-    try {
-        const saved = localStorage.getItem('cargoList');
-        if (saved) {
-            cargoList = JSON.parse(saved);
-            // Валидация и нормализация данных
-            cargoList = cargoList.filter(cargo => 
-                cargo && 
-                cargo.id &&
-                cargo.type &&
-                typeof cargo.weight === 'number' &&
-                cargo.dimensions && 
-                typeof cargo.dimensions.length === 'number' &&
-                typeof cargo.dimensions.width === 'number' &&
-                typeof cargo.dimensions.height === 'number'
-            ).map(cargo => ({
-                ...cargo,
-                id: typeof cargo.id === 'string' ? parseInt(cargo.id) : cargo.id
-            }));
-            
-            console.log('Загружено грузов:', cargoList.length);
-        }
-    } catch (e) {
-        console.error('Ошибка загрузки:', e);
-        cargoList = [];
-    }
-}
-
-// Обновить все отображения
-function updateAllDisplays() {
-    updateCargoCount();
-    updateTotals();
-    updateSaveButtonState();
-}
-
-// Обновить счетчик грузов
-function updateCargoCount() {
-    const count = cargoList.length;
-    console.log('Обновление счетчика грузов:', count);
-    
-    const cargoCountElement = document.getElementById('cargoCount');
-    const modalCargoCountElement = document.getElementById('modalCargoCount');
-    
-    if (cargoCountElement) {
-        cargoCountElement.textContent = count;
-        console.log('Счетчик обновлен:', count);
-    }
-    if (modalCargoCountElement) {
-        modalCargoCountElement.textContent = count;
-    }
-}
-
-// Обновить итоговые показатели
-function updateTotals() {
-    const totalWeight = cargoList.reduce((sum, cargo) => {
-        return sum + (cargo.weight || 0);
-    }, 0);
-    
-    const totalVolume = cargoList.reduce((sum, cargo) => {
-        if (!cargo.dimensions) return sum;
-        const length = cargo.dimensions.length || 0;
-        const width = cargo.dimensions.width || 0;
-        const height = cargo.dimensions.height || 0;
-        const volume = (length * width * height) / 1000000;
-        return sum + volume;
-    }, 0);
-    
-    console.log('Обновление итогов:', { totalWeight, totalVolume, грузов: cargoList.length });
-    
-    // Основные показатели
-    const totalWeightElement = document.getElementById('totalWeight');
-    const totalVolumeElement = document.getElementById('totalVolume');
-    
-    if (totalWeightElement) {
-        totalWeightElement.textContent = `${totalWeight} кг`;
-    }
-    if (totalVolumeElement) {
-        totalVolumeElement.textContent = `${totalVolume.toFixed(3)} м³`;
-    }
-    
-    // В модальном окне
-    const modalTotalWeightElement = document.getElementById('modalTotalWeight');
-    const modalTotalVolumeElement = document.getElementById('modalTotalVolume');
-    
-    if (modalTotalWeightElement) {
-        modalTotalWeightElement.textContent = `${totalWeight} кг`;
-    }
-    if (modalTotalVolumeElement) {
-        modalTotalVolumeElement.textContent = `${totalVolume.toFixed(3)} м³`;
-    }
-}
-
-// Показать модальное окно списка грузов
+// Функции для работы с модальным окном списка грузов
 function showCargoListModal() {
-    if (cargoList.length === 0) {
-        showTempAlert('Нет добавленных грузов!', 2000);
+    console.log('Показ модального окна со списком грузов');
+    const modal = document.getElementById('cargoListModal');
+    const content = document.getElementById('cargoListContent');
+    
+    if (!modal || !content) {
+        console.error('Не найдены элементы модального окна');
         return;
     }
     
-    renderCargoListModal();
-    document.getElementById('cargoListModal').style.display = 'block';
+    // Очищаем содержимое
+    content.innerHTML = '';
+    
+    if (!window.cargoList || window.cargoList.length === 0) {
+        content.innerHTML = '<div class="empty-state">Нет сохраненных грузов</div>';
+    } else {
+        // Создаем список грузов
+        window.cargoList.forEach((cargo, index) => {
+            const cargoItem = document.createElement('div');
+            cargoItem.className = 'cargo-list-item';
+            
+            cargoItem.innerHTML = `
+                <div class="cargo-list-header">
+                    <div class="cargo-type-badge">
+                        <span class="cargo-emoji-small">${getCargoEmoji(cargo.type)}</span>
+                        <span>${cargo.typeName}</span>
+                    </div>
+                    <span class="cargo-weight">${cargo.weight} кг</span>
+                </div>
+                <div class="cargo-details">
+                    <div class="detail-item">
+                        <span class="detail-label">Длина</span>
+                        <span class="detail-value">${cargo.length} см</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Ширина</span>
+                        <span class="detail-value">${cargo.width} см</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Высота</span>
+                        <span class="detail-value">${cargo.height} см</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Объем</span>
+                        <span class="detail-value">${cargo.volume.toFixed(2)} м³</span>
+                    </div>
+                </div>
+                <div class="cargo-time">${cargo.timestamp}</div>
+                ${cargo.photo ? '<img src="' + cargo.photo + '" class="cargo-photo-preview" alt="Фото груза">' : ''}
+                <button class="remove-cargo" onclick="deleteCargo(${cargo.id})">Удалить</button>
+            `;
+            
+            content.appendChild(cargoItem);
+        });
+    }
+    
+    // Обновляем итоги в модальном окне
+    updateModalTotals();
+    
+    // Показываем модальное окно
+    modal.style.display = 'block';
 }
 
-// Закрыть модальное окно списка грузов
 function closeCargoListModal() {
-    document.getElementById('cargoListModal').style.display = 'none';
+    const modal = document.getElementById('cargoListModal');
+    if (modal) {
+        modal.style.display = 'none';
+    }
 }
 
-// Отобразить список грузов в модальном окне
-function renderCargoListModal() {
-    const container = document.getElementById('cargoListContent');
+function updateModalTotals() {
+    const modalTotalWeight = document.getElementById('modalTotalWeight');
+    const modalTotalVolume = document.getElementById('modalTotalVolume');
+    const modalCargoCount = document.getElementById('modalCargoCount');
     
-    if (cargoList.length === 0) {
-        container.innerHTML = '<div class="empty-state">Нет добавленных грузов</div>';
+    if (!window.cargoList || window.cargoList.length === 0) {
+        if (modalTotalWeight) modalTotalWeight.textContent = '0 кг';
+        if (modalTotalVolume) modalTotalVolume.textContent = '0 м³';
+        if (modalCargoCount) modalCargoCount.textContent = '0';
         return;
     }
     
-    container.innerHTML = cargoList.map(cargo => {
-        const cargoId = typeof cargo.id === 'string' ? parseInt(cargo.id) : cargo.id;
-        const length = cargo.dimensions.length || 0;
-        const width = cargo.dimensions.width || 0;
-        const height = cargo.dimensions.height || 0;
-        const volume = (length * width * height) / 1000000;
-        
-        return `
-        <div class="cargo-list-item">
-            <div class="cargo-list-header">
-                <div class="cargo-type-badge">
-                    <span class="cargo-emoji-small">${cargoIcons[cargo.type]}</span>
-                    ${getCargoTypeName(cargo.type)}
-                </div>
-                <span class="cargo-weight">${cargo.weight || 0} кг</span>
-            </div>
-            <div class="cargo-details">
-                <div class="detail-item">
-                    <span class="detail-label">Размеры:</span>
-                    <span class="detail-value">${length}×${width}×${height} см</span>
-                </div>
-                <div class="detail-item">
-                    <span class="detail-label">Объем:</span>
-                    <span class="detail-value">${volume.toFixed(3)} м³</span>
-                </div>
-            </div>
-            ${cargo.photo ? `<img src="${cargo.photo}" class="cargo-photo-preview" alt="Фото груза">` : ''}
-            <div class="cargo-actions">
-                <button class="remove-cargo" onclick="removeCargo(${cargoId})">
-                    🗑️ Удалить
-                </button>
-            </div>
-        </div>
-        `;
-    }).join('');
+    const totalWeight = window.cargoList.reduce((sum, cargo) => sum + cargo.weight, 0);
+    const totalVolume = window.cargoList.reduce((sum, cargo) => sum + cargo.volume, 0);
+    
+    if (modalTotalWeight) modalTotalWeight.textContent = totalWeight + ' кг';
+    if (modalTotalVolume) modalTotalVolume.textContent = totalVolume.toFixed(2) + ' м³';
+    if (modalCargoCount) modalCargoCount.textContent = window.cargoList.length;
 }
 
-// Отправить оператору
+function deleteCargo(id) {
+    window.cargoList = window.cargoList.filter(cargo => cargo.id !== id);
+    localStorage.setItem('cargoList', JSON.stringify(window.cargoList));
+    updateStats();
+    showCargoListModal(); // Обновляем список
+    showNotification('Груз удален');
+}
+
+// Функция отправки оператору
 function sendToOperator() {
-    if (cargoList.length === 0) {
-        showTempAlert('Добавьте хотя бы один груз перед отправкой!', 2000);
+    if (!window.cargoList || window.cargoList.length === 0) {
+        showNotification('Нет грузов для отправки');
         return;
     }
     
-    const totalWeight = cargoList.reduce((sum, cargo) => sum + (cargo.weight || 0), 0);
-    const totalVolume = cargoList.reduce((sum, cargo) => {
-        const length = cargo.dimensions.length || 0;
-        const width = cargo.dimensions.width || 0;
-        const height = cargo.dimensions.height || 0;
-        return sum + (length * width * height) / 1000000;
-    }, 0);
-    
-    const shipmentData = {
-        cargos: cargoList.map(cargo => ({
-            ...cargo,
-            photo: cargo.photo ? 'Есть фото' : 'Нет фото' // Не отправляем большие фото
-        })),
-        totalWeight: totalWeight,
-        totalVolume: parseFloat(totalVolume.toFixed(3)),
+    // Создаем данные для отправки
+    const dataToSend = {
+        employee: JSON.parse(localStorage.getItem('employeeAuth')),
+        cargoList: window.cargoList,
         timestamp: new Date().toLocaleString('ru-RU'),
-        totalItems: cargoList.length
+        summary: {
+            totalItems: window.cargoList.length,
+            totalWeight: window.cargoList.reduce((sum, cargo) => sum + cargo.weight, 0),
+            totalVolume: window.cargoList.reduce((sum, cargo) => sum + cargo.volume, 0)
+        }
     };
     
-    console.log('Отправка оператору:', shipmentData);
-    showTempAlert(`Данные отправлены оператору!\nМест: ${cargoList.length}\nМасса: ${totalWeight} кг\nОбъем: ${totalVolume.toFixed(3)} м³`, 3000);
+    console.log('Отправка данных оператору:', dataToSend);
     
-    // Очищаем список
-    cargoList = [];
-    saveCargoList();
-    updateAllDisplays();
-    resetCurrentCargo();
-    currentCargoId = null;
+    // Здесь будет реальная отправка данных
+    // Пока просто показываем уведомление
+    showNotification('Данные отправлены оператору!');
+    
+    // Очищаем список после отправки (опционально)
+    // window.cargoList = [];
+    // localStorage.removeItem('cargoList');
+    // updateStats();
 }
 
-// Получить название типа груза
+// Вспомогательные функции
 function getCargoTypeName(type) {
     const names = {
         'euro-pallet': 'Европаллет',
         'american-pallet': 'Американский паллет',
         'box': 'Коробка',
-        'non-standard': 'Нестандартный груз'
+        'non-standard': 'Нестандарт'
     };
     return names[type] || type;
 }
 
-// Закрытие модальных окон при клике вне их
-window.addEventListener('click', function(e) {
-    const cargoListModal = document.getElementById('cargoListModal');
-    if (e.target === cargoListModal) {
+function getCargoEmoji(type) {
+    const emojis = {
+        'euro-pallet': '🇪🇺',
+        'american-pallet': '🇺🇸',
+        'box': '📦',
+        'non-standard': '📏'
+    };
+    return emojis[type] || '📦';
+}
+
+// Функция для показа уведомлений
+function showNotification(message) {
+    // Проверяем, есть ли уже уведомление
+    const existingNotification = document.querySelector('.notification');
+    if (existingNotification) {
+        existingNotification.remove();
+    }
+    
+    // Создаем элемент уведомления
+    const notification = document.createElement('div');
+    notification.className = 'notification';
+    notification.textContent = message;
+    notification.style.cssText = `
+        position: fixed;
+        top: 80px;
+        right: 10px;
+        background: #4CAF50;
+        color: white;
+        padding: 12px 16px;
+        border-radius: 8px;
+        z-index: 10000;
+        animation: slideIn 0.3s ease;
+        max-width: 300px;
+        font-size: 14px;
+        font-weight: 600;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    `;
+    
+    document.body.appendChild(notification);
+    
+    // Удаляем уведомление через 3 секунды
+    setTimeout(() => {
+        notification.style.animation = 'slideOut 0.3s ease';
+        setTimeout(() => {
+            if (notification.parentNode) {
+                notification.parentNode.removeChild(notification);
+            }
+        }, 300);
+    }, 3000);
+}
+
+// Добавляем стили для анимации уведомлений
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes slideIn {
+        from {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+    
+    @keyframes slideOut {
+        from {
+            transform: translateX(0);
+            opacity: 1;
+        }
+        to {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+    }
+`;
+document.head.appendChild(style);
+
+// Функции для работы с авторизацией
+function updateEmployeeInfo() {
+    const nameElement = document.getElementById('employeeName');
+    if (nameElement) {
+        const authData = localStorage.getItem('employeeAuth');
+        if (authData) {
+            try {
+                const employee = JSON.parse(authData);
+                nameElement.textContent = employee.name || 'Сотрудник';
+            } catch (e) {
+                nameElement.textContent = 'Сотрудник';
+            }
+        } else {
+            nameElement.textContent = 'Не авторизован';
+        }
+    }
+}
+
+function logout() {
+    localStorage.removeItem('employeeAuth');
+    localStorage.removeItem('cargoList'); // Очищаем данные грузов при выходе
+    window.location.href = 'index.html'; // Перенаправление на страницу входа
+}
+
+// Закрытие модального окна при клике вне его
+window.onclick = function(event) {
+    const modal = document.getElementById('cargoListModal');
+    if (event.target === modal) {
         closeCargoListModal();
     }
-});
+};
 
-// Предотвращение масштабирования при двойном тапе
-document.addEventListener('dblclick', function(e) {
-    e.preventDefault();
-}, { passive: false });
+// Обработчик для функции updateWeightFromInput (если она вызывается из HTML)
+function updateWeightFromInput() {
+    // Эта функция может быть вызвана из onchange атрибута
+    const weightInput = document.getElementById('weightInput');
+    if (weightInput) {
+        let weight = parseInt(weightInput.value) || 1;
+        if (weight < 1) weight = 1;
+        if (weight > 10000) weight = 10000;
+        weightInput.value = weight;
+        window.currentWeight = weight;
+    }
+}
