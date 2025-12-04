@@ -30,7 +30,7 @@ body {
 }
 
 header {
-    background: #b5b5b5;
+    background: #2c3e50;
     padding: 8px 12px;
     display: flex;
     justify-content: center;
@@ -134,7 +134,7 @@ h1 {
 
 .qr-reader {
     width: 100%;
-    height: 200px;
+    height: 150px;
     border: 2px dashed #3498db;
     border-radius: 8px;
     margin-bottom: 8px;
@@ -146,108 +146,14 @@ h1 {
     overflow: hidden;
 }
 
-.qr-reader.active {
-    border-color: #27ae60;
-    border-style: solid;
-}
-
-.scanner-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.scanner-frame {
-    width: 200px;
-    height: 200px;
-    border: 2px solid #3498db;
-    border-radius: 8px;
-    position: relative;
-    animation: scanner-pulse 2s infinite;
-}
-
-.scanner-line {
-    position: absolute;
-    top: 0;
-    left: 10%;
-    width: 80%;
-    height: 2px;
-    background: #3498db;
-    animation: scanner-line 2s infinite;
-}
-
-@keyframes scanner-pulse {
-    0% { border-color: #3498db; }
-    50% { border-color: #27ae60; }
-    100% { border-color: #3498db; }
-}
-
-@keyframes scanner-line {
-    0% { top: 0; }
-    50% { top: 100%; }
-    100% { top: 0; }
-}
-
 .scanner-instructions {
     color: #666;
     font-size: 12px;
     line-height: 1.3;
-    text-align: center;
-    margin-top: 120px;
 }
 
 .scanner-instructions p {
     margin: 2px 0;
-}
-
-.scanner-hint {
-    color: #3498db;
-    font-weight: 600;
-}
-
-.scanner-error {
-    text-align: center;
-    padding: 20px;
-    color: #666;
-}
-
-.error-icon {
-    font-size: 40px;
-    margin-bottom: 10px;
-}
-
-.scanner-error p {
-    margin-bottom: 15px;
-    font-size: 14px;
-}
-
-.btn-retry {
-    background: #3498db;
-    color: white;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
-    transition: background 0.3s ease;
-}
-
-.btn-retry:hover {
-    background: #2980b9;
-}
-
-.scanner-loading {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
-    color: #666;
-    font-size: 14px;
 }
 
 .manual-auth-section {
@@ -945,144 +851,134 @@ h1 {
     .app-container {
         padding: 8px;
     }
-
+    
     .auth-container {
         padding: 8px;
         gap: 8px;
     }
-
+    
     .auth-card {
         padding: 12px;
         max-width: 300px;
     }
-
+    
     .qr-reader {
-        height: 180px;
+        height: 130px;
     }
-
-    .scanner-frame {
-        width: 180px;
-        height: 180px;
-    }
-
-    .scanner-instructions {
-        margin-top: 100px;
-        font-size: 11px;
-    }
-
+    
     .manual-input {
         flex-direction: column;
         gap: 5px;
     }
-
+    
     .demo-codes {
         grid-template-columns: 1fr;
         gap: 4px;
     }
-
+    
     .demo-code {
         padding: 6px 4px;
         font-size: 10px;
     }
-
+    
     .scanner-instructions {
         font-size: 11px;
     }
-
+    
     h1 {
         font-size: 1.1em;
         margin-bottom: 8px;
     }
-
+    
     .main-layout {
         gap: 8px;
     }
-
+    
     .cargo-type-column {
         padding: 6px 4px;
         min-height: 35px;
     }
-
+    
     .cargo-image-placeholder {
         width: 25px;
         height: 25px;
     }
-
+    
     .cargo-image {
         width: 20px;
         height: 20px;
     }
-
+    
     .cargo-icon-mini {
         font-size: 14px;
     }
-
+    
     .cargo-type-column span {
         font-size: 10px;
     }
-
+    
     .photo-container-mini {
         width: 45px;
         height: 45px;
         padding: 6px;
     }
-
+    
     .control-item-compact {
         padding: 4px;
     }
-
+    
     .control-item-compact label {
         font-size: 10px;
         min-width: 40px;
     }
-
+    
     .control-btn-mini {
         padding: 4px 6px;
         font-size: 9px;
         min-width: 22px;
     }
-
+    
     .control-value-mini {
         font-size: 11px;
         min-width: 25px;
     }
-
+    
     .btn-save-mini,
     .btn-send-mini {
         padding: 8px;
         font-size: 11px;
     }
-
+    
     .stats-mini {
         padding: 8px;
     }
-
+    
     .clickable-stat {
         padding: 10px 12px;
         margin: -4px -6px 2px -6px;
     }
-
+    
     .clickable-stat::before {
         font-size: 14px;
         margin-right: 6px;
     }
-
+    
     .clickable-stat::after {
         font-size: 9px;
         margin-left: 6px;
         content: "Список";
     }
-
+    
     .clickable-stat .stat-label {
         font-size: 12px;
     }
-
+    
     .clickable-stat .stat-value {
         font-size: 12px;
         padding: 4px 10px;
         min-width: 35px;
     }
-
+    
     .stat-item {
         font-size: 10px;
     }
@@ -1099,20 +995,11 @@ h1 {
     .auth-container {
         padding-top: 5px;
     }
-
+    
     .qr-reader {
-        height: 150px;
+        height: 120px;
     }
-
-    .scanner-frame {
-        width: 150px;
-        height: 150px;
-    }
-
-    .scanner-instructions {
-        margin-top: 80px;
-    }
-
+    
     .demo-info {
         padding: 8px;
     }
@@ -1125,324 +1012,952 @@ h1 {
         margin: 0 auto;
     }
 }
+/* Добавить в styles.css */
 
-/* Скрываем внутренние элементы сканера */
-#qr-reader__dashboard {
-    display: none !important;
-}
-
-#qr-reader__camera_selection {
-    display: none !important;
-}
-
-.qr-reader-simple {
-    width: 100%;
-    height: 200px;
-    border: 2px dashed #3498db;
-    border-radius: 8px;
-    margin-bottom: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
-    position: relative;
-    overflow: hidden;
-}
-
-.scanner-placeholder {
+.weight-input {
+    width: 80px;
+    padding: 5px;
+    border: 2px solid #4CAF50;
+    border-radius: 5px;
+    font-size: 16px;
     text-align: center;
-    padding: 20px;
-    color: #666;
+    font-weight: bold;
+    background-color: white;
 }
 
-.placeholder-icon {
-    font-size: 48px;
+.weight-input:focus {
+    outline: none;
+    border-color: #2196F3;
+    box-shadow: 0 0 5px rgba(33, 150, 243, 0.3);
+}
+
+/* Убедиться, что поле ввода выглядит как прежний элемент */
+.control-value-mini.weight-input {
+    display: inline-block;
+    margin: 0;
+    height: 30px;
+    line-height: 30px;
+}
+/* Добавить в конец styles.css */
+
+/* Стили для уведомлений */
+.notification {
+    position: fixed;
+    top: 80px;
+    right: 10px;
+    background: #4CAF50;
+    color: white;
+    padding: 12px 16px;
+    border-radius: 8px;
+    z-index: 10000;
+    animation: slideIn 0.3s ease;
+    max-width: 300px;
+    font-size: 14px;
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.notification.error {
+    background: #e74c3c;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideOut {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+}
+
+/* Дополнительные стили для модального окна */
+.cargo-list-item {
+    background: white;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #e0e0e0;
     margin-bottom: 10px;
 }
 
-.scanner-placeholder h3 {
-    margin: 10px 0;
+.cargo-list-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.cargo-type-badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
     color: #2c3e50;
+    font-size: 14px;
+}
+
+.cargo-emoji-small {
     font-size: 16px;
 }
 
-.scanner-placeholder p {
-    margin: 5px 0;
+.cargo-weight {
+    background: #e3f2fd;
+    color: #1976d2;
+    padding: 4px 8px;
+    border-radius: 12px;
     font-size: 12px;
-    line-height: 1.4;
+    font-weight: bold;
 }
 
-.scanner-alternative {
-    margin-top: 15px;
+.cargo-details {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    margin-bottom: 10px;
 }
 
-.btn-alternative {
-    background: linear-gradient(135deg, #3498db, #2980b9);
-    color: white;
-    border: none;
-    padding: 10px 16px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 14px;
+.detail-item {
+    text-align: center;
+}
+
+.detail-label {
     font-weight: 600;
-    transition: all 0.3s ease;
-}
-
-.btn-alternative:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 2px 8px rgba(52, 152, 219, 0.3);
-}
-
-.input-hint {
-    font-size: 11px;
     color: #666;
-    text-align: center;
-    margin-top: 5px;
-    font-style: italic;
+    font-size: 11px;
+    display: block;
+    margin-bottom: 2px;
 }
 
-/* Адаптивность для упрощенного сканера */
-@media (max-width: 320px) {
-    .qr-reader-simple {
-        height: 180px;
-    }
-
-    .scanner-placeholder {
-        padding: 15px;
-    }
-
-    .placeholder-icon {
-        font-size: 36px;
-    }
-
-    .scanner-placeholder h3 {
-        font-size: 14px;
-    }
-
-    .scanner-placeholder p {
-        font-size: 11px;
-    }
-
-    .btn-alternative {
-        padding: 8px 12px;
-        font-size: 12px;
-    }
-}
-
-/* Стили для камеры */
-.camera-view {
-    width: 100%;
-    height: 100%;
-    position: relative;
-    overflow: hidden;
-    border-radius: 8px;
-}
-
-#cameraVideo {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    background: #000;
-}
-
-.camera-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.scanner-frame {
-    width: 200px;
-    height: 200px;
-    border: 3px solid #00ff00;
-    border-radius: 10px;
-    position: relative;
-    animation: scanner-pulse 2s infinite;
-    box-shadow: 0 0 0 1000px rgba(0, 0, 0, 0.3);
-}
-
-.scanner-line {
-    position: absolute;
-    top: 0;
-    left: 10%;
-    width: 80%;
-    height: 3px;
-    background: #00ff00;
-    animation: scanner-line 2s infinite;
-    box-shadow: 0 0 10px #00ff00;
-}
-
-@keyframes scanner-pulse {
-    0% { border-color: #00ff00; }
-    50% { border-color: #00cc00; }
-    100% { border-color: #00ff00; }
-}
-
-@keyframes scanner-line {
-    0% { top: 0; opacity: 1; }
-    50% { top: 100%; opacity: 0.7; }
-    100% { top: 0; opacity: 1; }
-}
-
-.camera-controls {
-    position: absolute;
-    bottom: 15px;
-    left: 0;
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    padding: 0 15px;
-}
-
-.btn-camera {
-    background: linear-gradient(135deg, #27ae60, #219653);
-    color: white;
-    border: none;
-    padding: 12px 20px;
-    border-radius: 25px;
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: 600;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-}
-
-.btn-camera:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
-}
-
-.btn-camera.secondary {
-    background: linear-gradient(135deg, #e74c3c, #c0392b);
-}
-
-.photo-preview {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    background: #000;
-}
-
-.photo-controls {
-    position: absolute;
-    bottom: 15px;
-    left: 0;
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    padding: 0 15px;
-}
-
-/* Адаптивность для камеры */
-@media (max-width: 320px) {
-    .scanner-frame {
-        width: 180px;
-        height: 180px;
-    }
-
-    .camera-controls {
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .btn-camera {
-        padding: 10px 16px;
-        font-size: 12px;
-        width: 80%;
-    }
-}
-
-/* Индикатор работы камеры */
-.camera-active {
-    border-color: #27ae60 !important;
-    border-style: solid !important;
-}
-
-.camera-status {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    background: rgba(0, 0, 0, 0.7);
-    color: white;
-    padding: 5px 10px;
-    border-radius: 15px;
+.detail-value {
+    color: #2c3e50;
+    font-weight: bold;
     font-size: 12px;
-    z-index: 10;
 }
 
-/* Стили для результатов сканирования */
-.scanner-result {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: rgba(0, 0, 0, 0.8);
-    color: white;
-    padding: 15px;
-    border-radius: 10px;
+.cargo-time {
+    font-size: 11px;
+    color: #999;
     text-align: center;
-    min-width: 250px;
-    z-index: 10;
-    backdrop-filter: blur(10px);
-}
-
-.scanner-result.success {
-    background: rgba(39, 174, 96, 0.9);
-}
-
-.scanner-result.error {
-    background: rgba(231, 76, 60, 0.9);
-}
-
-.scanner-result.scanning {
-    background: rgba(52, 152, 219, 0.9);
-}
-
-.result-icon {
-    font-size: 24px;
     margin-bottom: 8px;
 }
 
-.result-text {
+.cargo-photo-preview {
+    width: 60px;
+    height: 60px;
+    border-radius: 6px;
+    object-fit: cover;
+    margin: 0 auto 8px auto;
+    display: block;
+    border: 1px solid #e0e0e0;
+}
+
+.remove-cargo {
+    background: #e74c3c;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 12px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 600;
+    transition: background 0.3s ease;
+    width: 100%;
+    margin-top: 8px;
+}
+
+.remove-cargo:hover {
+    background: #c0392b;
+}
+
+.empty-state {
+    text-align: center;
+    color: #999;
+    font-style: italic;
+    padding: 30px 20px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border: 1px dashed #dee2e6;
     font-size: 14px;
-    line-height: 1.4;
 }
 
-.scanning {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    font-size: 16px;
+/* Стили для поля ввода веса */
+.control-buttons-mini .weight-input {
+    width: 100%;
+    padding: 6px 8px;
+    border: 2px solid #3498db;
+    border-radius: 4px;
+    font-size: 14px;
+    text-align: center;
+    font-weight: bold;
+    background-color: white;
+    height: 30px;
+    box-sizing: border-box;
 }
 
-/* Анимация сканирования */
-@keyframes scanning-pulse {
-    0% { opacity: 1; }
-    50% { opacity: 0.5; }
-    100% { opacity: 1; }
+.control-buttons-mini .weight-input:focus {
+    outline: none;
+    border-color: #2196F3;
+    box-shadow: 0 0 5px rgba(33, 150, 243, 0.3);
 }
 
-.scanning {
-    animation: scanning-pulse 1.5s infinite;
-}
-
-/* Адаптивность для результатов */
+/* Адаптивность */
 @media (max-width: 320px) {
-    .scanner-result {
-        min-width: 200px;
-        padding: 10px;
+    .notification {
+        top: 60px;
+        right: 5px;
+        left: 5px;
+        max-width: none;
+        font-size: 13px;
+        padding: 10px 12px;
     }
+}
+/* ==================== МОБИЛЬНАЯ ОПТИМИЗАЦИЯ ==================== */
 
-    .result-text {
+/* Базовые настройки для всех мобильных */
+html {
+    -webkit-text-size-adjust: 100%; /* Предотвращает авто-масштабирование текста */
+    -webkit-tap-highlight-color: transparent; /* Убирает синий фон при тапе */
+}
+
+body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+}
+
+.container {
+    background: white !important;
+    color: #2c3e50 !important;
+}
+
+/* Улучшаем доступность для тапа */
+button, 
+.cargo-type-column,
+.clickable-stat,
+.control-btn-mini,
+.photo-container-mini {
+    cursor: pointer;
+    -webkit-user-select: none;
+    user-select: none;
+    transition: all 0.2s ease;
+}
+
+button:active,
+.cargo-type-column:active,
+.clickable-stat:active,
+.control-btn-mini:active {
+    transform: scale(0.98);
+    opacity: 0.9;
+}
+
+/* Оптимизация для различных размеров экранов */
+
+/* Очень маленькие экраны (меньше 320px) */
+@media (max-width: 319px) {
+    .container {
+        padding: 2px;
+        border-radius: 5px;
+    }
+    
+    header {
+        padding: 5px 8px;
+    }
+    
+    .logo-image {
+        height: 20px;
+    }
+    
+    .logo-text {
+        font-size: 14px;
+    }
+    
+    .employee-info {
+        padding: 6px 8px;
         font-size: 12px;
     }
+    
+    .btn-logout {
+        padding: 4px 8px;
+        font-size: 11px;
+    }
+    
+    .app-container {
+        padding: 4px;
+    }
+    
+    h1 {
+        font-size: 1em;
+        margin-bottom: 8px;
+    }
+    
+    .cargo-type-column {
+        padding: 4px 3px;
+        min-height: 32px;
+        font-size: 10px;
+    }
+    
+    .cargo-image-placeholder {
+        width: 24px;
+        height: 24px;
+    }
+    
+    .cargo-icon-mini {
+        font-size: 12px;
+    }
+    
+    .photo-container-mini {
+        width: 35px;
+        height: 35px;
+    }
+    
+    .control-item-compact {
+        padding: 4px;
+    }
+    
+    .control-item-compact label {
+        font-size: 10px;
+        min-width: 35px;
+    }
+    
+    .control-btn-mini {
+        padding: 4px 6px;
+        font-size: 9px;
+        min-width: 20px;
+    }
+    
+    .control-value-mini {
+        font-size: 11px;
+    }
+    
+    .weight-input {
+        font-size: 14px !important;
+        height: 28px !important;
+        padding: 3px !important;
+    }
+    
+    .btn-save-mini,
+    .btn-send-mini {
+        padding: 8px;
+        font-size: 11px;
+        min-height: 36px;
+    }
+    
+    .stats-mini {
+        padding: 6px;
+    }
+    
+    .stat-item {
+        font-size: 10px;
+        padding: 3px 0;
+    }
+    
+    .clickable-stat {
+        padding: 8px 10px;
+        margin: -4px -4px 2px -4px;
+    }
+    
+    .clickable-stat::before {
+        font-size: 12px;
+        margin-right: 4px;
+    }
+    
+    .clickable-stat::after {
+        content: "Список";
+        font-size: 8px;
+        margin-left: 4px;
+    }
+    
+    .clickable-stat .stat-label {
+        font-size: 11px;
+    }
+    
+    .clickable-stat .stat-value {
+        font-size: 11px;
+        padding: 3px 8px;
+        min-width: 30px;
+    }
+}
+
+/* Средние мобильные (320px - 374px) */
+@media (min-width: 320px) and (max-width: 374px) {
+    .container {
+        padding: 3px;
+    }
+    
+    .app-container {
+        padding: 5px;
+    }
+    
+    .cargo-type-column {
+        padding: 5px 4px;
+        min-height: 35px;
+    }
+    
+    .photo-container-mini {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .weight-input {
+        font-size: 16px !important;
+        height: 32px !important;
+    }
+}
+
+/* Большие мобильные (375px - 424px) */
+@media (min-width: 375px) and (max-width: 424px) {
+    .container {
+        padding: 4px;
+    }
+    
+    .app-container {
+        padding: 6px;
+    }
+}
+
+/* Очень высокие экраны */
+@media (min-height: 700px) and (max-width: 480px) {
+    .main-layout {
+        gap: 15px;
+    }
+    
+    .cargo-types-column {
+        gap: 8px;
+    }
+    
+    .cargo-type-column {
+        min-height: 45px;
+    }
+    
+    .control-item-compact {
+        padding: 8px;
+    }
+    
+    .btn-save-mini,
+    .btn-send-mini {
+        padding: 12px;
+        font-size: 14px;
+    }
+}
+
+/* Очень короткие экраны */
+@media (max-height: 500px) {
+    .employee-info {
+        padding: 4px 8px;
+    }
+    
+    .app-container h1 {
+        margin: 3px 0;
+        font-size: 16px;
+    }
+    
+    .main-layout {
+        gap: 6px;
+    }
+    
+    .cargo-type-column {
+        padding: 3px 2px;
+        min-height: 28px;
+        font-size: 10px;
+    }
+    
+    .photo-container-mini {
+        width: 30px;
+        height: 30px;
+    }
+    
+    .btn-save-mini,
+    .btn-send-mini {
+        padding: 6px;
+        font-size: 11px;
+        min-height: 36px;
+    }
+}
+
+/* Пейзажная ориентация */
+@media (orientation: landscape) and (max-height: 500px) {
+    .container {
+        max-width: 100%;
+        border-radius: 0;
+    }
+    
+    .main-layout {
+        flex-direction: row;
+        height: calc(100vh - 120px);
+    }
+    
+    .left-column {
+        flex: 1;
+    }
+    
+    .right-column {
+        flex: 1;
+        justify-content: space-around;
+    }
+    
+    .cargo-types-column {
+        height: 100%;
+        justify-content: space-around;
+    }
+    
+    .photo-section-mini {
+        margin-top: auto;
+    }
+}
+
+/* Планшеты и большие экраны */
+@media (min-width: 768px) {
+    .container {
+        max-width: 500px;
+        margin: 10px auto;
+        border-radius: 15px;
+    }
+    
+    .main-layout {
+        flex-direction: row;
+        height: calc(100vh - 140px);
+    }
+}
+
+/* Улучшение для устройств iOS */
+@supports (-webkit-touch-callout: none) {
+    .cargo-type-column,
+    button {
+        -webkit-touch-callout: none;
+    }
+    
+    input, textarea {
+        font-size: 16px; /* Предотвращает зум в iOS */
+    }
+}
+
+/* Улучшение для устройств Android */
+@supports not (-webkit-touch-callout: none) {
+    body {
+        overscroll-behavior: none; /* Убирает эффект перетягивания */
+    }
+}
+
+/* Оптимизация модального окна для мобильных */
+@media (max-width: 480px) {
+    .cargo-list-modal-compact {
+        margin: 2% auto;
+        width: 98%;
+        max-height: 96vh;
+        padding: 12px;
+    }
+    
+    .cargo-list-item {
+        padding: 10px;
+    }
+    
+    .cargo-details {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 6px;
+    }
+    
+    .remove-cargo {
+        padding: 10px;
+        font-size: 14px;
+        min-height: 44px;
+    }
+    
+    .btn-secondary {
+        padding: 12px 20px;
+        font-size: 14px;
+        min-height: 44px;
+    }
+}
+
+/* Обеспечиваем прокрутку если контент не помещается */
+.cargo-list-container {
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Убираем стандартное поведение pull-to-refresh */
+body {
+    overscroll-behavior-y: contain;
+}
+/* ==================== МОБИЛЬНАЯ ОПТИМИЗАЦИЯ ==================== */
+
+/* Базовые настройки для всех мобильных */
+html {
+    -webkit-text-size-adjust: 100%; /* Предотвращает авто-масштабирование текста */
+    -webkit-tap-highlight-color: transparent; /* Убирает синий фон при тапе */
+}
+
+body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+}
+
+.container {
+    background: white !important;
+    color: #2c3e50 !important;
+}
+
+/* Улучшаем доступность для тапа */
+button, 
+.cargo-type-column,
+.clickable-stat,
+.control-btn-mini,
+.photo-container-mini {
+    cursor: pointer;
+    -webkit-user-select: none;
+    user-select: none;
+    transition: all 0.2s ease;
+}
+
+button:active,
+.cargo-type-column:active,
+.clickable-stat:active,
+.control-btn-mini:active {
+    transform: scale(0.98);
+    opacity: 0.9;
+}
+
+/* Оптимизация для различных размеров экранов */
+
+/* Очень маленькие экраны (меньше 320px) */
+@media (max-width: 319px) {
+    .container {
+        padding: 2px;
+        border-radius: 5px;
+    }
+    
+    header {
+        padding: 5px 8px;
+    }
+    
+    .logo-image {
+        height: 20px;
+    }
+    
+    .logo-text {
+        font-size: 14px;
+    }
+    
+    .employee-info {
+        padding: 6px 8px;
+        font-size: 12px;
+    }
+    
+    .btn-logout {
+        padding: 4px 8px;
+        font-size: 11px;
+    }
+    
+    .app-container {
+        padding: 4px;
+    }
+    
+    h1 {
+        font-size: 1em;
+        margin-bottom: 8px;
+    }
+    
+    .cargo-type-column {
+        padding: 4px 3px;
+        min-height: 32px;
+        font-size: 10px;
+    }
+    
+    .cargo-image-placeholder {
+        width: 24px;
+        height: 24px;
+    }
+    
+    .cargo-icon-mini {
+        font-size: 12px;
+    }
+    
+    .photo-container-mini {
+        width: 35px;
+        height: 35px;
+    }
+    
+    .control-item-compact {
+        padding: 4px;
+    }
+    
+    .control-item-compact label {
+        font-size: 10px;
+        min-width: 35px;
+    }
+    
+    .control-btn-mini {
+        padding: 4px 6px;
+        font-size: 9px;
+        min-width: 20px;
+    }
+    
+    .control-value-mini {
+        font-size: 11px;
+    }
+    
+    .weight-input {
+        font-size: 14px !important;
+        height: 28px !important;
+        padding: 3px !important;
+    }
+    
+    .btn-save-mini,
+    .btn-send-mini {
+        padding: 8px;
+        font-size: 11px;
+        min-height: 36px;
+    }
+    
+    .stats-mini {
+        padding: 6px;
+    }
+    
+    .stat-item {
+        font-size: 10px;
+        padding: 3px 0;
+    }
+    
+    .clickable-stat {
+        padding: 8px 10px;
+        margin: -4px -4px 2px -4px;
+    }
+    
+    .clickable-stat::before {
+        font-size: 12px;
+        margin-right: 4px;
+    }
+    
+    .clickable-stat::after {
+        content: "Список";
+        font-size: 8px;
+        margin-left: 4px;
+    }
+    
+    .clickable-stat .stat-label {
+        font-size: 11px;
+    }
+    
+    .clickable-stat .stat-value {
+        font-size: 11px;
+        padding: 3px 8px;
+        min-width: 30px;
+    }
+}
+
+/* Средние мобильные (320px - 374px) */
+@media (min-width: 320px) and (max-width: 374px) {
+    .container {
+        padding: 3px;
+    }
+    
+    .app-container {
+        padding: 5px;
+    }
+    
+    .cargo-type-column {
+        padding: 5px 4px;
+        min-height: 35px;
+    }
+    
+    .photo-container-mini {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .weight-input {
+        font-size: 16px !important;
+        height: 32px !important;
+    }
+}
+
+/* Большие мобильные (375px - 424px) */
+@media (min-width: 375px) and (max-width: 424px) {
+    .container {
+        padding: 4px;
+    }
+    
+    .app-container {
+        padding: 6px;
+    }
+}
+
+/* Очень высокие экраны */
+@media (min-height: 700px) and (max-width: 480px) {
+    .main-layout {
+        gap: 15px;
+    }
+    
+    .cargo-types-column {
+        gap: 8px;
+    }
+    
+    .cargo-type-column {
+        min-height: 45px;
+    }
+    
+    .control-item-compact {
+        padding: 8px;
+    }
+    
+    .btn-save-mini,
+    .btn-send-mini {
+        padding: 12px;
+        font-size: 14px;
+    }
+}
+
+/* Очень короткие экраны */
+@media (max-height: 500px) {
+    .employee-info {
+        padding: 4px 8px;
+    }
+    
+    .app-container h1 {
+        margin: 3px 0;
+        font-size: 16px;
+    }
+    
+    .main-layout {
+        gap: 6px;
+    }
+    
+    .cargo-type-column {
+        padding: 3px 2px;
+        min-height: 28px;
+        font-size: 10px;
+    }
+    
+    .photo-container-mini {
+        width: 30px;
+        height: 30px;
+    }
+    
+    .btn-save-mini,
+    .btn-send-mini {
+        padding: 6px;
+        font-size: 11px;
+        min-height: 36px;
+    }
+}
+
+/* Пейзажная ориентация */
+@media (orientation: landscape) and (max-height: 500px) {
+    .container {
+        max-width: 100%;
+        border-radius: 0;
+    }
+    
+    .main-layout {
+        flex-direction: row;
+        height: calc(100vh - 120px);
+    }
+    
+    .left-column {
+        flex: 1;
+    }
+    
+    .right-column {
+        flex: 1;
+        justify-content: space-around;
+    }
+    
+    .cargo-types-column {
+        height: 100%;
+        justify-content: space-around;
+    }
+    
+    .photo-section-mini {
+        margin-top: auto;
+    }
+}
+
+/* Планшеты и большие экраны */
+@media (min-width: 768px) {
+    .container {
+        max-width: 500px;
+        margin: 10px auto;
+        border-radius: 15px;
+    }
+    
+    .main-layout {
+        flex-direction: row;
+        height: calc(100vh - 140px);
+    }
+}
+
+/* Улучшение для устройств iOS */
+@supports (-webkit-touch-callout: none) {
+    .cargo-type-column,
+    button {
+        -webkit-touch-callout: none;
+    }
+    
+    input, textarea {
+        font-size: 16px; /* Предотвращает зум в iOS */
+    }
+}
+
+/* Улучшение для устройств Android */
+@supports not (-webkit-touch-callout: none) {
+    body {
+        overscroll-behavior: none; /* Убирает эффект перетягивания */
+    }
+}
+
+/* Оптимизация модального окна для мобильных */
+@media (max-width: 480px) {
+    .cargo-list-modal-compact {
+        margin: 2% auto;
+        width: 98%;
+        max-height: 96vh;
+        padding: 12px;
+    }
+    
+    .cargo-list-item {
+        padding: 10px;
+    }
+    
+    .cargo-details {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 6px;
+    }
+    
+    .remove-cargo {
+        padding: 10px;
+        font-size: 14px;
+        min-height: 44px;
+    }
+    
+    .btn-secondary {
+        padding: 12px 20px;
+        font-size: 14px;
+        min-height: 44px;
+    }
+}
+
+/* Обеспечиваем прокрутку если контент не помещается */
+.cargo-list-container {
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Убираем стандартное поведение pull-to-refresh */
+body {
+    overscroll-behavior-y: contain;
 }
