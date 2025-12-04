@@ -2,83 +2,151 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>NORD WHEEL - Авторизация</title>
     <link rel="stylesheet" href="styles.css">
-    <script src="jsQR.js"></script>
+    <script src="https://unpkg.com/html5-qrcode/minified/html5-qrcode.min.js"></script>
+    <style>
+        /* Дополнительные стили для мобильной оптимизации */
+        html, body {
+            height: 100vh;
+            overflow: hidden;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .container {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background: white;
+        }
+        
+        .auth-container {
+            height: calc(100vh - 60px);
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            padding: 10px;
+        }
+        
+        .qr-reader-mobile {
+            width: 100%;
+            height: 200px;
+            max-height: 30vh;
+            min-height: 150px;
+        }
+        
+        .manual-input {
+            flex-wrap: wrap;
+        }
+        
+        #employeeCode {
+            flex: 1;
+            min-width: 0;
+            font-size: 16px;
+            height: 44px; /* Минимальная высота для удобного тапа */
+        }
+        
+        .btn-auth {
+            min-width: 80px;
+            padding: 12px 15px;
+            height: 44px;
+        }
+        
+        /* Улучшаем кнопки для тапа */
+        .demo-code, .btn-auth {
+            min-height: 44px;
+        }
+    </style>
 </head>
 <body>
-<div class="container">
-    <header>
-        <div class="logo">
-            <img src="logonwnew.png" alt="NORD WHEEL" class="logo-image" onerror="this.style.display='none'">
-            <span class="logo-text">NORD WHEEL</span>
-        </div>
-    </header>
-
-    <main>
-        <div class="auth-container">
-            <h1>Авторизация</h1>
-
-            <div class="auth-card">
-                <div class="qr-scanner-section">
-                    <div id="qr-reader" class="qr-reader-simple">
-                        <div id="scannerPlaceholder" class="scanner-placeholder">
-                            <div class="placeholder-icon">📱</div>
-                            <h3>Сканирование QR-кодов</h3>
-                            <p>Для сканирования QR-кодов используйте камеру вашего устройства</p>
-                            <div class="scanner-alternative">
-                                <button class="btn-alternative" onclick="startQRScanner()">
-                                    📷 Запустить сканер QR
-                                </button>
-                            </div>
-                        </div>
-                        <div id="cameraView" class="camera-view" style="display: none;">
-                            <video id="cameraVideo" autoplay playsinline></video>
-                            <canvas id="qrCanvas" style="display: none;"></canvas>
-                            <div class="camera-overlay">
-                                <div class="scanner-frame"></div>
-                                <div class="scanner-line"></div>
-                            </div>
-                            <div class="scanner-result" id="scannerResult"></div>
-                            <div class="camera-controls">
-                                <button class="btn-camera secondary" onclick="stopQRScanner()">❌ Остановить</button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="scanner-instructions">
-                        <p id="scannerHint">Или используйте ручной ввод кода ниже</p>
-                    </div>
-                </div>
-
-                <div class="manual-auth-section">
-                    <h3>Введите код сотрудника</h3>
-                    <div class="manual-input">
-                        <input type="text" id="employeeCode" placeholder="EMP001" maxlength="10">
-                        <button class="btn-auth" onclick="manualAuth()">Войти</button>
-                    </div>
-                    <div class="input-hint">
-                        Формат: EMP + 3 цифры (например: EMP001)
-                    </div>
-                </div>
-
-                <div class="auth-status" id="authStatus">
-                    <!-- Статус авторизации будет здесь -->
-                </div>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <img src="logonwnew.png" alt="NORD WHEEL" class="logo-image" onerror="this.style.display='none'">
+                <span class="logo-text">NORD WHEEL</span>
             </div>
+        </header>
 
-            <div class="demo-info">
-                <h4>Демо-коды для тестирования:</h4>
-                <div class="demo-codes">
-                    <div class="demo-code" onclick="useDemoCode('EMP001')">
-                        <strong>EMP001</strong><br>Иванов Алексей
+        <main>
+            <div class="auth-container">
+                <h1>Авторизация</h1>
+                
+                <div class="auth-card">
+                    <div class="qr-scanner-section">
+                        <div id="qr-reader" class="qr-reader qr-reader-mobile"></div>
+                        <div class="scanner-instructions">
+                            <p>Наведите камеру на QR-код сотрудника</p>
+                            <p><small>Код должен быть в формате: EMP001</small></p>
+                        </div>
+                    </div>
+
+                    <div class="manual-auth-section">
+                        <h3>Или введите код</h3>
+                        <div class="manual-input">
+                            <input type="text" 
+                                   id="employeeCode" 
+                                   placeholder="EMP001" 
+                                   maxlength="10"
+                                   pattern="[A-Z0-9]{6}"
+                                   inputmode="text"
+                                   autocapitalize="characters">
+                            <button class="btn-auth" onclick="manualAuth()">Войти</button>
+                        </div>
+                    </div>
+
+                    <div class="auth-status" id="authStatus">
+                        <!-- Статус авторизации будет здесь -->
+                    </div>
+                </div>
+
+                <div class="demo-info">
+                    <h4>Демо-код:</h4>
+                    <div class="demo-codes">
+                        <div class="demo-code" onclick="useDemoCode('EMP001')">EMP001</div>
+                        <div class="demo-code" onclick="useDemoCode('TEST')">Тестовый</div>
                     </div>
                 </div>
             </div>
-        </div>
-    </main>
-</div>
+        </main>
+    </div>
 
-<script src="auth-qr.js"></script>
+    <script src="auth.js"></script>
+    <script>
+        // Улучшаем авторизацию для мобильных
+        document.addEventListener('DOMContentLoaded', function() {
+            // Автофокус на поле ввода
+            setTimeout(() => {
+                const input = document.getElementById('employeeCode');
+                if (input) {
+                    input.focus();
+                }
+            }, 500);
+            
+            // Оптимизация для очень маленьких экранов
+            function adjustForScreen() {
+                const screenHeight = window.innerHeight;
+                const screenWidth = window.innerWidth;
+                
+                // Для очень маленьких экранов
+                if (screenHeight < 500) {
+                    document.querySelector('.qr-reader-mobile').style.height = '120px';
+                    document.querySelector('h1').style.fontSize = '18px';
+                    document.querySelector('.auth-container').style.padding = '5px';
+                }
+                
+                // Для очень узких экранов
+                if (screenWidth < 320) {
+                    document.querySelector('.manual-input').style.flexDirection = 'column';
+                    document.querySelector('.btn-auth').style.width = '100%';
+                    document.querySelector('.btn-auth').style.marginTop = '5px';
+                    document.querySelector('.demo-codes').style.gridTemplateColumns = '1fr';
+                }
+            }
+            
+            // Вызываем при загрузке и изменении размера
+            adjustForScreen();
+            window.addEventListener('resize', adjustForScreen);
+        });
+    </script>
 </body>
 </html>
