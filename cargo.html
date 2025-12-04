@@ -2,10 +2,87 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>NORD WHEEL - Замер грузов</title>
     <link rel="stylesheet" href="styles.css">
     <script src="auth-simple.js"></script>
+    <style>
+        /* Мобильная оптимизация */
+        html, body {
+            height: 100%;
+            overflow: hidden;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .container {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background: white;
+        }
+        
+        main {
+            flex: 1;
+            overflow: hidden;
+            min-height: 0;
+        }
+        
+        .app-container {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            padding: 5px;
+        }
+        
+        .main-layout {
+            flex: 1;
+            min-height: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        @media (min-width: 480px) {
+            .main-layout {
+                flex-direction: row;
+            }
+        }
+        
+        /* Улучшаем кнопки для тапа */
+        .btn-save-mini, .btn-send-mini, .cargo-type-column, 
+        .control-btn-mini, .remove-cargo, .btn-secondary {
+            min-height: 44px;
+            touch-action: manipulation;
+        }
+        
+        /* Улучшаем поле ввода веса для мобильных */
+        .weight-input {
+            font-size: 18px !important;
+            height: 40px !important;
+        }
+        
+        /* Оптимизация для очень маленьких экранов */
+        @media (max-height: 600px) {
+            .employee-info {
+                padding: 5px 10px;
+            }
+            
+            .app-container h1 {
+                margin: 5px 0;
+                font-size: 1.1em;
+            }
+            
+            .cargo-type-column {
+                padding: 6px 4px;
+                min-height: 35px;
+            }
+            
+            .photo-container-mini {
+                width: 40px;
+                height: 40px;
+            }
+        }
+    </style>
 </head>
 <body>
     <div class="container">
@@ -71,9 +148,16 @@
                             <div class="control-item-compact">
                                 <label>Вес</label>
                                 <div class="control-buttons-mini">
-                                    <button type="button" class="control-btn-mini minus" onclick="changeWeight(-1)">-</button>
-                                    <span class="control-value-mini" id="weight">1</span>
-                                    <button type="button" class="control-btn-mini plus" onclick="changeWeight(1)">+</button>
+                                    <input type="number" 
+                                           id="weightInput" 
+                                           class="control-value-mini weight-input" 
+                                           value="1" 
+                                           min="1" 
+                                           max="10000" 
+                                           step="1"
+                                           inputmode="numeric"
+                                           pattern="[0-9]*"
+                                           onchange="updateWeightFromInput()">
                                 </div>
                                 <span class="control-unit">кг</span>
                             </div>
@@ -171,5 +255,65 @@
     <input type="file" id="photoInput" accept="image/*" capture="environment" style="display: none;">
 
     <script src="script.js"></script>
+    <script>
+        // Мобильная оптимизация скрипта
+        document.addEventListener('DOMContentLoaded', function() {
+            // Оптимизация для различных размеров экрана
+            function optimizeForScreen() {
+                const screenHeight = window.innerHeight;
+                const screenWidth = window.innerWidth;
+                
+                // Настройки для очень маленьких экранов
+                if (screenHeight < 600) {
+                    // Уменьшаем отступы
+                    document.querySelector('.app-container').style.padding = '3px';
+                    
+                    // Уменьшаем высоту элементов
+                    const cargoTypes = document.querySelectorAll('.cargo-type-column');
+                    cargoTypes.forEach(el => {
+                        el.style.padding = '4px 3px';
+                        el.style.minHeight = '32px';
+                    });
+                    
+                    // Уменьшаем фото
+                    document.querySelector('.photo-container-mini').style.width = '35px';
+                    document.querySelector('.photo-container-mini').style.height = '35px';
+                    
+                    // Уменьшаем кнопки
+                    document.querySelectorAll('.btn-save-mini, .btn-send-mini').forEach(btn => {
+                        btn.style.padding = '8px';
+                        btn.style.fontSize = '11px';
+                    });
+                }
+                
+                // Для узких экранов
+                if (screenWidth < 350) {
+                    // Делаем элементы уже
+                    document.querySelectorAll('.control-item-compact').forEach(el => {
+                        el.style.padding = '4px';
+                    });
+                    
+                    // Уменьшаем текст в статистике
+                    document.querySelectorAll('.stat-label, .stat-value').forEach(el => {
+                        el.style.fontSize = '10px';
+                    });
+                }
+            }
+            
+            // Вызываем при загрузке и изменении размера
+            optimizeForScreen();
+            window.addEventListener('resize', optimizeForScreen);
+            
+            // Предотвращаем масштабирование при двойном тапе
+            let lastTouchEnd = 0;
+            document.addEventListener('touchend', function(event) {
+                const now = (new Date()).getTime();
+                if (now - lastTouchEnd <= 300) {
+                    event.preventDefault();
+                }
+                lastTouchEnd = now;
+            }, false);
+        });
+    </script>
 </body>
 </html>
