@@ -61,72 +61,310 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
+            justify-content: flex-start;
         }
         
-        .qr-reader-mobile {
+        h1 {
+            margin: 10px 0 15px 0;
+            color: #2c3e50;
+            text-align: center;
+            font-size: 1.5em;
+        }
+        
+        .auth-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
             width: 100%;
-            height: 180px;
-            max-height: 25vh;
-            min-height: 150px;
+            max-width: 400px;
+            text-align: center;
+        }
+        
+        /* QR-СКАНЕР СТИЛИ */
+        .qr-scanner-section {
+            margin-bottom: 20px;
+        }
+        
+        #qr-reader {
+            width: 100%;
+            height: 250px;
+            border: 2px solid #3498db;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 0 auto 15px auto;
+            position: relative;
+            background: #000;
+        }
+        
+        #qr-reader video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        #qr-reader canvas {
+            display: none;
+        }
+        
+        .scanner-frame {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 200px;
+            height: 200px;
+            border: 3px solid #00ff00;
+            border-radius: 10px;
+            box-shadow: 0 0 0 1000px rgba(0, 0, 0, 0.5);
+            z-index: 1;
+        }
+        
+        .scanner-instructions {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.4;
+            margin-bottom: 10px;
+        }
+        
+        .scanner-instructions p {
+            margin: 5px 0;
+        }
+        
+        /* КНОПКА ЗАПУСКА СКАНЕРА */
+        .btn-scan {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 20px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin: 10px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            transition: all 0.3s;
+        }
+        
+        .btn-scan:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+        }
+        
+        .btn-scan:disabled {
+            background: #95a5a6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        /* РУЧНОЙ ВВОД */
+        .manual-auth-section {
+            border-top: 1px solid #e9ecef;
+            padding-top: 20px;
+            margin-top: 20px;
+        }
+        
+        .manual-auth-section h3 {
+            margin-bottom: 15px;
+            color: #2c3e50;
+            font-size: 18px;
         }
         
         .manual-input {
             display: flex;
-            gap: 8px;
+            gap: 10px;
             width: 100%;
             max-width: 300px;
+            margin: 0 auto;
         }
         
         #employeeCode {
             flex: 1;
             min-width: 0;
             font-size: 16px;
-            height: 44px;
-            padding: 0 12px;
+            height: 46px;
+            padding: 0 15px;
             border: 2px solid #3498db;
-            border-radius: 6px;
+            border-radius: 8px;
             text-align: center;
         }
         
+        #employeeCode:focus {
+            outline: none;
+            border-color: #2980b9;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        }
+        
         .btn-auth {
-            min-width: 80px;
-            padding: 0 15px;
-            height: 44px;
-            background: linear-gradient(135deg, #3498db, #2980b9);
+            min-width: 90px;
+            padding: 0 20px;
+            height: 46px;
+            background: linear-gradient(135deg, #27ae60, #219653);
             color: white;
             border: none;
-            border-radius: 6px;
+            border-radius: 8px;
             font-weight: 600;
-            font-size: 14px;
+            font-size: 16px;
             cursor: pointer;
+            transition: all 0.3s;
         }
         
-        /* Улучшаем кнопки для тапа */
-        .demo-code, .btn-auth {
-            min-height: 44px;
+        .btn-auth:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(39, 174, 96, 0.3);
         }
         
-        /* Адаптация для очень маленьких экранов */
+        /* СТАТУС АВТОРИЗАЦИИ */
+        .auth-status {
+            margin-top: 15px;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            min-height: 20px;
+            text-align: center;
+        }
+        
+        .auth-status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .auth-status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .auth-status.loading {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        
+        /* ДЕМО-КОДЫ */
+        .demo-info {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 15px;
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        .demo-info h4 {
+            margin-bottom: 10px;
+            color: #495057;
+            font-size: 16px;
+        }
+        
+        .demo-codes {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .demo-code {
+            background: white;
+            padding: 10px 15px;
+            border-radius: 6px;
+            border: 1px solid #dee2e6;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 14px;
+            font-weight: 500;
+            text-align: center;
+            flex: 1;
+            max-width: 150px;
+        }
+        
+        .demo-code:hover {
+            background: #e3f2fd;
+            border-color: #3498db;
+            transform: translateY(-2px);
+        }
+        
+        /* АДАПТАЦИЯ ДЛЯ МАЛЕНЬКИХ ЭКРАНОВ */
+        @media (max-height: 700px) {
+            #qr-reader {
+                height: 200px;
+            }
+            
+            .scanner-frame {
+                width: 180px;
+                height: 180px;
+            }
+        }
+        
         @media (max-height: 600px) {
-            header {
-                padding: 6px 10px !important;
-            }
-            
-            .logo-image {
-                height: 22px;
-            }
-            
-            .logo-text {
-                font-size: 15px;
-            }
-            
             .auth-container {
                 padding: 10px;
             }
             
-            .qr-reader-mobile {
-                height: 140px;
+            h1 {
+                font-size: 1.3em;
+                margin: 5px 0 10px 0;
+            }
+            
+            #qr-reader {
+                height: 180px;
+            }
+            
+            .scanner-frame {
+                width: 160px;
+                height: 160px;
+            }
+            
+            .auth-card {
+                padding: 15px;
+            }
+        }
+        
+        @media (max-width: 350px) {
+            .manual-input {
+                flex-direction: column;
+            }
+            
+            .btn-auth {
+                width: 100%;
+            }
+            
+            .demo-codes {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .demo-code {
+                max-width: 100%;
+                width: 100%;
+            }
+        }
+        
+        /* ИНДИКАТОР СКАНИРОВАНИЯ */
+        .scanning-indicator {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, #3498db, #2ecc71, #3498db);
+            background-size: 200% 100%;
+            animation: scanning 2s linear infinite;
+            z-index: 2;
+        }
+        
+        @keyframes scanning {
+            0% {
+                background-position: 200% 0;
+            }
+            100% {
+                background-position: -200% 0;
             }
         }
     </style>
@@ -144,14 +382,28 @@
             <h1>Авторизация</h1>
             
             <div class="auth-card">
+                <!-- QR-СКАНЕР -->
                 <div class="qr-scanner-section">
-                    <div id="qr-reader" class="qr-reader qr-reader-mobile"></div>
+                    <div id="qr-reader">
+                        <!-- Сканер будет инициализирован здесь -->
+                        <div class="scanner-frame"></div>
+                        <div class="scanning-indicator" style="display: none;"></div>
+                    </div>
+                    
                     <div class="scanner-instructions">
                         <p>Наведите камеру на QR-код сотрудника</p>
-                        <p><small>Код должен быть в формате: EMP001</small></p>
+                        <p><small>Расположите QR-код внутри рамки</small></p>
                     </div>
+                    
+                    <button id="startScannerBtn" class="btn-scan">
+                        <span>🔍</span> Запустить сканер
+                    </button>
+                    <button id="stopScannerBtn" class="btn-scan" style="background: linear-gradient(135deg, #e74c3c, #c0392b); display: none;">
+                        <span>⏹️</span> Остановить сканер
+                    </button>
                 </div>
 
+                <!-- РУЧНОЙ ВВОД -->
                 <div class="manual-auth-section">
                     <h3>Или введите код</h3>
                     <div class="manual-input">
@@ -166,24 +418,51 @@
                     </div>
                 </div>
 
+                <!-- СТАТУС АВТОРИЗАЦИИ -->
                 <div class="auth-status" id="authStatus">
-                    <!-- Статус авторизации будет здесь -->
+                    Готов к сканированию
                 </div>
             </div>
 
+            <!-- ДЕМО-КОДЫ -->
             <div class="demo-info">
-                <h4>Демо-код:</h4>
+                <h4>Демо-коды:</h4>
                 <div class="demo-codes">
-                    <div class="demo-code" onclick="useDemoCode('EMP001')">EMP001</div>
-                    <div class="demo-code" onclick="useDemoCode('TEST')">Тестовый</div>
+                    <div class="demo-code" onclick="useDemoCode('EMP001')">EMP001 - Иванов</div>
+                    <div class="demo-code" onclick="useDemoCode('EMP002')">EMP002 - Петров</div>
                 </div>
             </div>
         </main>
     </div>
 
-    <script src="auth.js"></script>
     <script>
+        // ПЕРЕМЕННЫЕ ДЛЯ QR-СКАНЕРА
+        let html5QrCode = null;
+        let isScannerActive = false;
+        let lastScannedCode = '';
+        
         document.addEventListener('DOMContentLoaded', function() {
+            console.log('NORD WHEEL Auth - QR Scanner initialized');
+            
+            // Элементы интерфейса
+            const startBtn = document.getElementById('startScannerBtn');
+            const stopBtn = document.getElementById('stopScannerBtn');
+            const qrReader = document.getElementById('qr-reader');
+            const scanningIndicator = document.querySelector('.scanning-indicator');
+            
+            // Кнопка запуска сканера
+            startBtn.addEventListener('click', function() {
+                startQRScanner();
+            });
+            
+            // Кнопка остановки сканера
+            stopBtn.addEventListener('click', function() {
+                stopQRScanner();
+            });
+            
+            // Проверяем поддержку камеры
+            checkCameraSupport();
+            
             // Автофокус на поле ввода
             setTimeout(() => {
                 const input = document.getElementById('employeeCode');
@@ -192,28 +471,402 @@
                 }
             }, 500);
             
-            // Адаптация для разных экранов
-            function adjustForScreen() {
-                const screenHeight = window.innerHeight;
-                const screenWidth = window.innerWidth;
-                
-                if (screenHeight < 500) {
-                    document.querySelector('.qr-reader-mobile').style.height = '120px';
-                    document.querySelector('h1').style.fontSize = '18px';
-                    document.querySelector('.auth-container').style.padding = '10px';
-                }
-                
-                if (screenWidth < 320) {
-                    document.querySelector('.manual-input').style.flexDirection = 'column';
-                    document.querySelector('.btn-auth').style.width = '100%';
-                    document.querySelector('.btn-auth').style.marginTop = '5px';
-                    document.querySelector('.demo-codes').style.gridTemplateColumns = '1fr';
-                }
+            // Проверяем, есть ли сохраненная сессия
+            checkExistingSession();
+        });
+        
+        // ПРОВЕРКА ПОДДЕРЖКИ КАМЕРЫ
+        function checkCameraSupport() {
+            const hasGetUserMedia = !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia);
+            
+            if (!hasGetUserMedia) {
+                showAuthStatus('Ваш браузер не поддерживает доступ к камере', 'error');
+                document.getElementById('startScannerBtn').disabled = true;
+                document.getElementById('startScannerBtn').innerHTML = '<span>🚫</span> Камера не поддерживается';
             }
             
-            adjustForScreen();
-            window.addEventListener('resize', adjustForScreen);
+            return hasGetUserMedia;
+        }
+        
+        // ЗАПУСК QR-СКАНЕРА
+        async function startQRScanner() {
+            if (!checkCameraSupport()) {
+                return;
+            }
+            
+            if (isScannerActive) {
+                return;
+            }
+            
+            try {
+                showAuthStatus('Запуск камеры...', 'loading');
+                
+                // Скрываем кнопку старта, показываем кнопку остановки
+                document.getElementById('startScannerBtn').style.display = 'none';
+                document.getElementById('stopScannerBtn').style.display = 'flex';
+                
+                // Показываем индикатор сканирования
+                document.querySelector('.scanning-indicator').style.display = 'block';
+                
+                // Создаем экземпляр сканера
+                html5QrCode = new Html5Qrcode("qr-reader");
+                
+                const qrCodeSuccessCallback = (decodedText, decodedResult) => {
+                    // Обработка успешного сканирования
+                    handleQRScanSuccess(decodedText);
+                };
+                
+                const qrCodeErrorCallback = (error) => {
+                    // Ошибки сканирования игнорируем (это нормально при поиске кода)
+                    console.log(`QR Code scan error: ${error}`);
+                };
+                
+                // Конфигурация сканера
+                const config = {
+                    fps: 10,
+                    qrbox: {
+                        width: 200,
+                        height: 200
+                    },
+                    aspectRatio: 1.0,
+                    disableFlip: false
+                };
+                
+                // Получаем список камер и выбираем заднюю (если есть)
+                const cameras = await Html5Qrcode.getCameras();
+                let cameraId = null;
+                
+                if (cameras && cameras.length > 0) {
+                    // Ищем заднюю камеру
+                    const rearCamera = cameras.find(camera => 
+                        camera.label.toLowerCase().includes('back') || 
+                        camera.label.toLowerCase().includes('rear') ||
+                        camera.label.toLowerCase().includes('environment')
+                    );
+                    
+                    cameraId = rearCamera ? rearCamera.id : cameras[0].id;
+                    
+                    // Запускаем сканер с выбранной камерой
+                    await html5QrCode.start(
+                        cameraId,
+                        config,
+                        qrCodeSuccessCallback,
+                        qrCodeErrorCallback
+                    );
+                } else {
+                    // Запускаем сканер без указания камеры
+                    await html5QrCode.start(
+                        { facingMode: "environment" },
+                        config,
+                        qrCodeSuccessCallback,
+                        qrCodeErrorCallback
+                    );
+                }
+                
+                isScannerActive = true;
+                showAuthStatus('Сканер активен. Наведите на QR-код', 'success');
+                
+            } catch (error) {
+                console.error('Scanner error:', error);
+                handleScannerError(error);
+                
+                // Возвращаем кнопки в исходное состояние
+                document.getElementById('startScannerBtn').style.display = 'flex';
+                document.getElementById('stopScannerBtn').style.display = 'none';
+                document.querySelector('.scanning-indicator').style.display = 'none';
+            }
+        }
+        
+        // ОСТАНОВКА QR-СКАНЕРА
+        function stopQRScanner() {
+            if (!isScannerActive || !html5QrCode) {
+                return;
+            }
+            
+            html5QrCode.stop().then((ignore) => {
+                // Успешная остановка
+                html5QrCode.clear();
+                html5QrCode = null;
+                isScannerActive = false;
+                lastScannedCode = '';
+                
+                // Возвращаем кнопки в исходное состояние
+                document.getElementById('startScannerBtn').style.display = 'flex';
+                document.getElementById('stopScannerBtn').style.display = 'none';
+                document.querySelector('.scanning-indicator').style.display = 'none';
+                
+                showAuthStatus('Сканер остановлен', 'loading');
+                
+            }).catch((error) => {
+                console.error('Error stopping scanner:', error);
+                showAuthStatus('Ошибка остановки сканера', 'error');
+            });
+        }
+        
+        // ОБРАБОТКА УСПЕШНОГО СКАНИРОВАНИЯ QR-КОДА
+        function handleQRScanSuccess(decodedText) {
+            console.log('QR Code scanned:', decodedText);
+            
+            // Защита от повторного сканирования того же кода
+            if (decodedText === lastScannedCode) {
+                return;
+            }
+            
+            lastScannedCode = decodedText;
+            
+            // Извлекаем код сотрудника из QR-кода
+            const employeeCode = extractEmployeeCode(decodedText);
+            
+            if (employeeCode) {
+                // Показываем успешное сканирование
+                showAuthStatus(`QR-код распознан: ${employeeCode}`, 'success');
+                
+                // Останавливаем сканер
+                stopQRScanner();
+                
+                // Авторизуем сотрудника через 1 секунду
+                setTimeout(() => {
+                    authenticateEmployee(employeeCode);
+                }, 1000);
+                
+            } else {
+                // Неверный формат QR-кода
+                showAuthStatus('Неверный формат QR-кода', 'error');
+                
+                // Сбрасываем защиту через 3 секунды
+                setTimeout(() => {
+                    lastScannedCode = '';
+                }, 3000);
+            }
+        }
+        
+        // ИЗВЛЕЧЕНИЕ КОДА СОТРУДНИКА ИЗ QR-КОДА
+        function extractEmployeeCode(qrData) {
+            if (!qrData) return null;
+            
+            const cleanData = qrData.trim().toUpperCase();
+            console.log('Analyzing QR data:', cleanData);
+            
+            // 1. Прямой код EMP001
+            const directMatch = cleanData.match(/^EMP\d{2,3}$/);
+            if (directMatch) {
+                console.log('Direct code found:', directMatch[0]);
+                return directMatch[0];
+            }
+            
+            // 2. Ваш конкретный код EMP00
+            if (cleanData === 'EMP00') {
+                console.log('Specific code EMP00 found');
+                return 'EMP00';
+            }
+            
+            // 3. Код в тексте: "EMP001" в любом месте
+            const anywhereMatch = cleanData.match(/(EMP\d{2,3})/);
+            if (anywhereMatch && anywhereMatch[1]) {
+                console.log('Code found anywhere in text:', anywhereMatch[1]);
+                return anywhereMatch[1];
+            }
+            
+            // 4. JSON данные: {"emp_code": "EMP001"}
+            try {
+                const jsonData = JSON.parse(qrData);
+                const code = jsonData.employee_code || jsonData.code || jsonData.emp_code ||
+                    jsonData.emp || jsonData.id || jsonData.user_code;
+                if (code && typeof code === 'string') {
+                    const jsonMatch = code.toUpperCase().match(/(EMP\d{2,3})/);
+                    if (jsonMatch && jsonMatch[1]) {
+                        console.log('JSON code found:', jsonMatch[1]);
+                        return jsonMatch[1];
+                    }
+                }
+            } catch (e) {
+                // Не JSON, продолжаем
+            }
+            
+            console.log('No employee code found in QR data');
+            return null;
+        }
+        
+        // ОБРАБОТКА ОШИБОК СКАНЕРА
+        function handleScannerError(error) {
+            let errorMessage = 'Не удалось запустить сканер';
+            
+            if (error.name === 'NotAllowedError') {
+                errorMessage = 'Доступ к камере запрещен. Разрешите доступ в настройках браузера';
+            } else if (error.name === 'NotFoundError') {
+                errorMessage = 'Камера не найдена на устройстве';
+            } else if (error.name === 'NotSupportedError') {
+                errorMessage = 'Браузер не поддерживает доступ к камере';
+            } else if (error.name === 'NotReadableError') {
+                errorMessage = 'Камера уже используется другим приложением';
+            } else if (error.message && error.message.includes('Permission denied')) {
+                errorMessage = 'Разрешите доступ к камере в настройках браузера';
+            }
+            
+            showAuthStatus(errorMessage, 'error');
+        }
+        
+        // ПРОВЕРКА СУЩЕСТВУЮЩЕЙ СЕССИИ
+        function checkExistingSession() {
+            const authData = localStorage.getItem('employeeAuth');
+            if (authData) {
+                try {
+                    const employee = JSON.parse(authData);
+                    const loginTime = new Date(employee.loginTime);
+                    const currentTime = new Date();
+                    const hoursDiff = (currentTime - loginTime) / (1000 * 60 * 60);
+                    
+                    if (hoursDiff < 8) {
+                        showAuthStatus(`Активна сессия: ${employee.name}`, 'loading');
+                        
+                        // Добавляем кнопку продолжения
+                        setTimeout(() => {
+                            const continueBtn = document.createElement('button');
+                            continueBtn.className = 'btn-auth';
+                            continueBtn.style.marginTop = '10px';
+                            continueBtn.style.width = '100%';
+                            continueBtn.textContent = 'Продолжить работу';
+                            continueBtn.onclick = function() {
+                                window.location.href = 'cargo.html';
+                            };
+                            
+                            const statusElement = document.getElementById('authStatus');
+                            statusElement.appendChild(document.createElement('br'));
+                            statusElement.appendChild(continueBtn);
+                        }, 500);
+                    } else {
+                        // Сессия истекла
+                        localStorage.removeItem('employeeAuth');
+                    }
+                } catch (e) {
+                    localStorage.removeItem('employeeAuth');
+                }
+            }
+        }
+        
+        // РУЧНАЯ АВТОРИЗАЦИЯ
+        function manualAuth() {
+            const codeInput = document.getElementById('employeeCode');
+            const code = codeInput.value.trim().toUpperCase();
+            
+            if (!code) {
+                showAuthStatus('Введите код сотрудника', 'error');
+                codeInput.focus();
+                return;
+            }
+            
+            if (!code.match(/^EMP\d{2,3}$/)) {
+                showAuthStatus('Неверный формат кода. Пример: EMP001', 'error');
+                codeInput.focus();
+                codeInput.select();
+                return;
+            }
+            
+            authenticateEmployee(code);
+        }
+        
+        // ИСПОЛЬЗОВАНИЕ ДЕМО-КОДА
+        function useDemoCode(code) {
+            const codeInput = document.getElementById('employeeCode');
+            codeInput.value = code;
+            codeInput.focus();
+            showAuthStatus(`Демо-код "${code}" установлен. Нажмите "Войти"`, 'loading');
+        }
+        
+        // АВТОРИЗАЦИЯ СОТРУДНИКА
+        function authenticateEmployee(employeeCode) {
+            // Останавливаем сканер если он активен
+            if (isScannerActive) {
+                stopQRScanner();
+            }
+            
+            showAuthStatus('Проверка кода...', 'loading');
+            
+            // Имитация задержки проверки
+            setTimeout(() => {
+                // База данных сотрудников (временная)
+                const employees = {
+                    'EMP001': {
+                        id: 'EMP001',
+                        name: 'Иванов Алексей',
+                        position: 'Старший кладовщик',
+                        department: 'Склад №1'
+                    },
+                    'EMP002': {
+                        id: 'EMP002',
+                        name: 'Петров Сергей',
+                        position: 'Кладовщик',
+                        department: 'Склад №2'
+                    },
+                    'EMP00': {
+                        id: 'EMP00',
+                        name: 'Тестовый Сотрудник',
+                        position: 'Тестер',
+                        department: 'Технический отдел'
+                    }
+                };
+                
+                const employee = employees[employeeCode];
+                
+                if (employee) {
+                    // Сохраняем данные авторизации
+                    employee.loginTime = new Date().toISOString();
+                    employee.loginTimeDisplay = new Date().toLocaleString('ru-RU');
+                    employee.sessionId = 'SESS_' + Date.now();
+                    
+                    localStorage.setItem('employeeAuth', JSON.stringify(employee));
+                    
+                    showAuthStatus(`Успешный вход! Добро пожаловать, ${employee.name}`, 'success');
+                    
+                    // Переход на страницу грузов через 2 секунды
+                    setTimeout(() => {
+                        window.location.href = 'cargo.html';
+                    }, 2000);
+                    
+                } else {
+                    showAuthStatus('Код сотрудника не найден в системе', 'error');
+                    const codeInput = document.getElementById('employeeCode');
+                    if (codeInput) {
+                        codeInput.focus();
+                        codeInput.select();
+                    }
+                }
+            }, 1000);
+        }
+        
+        // ПОКАЗАТЬ СТАТУС АВТОРИЗАЦИИ
+        function showAuthStatus(message, type) {
+            const statusElement = document.getElementById('authStatus');
+            if (statusElement) {
+                statusElement.textContent = message;
+                statusElement.className = `auth-status ${type || ''}`;
+                
+                // Автоматическое скрытие статуса через некоторое время
+                if (type === 'error' || type === 'success') {
+                    setTimeout(() => {
+                        if (statusElement.textContent === message) {
+                            statusElement.textContent = '';
+                            statusElement.className = 'auth-status';
+                        }
+                    }, type === 'error' ? 5000 : 3000);
+                }
+            }
+        }
+        
+        // ОСТАНОВКА СКАНЕРА ПРИ ПЕРЕЗАГРУЗКЕ СТРАНИЦЫ
+        window.addEventListener('beforeunload', function() {
+            if (isScannerActive) {
+                stopQRScanner();
+            }
         });
+        
+        // ЭКСПОРТ ФУНКЦИЙ ДЛЯ HTML
+        window.manualAuth = manualAuth;
+        window.useDemoCode = useDemoCode;
+        window.startQRScanner = startQRScanner;
+        window.stopQRScanner = stopQRScanner;
+        
+        console.log('NORD WHEEL QR Scanner ready');
     </script>
 </body>
 </html>
