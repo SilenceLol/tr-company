@@ -7,10 +7,12 @@
     <link rel="stylesheet" href="styles.css">
     <script src="auth-simple.js"></script>
     <style>
-        /* Мобильная оптимизация */
+        /* ОЧЕНЬ КОМПАКТНЫЙ ДВУХКОЛОНОЧНЫЙ ДИЗАЙН */
         html, body {
             height: 100%;
             overflow: hidden;
+            margin: 0;
+            padding: 0;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         }
         
@@ -19,67 +21,418 @@
             display: flex;
             flex-direction: column;
             background: white;
+            padding: 0;
+            margin: 0;
+            border-radius: 0;
         }
         
+        /* ШАПКА - СУПЕР КОМПАКТНАЯ */
+        header {
+            padding: 5px 8px !important;
+            min-height: 35px;
+            flex-shrink: 0;
+        }
+        
+        .logo-image {
+            height: 20px !important;
+        }
+        
+        .logo-text {
+            font-size: 14px !important;
+        }
+        
+        /* ИНФОРМАЦИЯ О СОТРУДНИКЕ - КОМПАКТНО */
+        .employee-info {
+            padding: 5px 8px !important;
+            min-height: 32px;
+            font-size: 12px;
+            flex-shrink: 0;
+        }
+        
+        .btn-logout {
+            padding: 3px 6px !important;
+            font-size: 10px !important;
+        }
+        
+        /* ОСНОВНОЙ КОНТЕНТ - ДВЕ КОЛОНКИ */
         main {
             flex: 1;
             overflow: hidden;
             min-height: 0;
-        }
-        
-        .app-container {
-            height: 100%;
+            padding: 5px;
             display: flex;
             flex-direction: column;
-            padding: 5px;
         }
         
-        .main-layout {
+        h1 {
+            font-size: 1em !important;
+            margin: 0 0 5px 0 !important;
+            text-align: center;
+            padding: 0;
+            flex-shrink: 0;
+        }
+        
+        /* ДВУХКОЛОНОЧНЫЙ ЛАЙАУТ */
+        .two-column-layout {
+            display: flex;
             flex: 1;
             min-height: 0;
+            gap: 5px;
+            height: calc(100vh - 120px);
+        }
+        
+        /* ЛЕВАЯ КОЛОНКА - ВЫБОР ГРУЗА */
+        .left-column {
+            flex: 1;
+            min-width: 0;
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 5px;
         }
         
-        @media (min-width: 480px) {
-            .main-layout {
-                flex-direction: row;
-            }
+        .cargo-types-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 4px;
+            flex: 1;
         }
         
-        /* Улучшаем кнопки для тапа */
-        .btn-save-mini, .btn-send-mini, .cargo-type-column, 
-        .control-btn-mini, .remove-cargo, .btn-secondary {
-            min-height: 44px;
-            touch-action: manipulation;
+        .cargo-type-item {
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 8px 4px;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            background: #f8f9fa;
+            transition: all 0.2s;
+            min-height: 60px;
         }
         
-        /* Улучшаем поле ввода веса для мобильных */
-        .weight-input {
-            font-size: 18px !important;
-            height: 40px !important;
+        .cargo-type-item.selected {
+            border-color: #3498db;
+            background: #e3f2fd;
+            box-shadow: 0 2px 4px rgba(52, 152, 219, 0.3);
         }
         
-        /* Оптимизация для очень маленьких экранов */
+        .cargo-type-icon {
+            font-size: 18px;
+            margin-bottom: 3px;
+        }
+        
+        .cargo-type-name {
+            font-size: 11px;
+            font-weight: 600;
+            color: #2c3e50;
+            line-height: 1.2;
+        }
+        
+        .photo-section {
+            flex-shrink: 0;
+            text-align: center;
+            margin-top: auto;
+        }
+        
+        .photo-container {
+            width: 45px;
+            height: 45px;
+            border: 1px dashed #3498db;
+            border-radius: 6px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            background: white;
+        }
+        
+        .photo-label {
+            font-size: 9px;
+            color: #666;
+            margin-top: 2px;
+            display: block;
+        }
+        
+        /* ПРАВАЯ КОЛОНКА - НАСТРОЙКИ */
+        .right-column {
+            flex: 1;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        
+        /* КОНТРОЛЫ - КОМПАКТНО */
+        .controls-compact {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        
+        .control-group {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 6px;
+            padding: 6px;
+        }
+        
+        .control-label {
+            font-size: 10px;
+            font-weight: 600;
+            color: #495057;
+            display: block;
+            margin-bottom: 4px;
+            text-align: center;
+        }
+        
+        .weight-control {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .weight-input-compact {
+            width: 80px;
+            padding: 6px;
+            border: 2px solid #3498db;
+            border-radius: 4px;
+            font-size: 14px;
+            text-align: center;
+            font-weight: bold;
+        }
+        
+        .dimension-control {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+        
+        .dimension-btn {
+            background: #3498db;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        
+        .dimension-value {
+            font-size: 13px;
+            font-weight: bold;
+            min-width: 40px;
+            text-align: center;
+        }
+        
+        .dimension-unit {
+            font-size: 9px;
+            color: #666;
+            margin-left: 2px;
+        }
+        
+        /* КНОПКА КОЛИЧЕСТВА */
+        .quantity-control {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            margin-top: 5px;
+        }
+        
+        .quantity-btn {
+            background: #27ae60;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        .quantity-value {
+            font-size: 14px;
+            font-weight: bold;
+            min-width: 30px;
+            text-align: center;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 4px;
+        }
+        
+        /* ОСНОВНЫЕ КНОПКИ */
+        .action-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        
+        .btn-save-compact, .btn-send-compact {
+            padding: 10px;
+            border: none;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            min-height: 40px;
+        }
+        
+        .btn-save-compact {
+            background: linear-gradient(135deg, #27ae60, #219653);
+            color: white;
+        }
+        
+        .btn-send-compact {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: white;
+        }
+        
+        /* СТАТИСТИКА - КОМПАКТНО */
+        .stats-compact {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            padding: 8px;
+            border-radius: 6px;
+            margin-top: auto;
+        }
+        
+        .stats-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 5px;
+            cursor: pointer;
+        }
+        
+        .stats-title {
+            font-size: 11px;
+            font-weight: 600;
+        }
+        
+        .stats-toggle {
+            font-size: 10px;
+            opacity: 0.8;
+            background: rgba(255,255,255,0.2);
+            padding: 2px 6px;
+            border-radius: 10px;
+        }
+        
+        .stats-items {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 4px;
+            text-align: center;
+        }
+        
+        .stat-item-compact {
+            font-size: 10px;
+        }
+        
+        .stat-value-compact {
+            font-weight: bold;
+            font-size: 11px;
+            display: block;
+            margin-top: 2px;
+        }
+        
+        /* АДАПТИВНОСТЬ ДЛЯ ОЧЕНЬ МАЛЕНЬКИХ ЭКРАНОВ */
         @media (max-height: 600px) {
-            .employee-info {
-                padding: 5px 10px;
+            .two-column-layout {
+                height: calc(100vh - 100px);
             }
             
-            .app-container h1 {
-                margin: 5px 0;
-                font-size: 1.1em;
+            .cargo-type-item {
+                padding: 5px 3px;
+                min-height: 50px;
             }
             
-            .cargo-type-column {
-                padding: 6px 4px;
-                min-height: 35px;
+            .cargo-type-icon {
+                font-size: 16px;
             }
             
-            .photo-container-mini {
+            .cargo-type-name {
+                font-size: 10px;
+            }
+            
+            .control-group {
+                padding: 4px;
+            }
+            
+            .btn-save-compact, .btn-send-compact {
+                padding: 8px;
+                font-size: 11px;
+                min-height: 36px;
+            }
+            
+            .photo-container {
                 width: 40px;
                 height: 40px;
+            }
+        }
+        
+        @media (max-height: 500px) {
+            header {
+                padding: 3px 5px !important;
+                min-height: 30px;
+            }
+            
+            .employee-info {
+                padding: 3px 5px !important;
+                min-height: 28px;
+                font-size: 11px;
+            }
+            
+            h1 {
+                font-size: 0.9em !important;
+                margin-bottom: 3px !important;
+            }
+            
+            .two-column-layout {
+                height: calc(100vh - 90px);
+            }
+            
+            .cargo-type-item {
+                min-height: 45px;
+            }
+            
+            .weight-input-compact {
+                width: 70px;
+                padding: 4px;
+                font-size: 13px;
+            }
+        }
+        
+        /* ГОРИЗОНТАЛЬНАЯ ОРИЕНТАЦИЯ */
+        @media (orientation: landscape) and (max-height: 400px) {
+            .two-column-layout {
+                flex-direction: row;
+            }
+            
+            .cargo-types-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .photo-section {
+                margin-top: 5px;
             }
         }
     </style>
@@ -102,126 +455,131 @@
         </div>
 
         <main>
-            <div class="app-container">
-                <h1>Замер грузов</h1>
-                
-                <div class="main-layout">
-                    <!-- Левая колонка - типы грузов -->
-                    <div class="left-column">
-                        <div class="cargo-types-column">
-                            <div class="cargo-type-column" data-type="euro-pallet">
-                                <div class="cargo-image-placeholder">
-                                    <img src="паллет.jpg" alt="Европаллет" class="cargo-image">
-                                </div>
-                                <span>Европаллет</span>
-                            </div>
-                            <div class="cargo-type-column" data-type="american-pallet">
-                                <div class="cargo-image-placeholder">
-                                    <img src="паллет.jpg" alt="Американский паллет" class="cargo-image">
-                                </div>
-                                <span>Американский</span>
-                            </div>
-                            <div class="cargo-type-column" data-type="box">
-                                <div class="cargo-icon-mini">📦</div>
-                                <span>Коробка</span>
-                            </div>
-                            <div class="cargo-type-column" data-type="non-standard">
-                                <div class="cargo-icon-mini">📏</div>
-                                <span>Нестандарт</span>
-                            </div>
+            <h1>Замер грузов</h1>
+            
+            <div class="two-column-layout">
+                <!-- ЛЕВАЯ КОЛОНКА - ВЫБОР ГРУЗА -->
+                <div class="left-column">
+                    <div class="cargo-types-grid">
+                        <div class="cargo-type-item" data-type="euro-pallet" onclick="selectCargoType('euro-pallet')">
+                            <div class="cargo-type-icon">🇪🇺</div>
+                            <div class="cargo-type-name">Европаллет</div>
                         </div>
-
-                        <div class="photo-section-mini">
-                            <div class="photo-container-mini" onclick="takePhoto()">
-                                <div class="photo-placeholder-mini" id="photoPlaceholder">
-                                    <div class="camera-icon-mini">📷</div>
-                                </div>
-                                <img id="cargoPhoto" class="cargo-photo-mini" style="display: none;">
-                            </div>
-                            <span class="photo-label">Фото</span>
+                        <div class="cargo-type-item" data-type="american-pallet" onclick="selectCargoType('american-pallet')">
+                            <div class="cargo-type-icon">🇺🇸</div>
+                            <div class="cargo-type-name">Американский</div>
+                        </div>
+                        <div class="cargo-type-item" data-type="box" onclick="selectCargoType('box')">
+                            <div class="cargo-type-icon">📦</div>
+                            <div class="cargo-type-name">Коробка</div>
+                        </div>
+                        <div class="cargo-type-item" data-type="non-standard" onclick="selectCargoType('non-standard')">
+                            <div class="cargo-type-icon">📏</div>
+                            <div class="cargo-type-name">Нестандарт</div>
                         </div>
                     </div>
-
-                    <!-- Правая колонка - контролы -->
-                    <div class="right-column">
-                        <div class="controls-stack-compact">
-                            <div class="control-item-compact">
-                                <label>Вес</label>
-                                <div class="control-buttons-mini">
-                                    <input type="number" 
-                                           id="weightInput" 
-                                           class="control-value-mini weight-input" 
-                                           value="1" 
-                                           min="1" 
-                                           max="10000" 
-                                           step="1"
-                                           inputmode="numeric"
-                                           pattern="[0-9]*"
-                                           onchange="updateWeightFromInput()">
-                                </div>
-                                <span class="control-unit">кг</span>
+                    
+                    <div class="photo-section">
+                        <div class="photo-container" onclick="takePhoto()">
+                            <div class="photo-placeholder-mini" id="photoPlaceholder">
+                                <div class="camera-icon-mini">📷</div>
                             </div>
-
-                            <div class="control-item-compact">
-                                <label>Длина</label>
-                                <div class="control-buttons-mini">
-                                    <button type="button" class="control-btn-mini minus" onclick="changeDimension('length', -10)">-</button>
-                                    <span class="control-value-mini" id="lengthValue">120</span>
-                                    <button type="button" class="control-btn-mini plus" onclick="changeDimension('length', 10)">+</button>
-                                </div>
-                                <span class="control-unit">см</span>
-                            </div>
-
-                            <div class="control-item-compact">
-                                <label>Ширина</label>
-                                <div class="control-buttons-mini">
-                                    <button type="button" class="control-btn-mini minus" onclick="changeDimension('width', -10)">-</button>
-                                    <span class="control-value-mini" id="widthValue">80</span>
-                                    <button type="button" class="control-btn-mini plus" onclick="changeDimension('width', 10)">+</button>
-                                </div>
-                                <span class="control-unit">см</span>
-                            </div>
-
-                            <div class="control-item-compact">
-                                <label>Высота</label>
-                                <div class="control-buttons-mini">
-                                    <button type="button" class="control-btn-mini minus" onclick="changeDimension('height', -10)">-</button>
-                                    <span class="control-value-mini" id="heightValue">30</span>
-                                    <button type="button" class="control-btn-mini plus" onclick="changeDimension('height', 10)">+</button>
-                                </div>
-                                <span class="control-unit">см</span>
+                            <img id="cargoPhoto" class="cargo-photo-mini" style="display: none;">
+                        </div>
+                        <span class="photo-label">Фото</span>
+                    </div>
+                </div>
+                
+                <!-- ПРАВАЯ КОЛОНКА - НАСТРОЙКИ -->
+                <div class="right-column">
+                    <div class="controls-compact">
+                        <!-- ВЕС -->
+                        <div class="control-group">
+                            <div class="control-label">Вес груза</div>
+                            <div class="weight-control">
+                                <input type="number" 
+                                       id="weightInput" 
+                                       class="weight-input-compact" 
+                                       value="1" 
+                                       min="1" 
+                                       max="10000" 
+                                       step="1"
+                                       inputmode="numeric">
+                                <div class="control-label">кг</div>
                             </div>
                         </div>
-
-                        <button class="btn-save-mini" onclick="saveCargo()">
+                        
+                        <!-- РАЗМЕРЫ -->
+                        <div class="control-group">
+                            <div class="control-label">Размеры (см)</div>
+                            <div class="dimension-control">
+                                <button class="dimension-btn minus" onclick="changeDimension('length', -10)">-</button>
+                                <span class="dimension-value" id="lengthValue">120</span>
+                                <span class="dimension-unit">Д</span>
+                                <button class="dimension-btn plus" onclick="changeDimension('length', 10)">+</button>
+                            </div>
+                            <div class="dimension-control">
+                                <button class="dimension-btn minus" onclick="changeDimension('width', -10)">-</button>
+                                <span class="dimension-value" id="widthValue">80</span>
+                                <span class="dimension-unit">Ш</span>
+                                <button class="dimension-btn plus" onclick="changeDimension('width', 10)">+</button>
+                            </div>
+                            <div class="dimension-control">
+                                <button class="dimension-btn minus" onclick="changeDimension('height', -10)">-</button>
+                                <span class="dimension-value" id="heightValue">30</span>
+                                <span class="dimension-unit">В</span>
+                                <button class="dimension-btn plus" onclick="changeDimension('height', 10)">+</button>
+                            </div>
+                        </div>
+                        
+                        <!-- КОЛИЧЕСТВО -->
+                        <div class="control-group">
+                            <div class="control-label">Количество одинаковых</div>
+                            <div class="quantity-control">
+                                <button class="quantity-btn minus" onclick="changeQuantity(-1)">-</button>
+                                <span class="quantity-value" id="quantityValue">1</span>
+                                <button class="quantity-btn plus" onclick="changeQuantity(1)">+</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- ОСНОВНЫЕ КНОПКИ -->
+                    <div class="action-buttons">
+                        <button class="btn-save-compact" onclick="saveCargo()">
                             💾 Сохранить
                         </button>
-
-                        <div class="stats-mini">
-                            <div class="stat-item clickable-stat" onclick="showCargoListModal()">
-                                <span class="stat-label">Места:</span>
-                                <span class="stat-value" id="cargoCount">0</span>
-                            </div>
-                            <div class="stat-item">
-                                <span class="stat-label">Масса:</span>
-                                <span class="stat-value" id="totalWeight">0 кг</span>
-                            </div>
-                            <div class="stat-item">
-                                <span class="stat-label">Объем:</span>
-                                <span class="stat-value" id="totalVolume">0 м³</span>
-                            </div>
-                        </div>
-
-                        <button class="btn-send-mini" onclick="sendToOperator()">
+                        <button class="btn-send-compact" onclick="sendToOperator()">
                             📧 Отправить
                         </button>
+                    </div>
+                    
+                    <!-- СТАТИСТИКА -->
+                    <div class="stats-compact">
+                        <div class="stats-header" onclick="showCargoListModal()">
+                            <div class="stats-title">Статистика</div>
+                            <div class="stats-toggle">Показать все</div>
+                        </div>
+                        <div class="stats-items">
+                            <div class="stat-item-compact">
+                                Места
+                                <span class="stat-value-compact" id="cargoCount">0</span>
+                            </div>
+                            <div class="stat-item-compact">
+                                Масса
+                                <span class="stat-value-compact" id="totalWeight">0 кг</span>
+                            </div>
+                            <div class="stat-item-compact">
+                                Объем
+                                <span class="stat-value-compact" id="totalVolume">0 м³</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </main>
     </div>
 
-    <!-- Модальное окно списка грузов -->
+    <!-- Модальное окно списка грузов С ГРУППИРОВКОЙ -->
     <div id="cargoListModal" class="modal">
         <div class="modal-content cargo-list-modal-compact">
             <span class="close" onclick="closeCargoListModal()">&times;</span>
@@ -256,64 +614,179 @@
 
     <script src="script.js"></script>
     <script>
-        // Мобильная оптимизация скрипта
+        // НОВЫЙ СКРИПТ ДЛЯ ДВУХКОЛОНОЧНОЙ ВЕРСИИ
         document.addEventListener('DOMContentLoaded', function() {
-            // Оптимизация для различных размеров экрана
-            function optimizeForScreen() {
-                const screenHeight = window.innerHeight;
-                const screenWidth = window.innerWidth;
-                
-                // Настройки для очень маленьких экранов
-                if (screenHeight < 600) {
-                    // Уменьшаем отступы
-                    document.querySelector('.app-container').style.padding = '3px';
-                    
-                    // Уменьшаем высоту элементов
-                    const cargoTypes = document.querySelectorAll('.cargo-type-column');
-                    cargoTypes.forEach(el => {
-                        el.style.padding = '4px 3px';
-                        el.style.minHeight = '32px';
-                    });
-                    
-                    // Уменьшаем фото
-                    document.querySelector('.photo-container-mini').style.width = '35px';
-                    document.querySelector('.photo-container-mini').style.height = '35px';
-                    
-                    // Уменьшаем кнопки
-                    document.querySelectorAll('.btn-save-mini, .btn-send-mini').forEach(btn => {
-                        btn.style.padding = '8px';
-                        btn.style.fontSize = '11px';
-                    });
-                }
-                
-                // Для узких экранов
-                if (screenWidth < 350) {
-                    // Делаем элементы уже
-                    document.querySelectorAll('.control-item-compact').forEach(el => {
-                        el.style.padding = '4px';
-                    });
-                    
-                    // Уменьшаем текст в статистике
-                    document.querySelectorAll('.stat-label, .stat-value').forEach(el => {
-                        el.style.fontSize = '10px';
-                    });
-                }
+            // Инициализация переменных
+            window.currentCargoType = 'euro-pallet';
+            window.currentWeight = 1;
+            window.currentQuantity = 1;
+            window.currentDimensions = {
+                length: 120,
+                width: 80,
+                height: 30
+            };
+            window.cargoList = JSON.parse(localStorage.getItem('cargoList')) || [];
+            
+            // Выбираем тип груза по умолчанию
+            selectCargoType('euro-pallet');
+            
+            // Инициализация интерфейса
+            updateStats();
+            updateEmployeeInfo();
+            setupWeightInput();
+            updateDimensionDisplays();
+            updateQuantityDisplay();
+            
+            // Инициализация фотографии
+            initPhotoInput();
+        });
+        
+        function selectCargoType(type) {
+            // Убираем выделение у всех
+            document.querySelectorAll('.cargo-type-item').forEach(item => {
+                item.classList.remove('selected');
+            });
+            
+            // Выделяем выбранный
+            const selectedItem = document.querySelector(`[data-type="${type}"]`);
+            if (selectedItem) {
+                selectedItem.classList.add('selected');
             }
             
-            // Вызываем при загрузке и изменении размера
-            optimizeForScreen();
-            window.addEventListener('resize', optimizeForScreen);
+            window.currentCargoType = type;
             
-            // Предотвращаем масштабирование при двойном тапе
-            let lastTouchEnd = 0;
-            document.addEventListener('touchend', function(event) {
-                const now = (new Date()).getTime();
-                if (now - lastTouchEnd <= 300) {
-                    event.preventDefault();
+            // Устанавливаем размеры по умолчанию для типа
+            setDefaultDimensionsForType(type);
+        }
+        
+        function setDefaultDimensionsForType(type) {
+            switch(type) {
+                case 'euro-pallet':
+                    window.currentDimensions = { length: 120, width: 80, height: 30 };
+                    break;
+                case 'american-pallet':
+                    window.currentDimensions = { length: 120, width: 100, height: 30 };
+                    break;
+                case 'box':
+                    window.currentDimensions = { length: 60, width: 40, height: 40 };
+                    break;
+                case 'non-standard':
+                    window.currentDimensions = { length: 100, width: 100, height: 100 };
+                    break;
+            }
+            updateDimensionDisplays();
+        }
+        
+        function setupWeightInput() {
+            const weightInput = document.getElementById('weightInput');
+            if (weightInput) {
+                weightInput.value = window.currentWeight;
+                
+                weightInput.addEventListener('input', function() {
+                    this.value = this.value.replace(/[^0-9]/g, '');
+                    const weight = parseInt(this.value) || 1;
+                    if (weight >= 1 && weight <= 10000) {
+                        window.currentWeight = weight;
+                    }
+                });
+                
+                weightInput.addEventListener('change', function() {
+                    let weight = parseInt(this.value) || 1;
+                    if (weight < 1) weight = 1;
+                    if (weight > 10000) weight = 10000;
+                    this.value = weight;
+                    window.currentWeight = weight;
+                });
+                
+                weightInput.addEventListener('focus', function() {
+                    this.select();
+                });
+            }
+        }
+        
+        function changeDimension(dimension, delta) {
+            if (window.currentDimensions[dimension] !== undefined) {
+                let newValue = window.currentDimensions[dimension] + delta;
+                if (newValue >= 10) {
+                    window.currentDimensions[dimension] = newValue;
+                    updateDimensionDisplay(dimension);
                 }
-                lastTouchEnd = now;
-            }, false);
-        });
+            }
+        }
+        
+        function updateDimensionDisplay(dimension) {
+            const element = document.getElementById(dimension + 'Value');
+            if (element) {
+                element.textContent = window.currentDimensions[dimension];
+            }
+        }
+        
+        function updateDimensionDisplays() {
+            updateDimensionDisplay('length');
+            updateDimensionDisplay('width');
+            updateDimensionDisplay('height');
+        }
+        
+        function changeQuantity(delta) {
+            let newQuantity = window.currentQuantity + delta;
+            if (newQuantity >= 1 && newQuantity <= 100) {
+                window.currentQuantity = newQuantity;
+                updateQuantityDisplay();
+            }
+        }
+        
+        function updateQuantityDisplay() {
+            const element = document.getElementById('quantityValue');
+            if (element) {
+                element.textContent = window.currentQuantity;
+            }
+        }
+        
+        function saveCargo() {
+            // Основная функция сохранения будет в script.js
+            // Это временная заглушка
+            console.log('Сохранение груза:', {
+                type: window.currentCargoType,
+                weight: window.currentWeight,
+                quantity: window.currentQuantity,
+                dimensions: window.currentDimensions
+            });
+            
+            // Вызываем функцию из script.js
+            if (typeof window.saveCargoWithQuantity === 'function') {
+                window.saveCargoWithQuantity();
+            }
+        }
+        
+        function initPhotoInput() {
+            const photoInput = document.getElementById('photoInput');
+            if (photoInput) {
+                photoInput.addEventListener('change', function(e) {
+                    if (e.target.files && e.target.files[0]) {
+                        const reader = new FileReader();
+                        reader.onload = function(event) {
+                            const photo = document.getElementById('cargoPhoto');
+                            const placeholder = document.getElementById('photoPlaceholder');
+                            
+                            photo.src = event.target.result;
+                            photo.style.display = 'block';
+                            placeholder.style.display = 'none';
+                        };
+                        reader.readAsDataURL(e.target.files[0]);
+                    }
+                });
+            }
+        }
+        
+        function takePhoto() {
+            document.getElementById('photoInput').click();
+        }
+        
+        // Экспортируем функции для использования в script.js
+        window.selectCargoType = selectCargoType;
+        window.changeDimension = changeDimension;
+        window.changeQuantity = changeQuantity;
+        window.takePhoto = takePhoto;
     </script>
 </body>
 </html>
