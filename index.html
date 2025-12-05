@@ -88,13 +88,18 @@
         
         #qr-reader {
             width: 100%;
-            height: 250px;
-            border: 2px solid #3498db;
-            border-radius: 10px;
+            height: 300px;
+            border: 3px solid #3498db;
+            border-radius: 12px;
             overflow: hidden;
             margin: 0 auto 15px auto;
             position: relative;
             background: #000;
+            display: none; /* Скрыт по умолчанию */
+        }
+        
+        #qr-reader.active {
+            display: block;
         }
         
         #qr-reader video {
@@ -107,13 +112,53 @@
             display: none;
         }
         
+        .scanner-placeholder {
+            width: 100%;
+            height: 300px;
+            border: 3px dashed #3498db;
+            border-radius: 12px;
+            margin: 0 auto 15px auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: #f8f9fa;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .scanner-placeholder:hover {
+            background: #e3f2fd;
+            border-color: #2980b9;
+        }
+        
+        .scanner-placeholder-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+            color: #3498db;
+        }
+        
+        .scanner-placeholder-text {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 8px;
+        }
+        
+        .scanner-placeholder-hint {
+            font-size: 14px;
+            color: #666;
+            text-align: center;
+            max-width: 80%;
+        }
+        
         .scanner-frame {
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 200px;
-            height: 200px;
+            width: 220px;
+            height: 220px;
             border: 3px solid #00ff00;
             border-radius: 10px;
             box-shadow: 0 0 0 1000px rgba(0, 0, 0, 0.5);
@@ -131,22 +176,27 @@
             margin: 5px 0;
         }
         
-        /* КНОПКА ЗАПУСКА СКАНЕРА */
+        /* КНОПКИ СКАНЕРА */
+        .scanner-controls {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
         .btn-scan {
             background: linear-gradient(135deg, #3498db, #2980b9);
             color: white;
             border: none;
             border-radius: 8px;
-            padding: 12px 20px;
+            padding: 14px 20px;
             font-size: 16px;
             font-weight: 600;
             cursor: pointer;
-            margin: 10px 0;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
-            width: 100%;
+            flex: 1;
             transition: all 0.3s;
         }
         
@@ -159,6 +209,14 @@
             background: #95a5a6;
             cursor: not-allowed;
             transform: none;
+        }
+        
+        .btn-scan-stop {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+        }
+        
+        .btn-scan-stop:hover {
+            box-shadow: 0 4px 12px rgba(231, 76, 60, 0.3);
         }
         
         /* РУЧНОЙ ВВОД */
@@ -247,6 +305,12 @@
             border: 1px solid #bee5eb;
         }
         
+        .auth-status.scanning {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+        
         /* ДЕМО-КОДЫ */
         .demo-info {
             background: #f8f9fa;
@@ -292,8 +356,8 @@
         
         /* АДАПТАЦИЯ ДЛЯ МАЛЕНЬКИХ ЭКРАНОВ */
         @media (max-height: 700px) {
-            #qr-reader {
-                height: 200px;
+            #qr-reader, .scanner-placeholder {
+                height: 250px;
             }
             
             .scanner-frame {
@@ -312,8 +376,8 @@
                 margin: 5px 0 10px 0;
             }
             
-            #qr-reader {
-                height: 180px;
+            #qr-reader, .scanner-placeholder {
+                height: 220px;
             }
             
             .scanner-frame {
@@ -344,6 +408,10 @@
                 max-width: 100%;
                 width: 100%;
             }
+            
+            .scanner-controls {
+                flex-direction: column;
+            }
         }
         
         /* ИНДИКАТОР СКАНИРОВАНИЯ */
@@ -352,7 +420,7 @@
             top: 0;
             left: 0;
             width: 100%;
-            height: 3px;
+            height: 4px;
             background: linear-gradient(90deg, #3498db, #2ecc71, #3498db);
             background-size: 200% 100%;
             animation: scanning 2s linear infinite;
@@ -366,6 +434,59 @@
             100% {
                 background-position: -200% 0;
             }
+        }
+        
+        /* ПРЕЛОАДЕР КАМЕРЫ */
+        .camera-loader {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            color: white;
+        }
+        
+        .loader-spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 15px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* УВЕДОМЛЕНИЕ О РАЗРЕШЕНИИ КАМЕРЫ */
+        .camera-permission-notice {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 15px;
+            text-align: center;
+            font-size: 14px;
+            color: #856404;
+            display: none;
+        }
+        
+        .camera-permission-notice.show {
+            display: block;
+        }
+        
+        .permission-icon {
+            font-size: 24px;
+            margin-bottom: 8px;
         }
     </style>
 </head>
@@ -381,31 +502,51 @@
         <main class="auth-container">
             <h1>Авторизация</h1>
             
+            <!-- УВЕДОМЛЕНИЕ О РАЗРЕШЕНИИ -->
+            <div class="camera-permission-notice" id="cameraPermissionNotice">
+                <div class="permission-icon">📱</div>
+                <p><strong>Для использования сканера необходимо разрешить доступ к камере</strong></p>
+                <p>При нажатии "Запустить сканер" появится запрос на разрешение использования камеры</p>
+            </div>
+            
             <div class="auth-card">
                 <!-- QR-СКАНЕР -->
                 <div class="qr-scanner-section">
+                    <!-- ПЛЕЙСХОЛДЕР ДЛЯ ЗАПУСКА СКАНЕРА -->
+                    <div class="scanner-placeholder" id="scannerPlaceholder" onclick="startQRScanner()">
+                        <div class="scanner-placeholder-icon">📷</div>
+                        <div class="scanner-placeholder-text">Запустить QR-сканер</div>
+                        <div class="scanner-placeholder-hint">
+                            Нажмите чтобы включить камеру и отсканировать QR-код сотрудника
+                        </div>
+                    </div>
+                    
+                    <!-- АКТИВНЫЙ СКАНЕР (скрыт по умолчанию) -->
                     <div id="qr-reader">
-                        <!-- Сканер будет инициализирован здесь -->
                         <div class="scanner-frame"></div>
-                        <div class="scanning-indicator" style="display: none;"></div>
+                        <div class="scanning-indicator"></div>
+                        <!-- Прелоадер будет добавляться динамически -->
                     </div>
                     
-                    <div class="scanner-instructions">
+                    <div class="scanner-instructions" id="scannerInstructions">
                         <p>Наведите камеру на QR-код сотрудника</p>
-                        <p><small>Расположите QR-код внутри рамки</small></p>
+                        <p><small>Расположите QR-код внутри зеленой рамки</small></p>
                     </div>
                     
-                    <button id="startScannerBtn" class="btn-scan">
-                        <span>🔍</span> Запустить сканер
-                    </button>
-                    <button id="stopScannerBtn" class="btn-scan" style="background: linear-gradient(135deg, #e74c3c, #c0392b); display: none;">
-                        <span>⏹️</span> Остановить сканер
-                    </button>
+                    <!-- КНОПКИ УПРАВЛЕНИЯ СКАНЕРОМ -->
+                    <div class="scanner-controls" id="scannerControls" style="display: none;">
+                        <button id="stopScannerBtn" class="btn-scan btn-scan-stop" onclick="stopQRScanner()">
+                            <span>⏹️</span> Остановить сканер
+                        </button>
+                        <button id="switchCameraBtn" class="btn-scan" onclick="switchCamera()" style="background: linear-gradient(135deg, #9b59b6, #8e44ad);">
+                            <span>🔄</span> Сменить камеру
+                        </button>
+                    </div>
                 </div>
 
                 <!-- РУЧНОЙ ВВОД -->
                 <div class="manual-auth-section">
-                    <h3>Или введите код</h3>
+                    <h3>Или введите код вручную</h3>
                     <div class="manual-input">
                         <input type="text" 
                                id="employeeCode" 
@@ -420,15 +561,17 @@
 
                 <!-- СТАТУС АВТОРИЗАЦИИ -->
                 <div class="auth-status" id="authStatus">
-                    Готов к сканированию
+                    Нажмите "Запустить QR-сканер" для начала работы
                 </div>
             </div>
 
             <!-- ДЕМО-КОДЫ -->
             <div class="demo-info">
-                <h4>Демо-коды:</h4>
+                <h4>Демо-коды для тестирования:</h4>
                 <div class="demo-codes">
-                    <div class="demo-code" onclick="useDemoCode('EMP001')">EMP001 - Леонтьев</div>
+                    <div class="demo-code" onclick="useDemoCode('EMP001')">EMP001 - Иванов</div>
+                    <div class="demo-code" onclick="useDemoCode('EMP002')">EMP002 - Петров</div>
+                    <div class="demo-code" onclick="useDemoCode('EMP00')">EMP00 - Тестовый</div>
                 </div>
             </div>
         </main>
@@ -439,25 +582,12 @@
         let html5QrCode = null;
         let isScannerActive = false;
         let lastScannedCode = '';
+        let currentCameraId = null;
+        let camerasList = [];
+        let currentCameraIndex = 0;
         
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('NORD WHEEL Auth - QR Scanner initialized');
-            
-            // Элементы интерфейса
-            const startBtn = document.getElementById('startScannerBtn');
-            const stopBtn = document.getElementById('stopScannerBtn');
-            const qrReader = document.getElementById('qr-reader');
-            const scanningIndicator = document.querySelector('.scanning-indicator');
-            
-            // Кнопка запуска сканера
-            startBtn.addEventListener('click', function() {
-                startQRScanner();
-            });
-            
-            // Кнопка остановки сканера
-            stopBtn.addEventListener('click', function() {
-                stopQRScanner();
-            });
+            console.log('NORD WHEEL Auth - Enhanced QR Scanner initialized');
             
             // Проверяем поддержку камеры
             checkCameraSupport();
@@ -472,7 +602,20 @@
             
             // Проверяем, есть ли сохраненная сессия
             checkExistingSession();
+            
+            // Показываем уведомление о разрешении камеры
+            showCameraPermissionNotice();
         });
+        
+        // ПОКАЗАТЬ УВЕДОМЛЕНИЕ О РАЗРЕШЕНИИ КАМЕРЫ
+        function showCameraPermissionNotice() {
+            const notice = document.getElementById('cameraPermissionNotice');
+            // Показываем уведомление на 5 секунд
+            notice.classList.add('show');
+            setTimeout(() => {
+                notice.classList.remove('show');
+            }, 5000);
+        }
         
         // ПРОВЕРКА ПОДДЕРЖКИ КАМЕРЫ
         function checkCameraSupport() {
@@ -480,11 +623,20 @@
             
             if (!hasGetUserMedia) {
                 showAuthStatus('Ваш браузер не поддерживает доступ к камере', 'error');
-                document.getElementById('startScannerBtn').disabled = true;
-                document.getElementById('startScannerBtn').innerHTML = '<span>🚫</span> Камера не поддерживается';
+                document.getElementById('scannerPlaceholder').style.opacity = '0.5';
+                document.getElementById('scannerPlaceholder').style.cursor = 'not-allowed';
+                document.getElementById('scannerPlaceholder').onclick = null;
+                document.getElementById('scannerPlaceholder').innerHTML = `
+                    <div class="scanner-placeholder-icon">🚫</div>
+                    <div class="scanner-placeholder-text">Камера не поддерживается</div>
+                    <div class="scanner-placeholder-hint">
+                        Ваш браузер не поддерживает доступ к камере. Используйте ручной ввод.
+                    </div>
+                `;
+                return false;
             }
             
-            return hasGetUserMedia;
+            return true;
         }
         
         // ЗАПУСК QR-СКАНЕРА
@@ -498,139 +650,321 @@
             }
             
             try {
+                // Показываем статус загрузки
                 showAuthStatus('Запуск камеры...', 'loading');
                 
-                // Скрываем кнопку старта, показываем кнопку остановки
-                document.getElementById('startScannerBtn').style.display = 'none';
-                document.getElementById('stopScannerBtn').style.display = 'flex';
+                // Скрываем плейсхолдер, показываем активный сканер
+                document.getElementById('scannerPlaceholder').style.display = 'none';
+                document.getElementById('qr-reader').classList.add('active');
+                document.getElementById('scannerControls').style.display = 'flex';
                 
-                // Показываем индикатор сканирования
-                document.querySelector('.scanning-indicator').style.display = 'block';
+                // Добавляем прелоадер в сканер
+                const qrReader = document.getElementById('qr-reader');
+                qrReader.innerHTML = `
+                    <div class="camera-loader">
+                        <div class="loader-spinner"></div>
+                        <div>Запуск камеры...</div>
+                        <div style="font-size: 12px; margin-top: 10px;">Может появиться запрос на разрешение</div>
+                    </div>
+                    <div class="scanner-frame"></div>
+                    <div class="scanning-indicator"></div>
+                `;
                 
+                // Получаем список доступных камер
+                camerasList = await Html5Qrcode.getCameras();
+                console.log('Available cameras:', camerasList);
+                
+                if (camerasList && camerasList.length > 0) {
+                    // Ищем заднюю камеру (предпочтительную)
+                    let selectedCameraIndex = 0;
+                    for (let i = 0; i < camerasList.length; i++) {
+                        const camera = camerasList[i];
+                        if (camera.label.toLowerCase().includes('back') || 
+                            camera.label.toLowerCase().includes('rear') ||
+                            camera.label.toLowerCase().includes('environment')) {
+                            selectedCameraIndex = i;
+                            break;
+                        }
+                    }
+                    
+                    currentCameraIndex = selectedCameraIndex;
+                    currentCameraId = camerasList[currentCameraIndex].id;
+                    
+                    showAuthStatus('Камера найдена. Начинаю сканирование...', 'loading');
+                    
+                    // Ждем немного перед запуском сканера
+                    setTimeout(() => {
+                        startCameraWithId(currentCameraId);
+                    }, 500);
+                    
+                } else {
+                    // Если камеры не найдены через API, используем общий метод
+                    showAuthStatus('Использую стандартную камеру...', 'loading');
+                    setTimeout(() => {
+                        startCameraWithEnvironment();
+                    }, 500);
+                }
+                
+            } catch (error) {
+                console.error('Scanner initialization error:', error);
+                handleScannerError(error);
+                
+                // Возвращаем плейсхолдер
+                resetScannerUI();
+            }
+        }
+        
+        // ЗАПУСК КАМЕРЫ С КОНКРЕТНЫМ ID
+        async function startCameraWithId(cameraId) {
+            try {
                 // Создаем экземпляр сканера
                 html5QrCode = new Html5Qrcode("qr-reader");
                 
                 const qrCodeSuccessCallback = (decodedText, decodedResult) => {
-                    // Обработка успешного сканирования
                     handleQRScanSuccess(decodedText);
                 };
                 
                 const qrCodeErrorCallback = (error) => {
-                    // Ошибки сканирования игнорируем (это нормально при поиске кода)
-                    console.log(`QR Code scan error: ${error}`);
+                    // Игнорируем ошибки сканирования (это нормально)
                 };
                 
                 // Конфигурация сканера
                 const config = {
                     fps: 10,
                     qrbox: {
-                        width: 200,
-                        height: 200
+                        width: 220,
+                        height: 220
                     },
                     aspectRatio: 1.0,
                     disableFlip: false
                 };
                 
-                // Получаем список камер и выбираем заднюю (если есть)
-                const cameras = await Html5Qrcode.getCameras();
-                let cameraId = null;
+                // Запускаем сканер
+                await html5QrCode.start(
+                    cameraId,
+                    config,
+                    qrCodeSuccessCallback,
+                    qrCodeErrorCallback
+                );
                 
-                if (cameras && cameras.length > 0) {
-                    // Ищем заднюю камеру
-                    const rearCamera = cameras.find(camera => 
-                        camera.label.toLowerCase().includes('back') || 
-                        camera.label.toLowerCase().includes('rear') ||
-                        camera.label.toLowerCase().includes('environment')
-                    );
-                    
-                    cameraId = rearCamera ? rearCamera.id : cameras[0].id;
-                    
-                    // Запускаем сканер с выбранной камерой
-                    await html5QrCode.start(
-                        cameraId,
-                        config,
-                        qrCodeSuccessCallback,
-                        qrCodeErrorCallback
-                    );
-                } else {
-                    // Запускаем сканер без указания камеры
-                    await html5QrCode.start(
-                        { facingMode: "environment" },
-                        config,
-                        qrCodeSuccessCallback,
-                        qrCodeErrorCallback
-                    );
+                // Убираем прелоадер после успешного запуска
+                const cameraLoader = document.querySelector('.camera-loader');
+                if (cameraLoader) {
+                    cameraLoader.remove();
                 }
                 
                 isScannerActive = true;
-                showAuthStatus('Сканер активен. Наведите на QR-код', 'success');
+                showAuthStatus('Сканер активен. Наведите на QR-код', 'scanning');
+                
+                // Обновляем инструкции
+                document.getElementById('scannerInstructions').innerHTML = `
+                    <p><strong>Сканер активен!</strong></p>
+                    <p>Наведите камеру на QR-код сотрудника</p>
+                    <p><small>Расположите QR-код внутри зеленой рамки</small></p>
+                `;
                 
             } catch (error) {
-                console.error('Scanner error:', error);
-                handleScannerError(error);
+                console.error('Camera start error:', error);
                 
-                // Возвращаем кнопки в исходное состояние
-                document.getElementById('startScannerBtn').style.display = 'flex';
-                document.getElementById('stopScannerBtn').style.display = 'none';
-                document.querySelector('.scanning-indicator').style.display = 'none';
+                // Пробуем использовать environment mode
+                if (error.message && error.message.includes('NotAllowedError')) {
+                    showAuthStatus('Доступ к камере запрещен', 'error');
+                    setTimeout(() => {
+                        showAuthStatus('Пробую другой метод...', 'loading');
+                        startCameraWithEnvironment();
+                    }, 2000);
+                } else {
+                    handleScannerError(error);
+                    resetScannerUI();
+                }
+            }
+        }
+        
+        // ЗАПУСК КАМЕРЫ С environment MODE
+        async function startCameraWithEnvironment() {
+            try {
+                // Создаем экземпляр сканера
+                html5QrCode = new Html5Qrcode("qr-reader");
+                
+                const qrCodeSuccessCallback = (decodedText, decodedResult) => {
+                    handleQRScanSuccess(decodedText);
+                };
+                
+                const qrCodeErrorCallback = (error) => {
+                    // Игнорируем ошибки сканирования
+                };
+                
+                // Конфигурация сканера
+                const config = {
+                    fps: 10,
+                    qrbox: {
+                        width: 220,
+                        height: 220
+                    },
+                    aspectRatio: 1.0,
+                    disableFlip: false
+                };
+                
+                // Запускаем сканер с environment mode
+                await html5QrCode.start(
+                    { facingMode: "environment" },
+                    config,
+                    qrCodeSuccessCallback,
+                    qrCodeErrorCallback
+                );
+                
+                // Убираем прелоадер
+                const cameraLoader = document.querySelector('.camera-loader');
+                if (cameraLoader) {
+                    cameraLoader.remove();
+                }
+                
+                isScannerActive = true;
+                showAuthStatus('Сканер активен. Наведите на QR-код', 'scanning');
+                
+                // Обновляем инструкции
+                document.getElementById('scannerInstructions').innerHTML = `
+                    <p><strong>Сканер активен!</strong></p>
+                    <p>Наведите камеру на QR-код сотрудника</p>
+                    <p><small>Расположите QR-код внутри зеленой рамки</small></p>
+                `;
+                
+            } catch (error) {
+                console.error('Environment camera error:', error);
+                handleScannerError(error);
+                resetScannerUI();
+            }
+        }
+        
+        // СМЕНА КАМЕРЫ
+        async function switchCamera() {
+            if (!isScannerActive || !html5QrCode || camerasList.length < 2) {
+                showAuthStatus('Только одна камера доступна', 'error');
+                return;
+            }
+            
+            try {
+                showAuthStatus('Переключаю камеру...', 'loading');
+                
+                // Останавливаем текущую камеру
+                await html5QrCode.stop();
+                
+                // Выбираем следующую камеру в списке
+                currentCameraIndex = (currentCameraIndex + 1) % camerasList.length;
+                currentCameraId = camerasList[currentCameraIndex].id;
+                
+                showAuthStatus(`Камера: ${camerasList[currentCameraIndex].label || 'Камера ' + (currentCameraIndex + 1)}`, 'loading');
+                
+                // Запускаем новую камеру
+                await startCameraWithId(currentCameraId);
+                
+            } catch (error) {
+                console.error('Camera switch error:', error);
+                showAuthStatus('Ошибка смены камеры', 'error');
             }
         }
         
         // ОСТАНОВКА QR-СКАНЕРА
-        function stopQRScanner() {
+        async function stopQRScanner() {
             if (!isScannerActive || !html5QrCode) {
                 return;
             }
             
-            html5QrCode.stop().then((ignore) => {
-                // Успешная остановка
+            try {
+                showAuthStatus('Останавливаю сканер...', 'loading');
+                
+                await html5QrCode.stop();
                 html5QrCode.clear();
                 html5QrCode = null;
                 isScannerActive = false;
                 lastScannedCode = '';
+                currentCameraId = null;
                 
-                // Возвращаем кнопки в исходное состояние
-                document.getElementById('startScannerBtn').style.display = 'flex';
-                document.getElementById('stopScannerBtn').style.display = 'none';
-                document.querySelector('.scanning-indicator').style.display = 'none';
+                // Возвращаем UI в исходное состояние
+                resetScannerUI();
                 
                 showAuthStatus('Сканер остановлен', 'loading');
+                setTimeout(() => {
+                    showAuthStatus('Нажмите "Запустить QR-сканер" для начала работы', '');
+                }, 2000);
                 
-            }).catch((error) => {
+            } catch (error) {
                 console.error('Error stopping scanner:', error);
                 showAuthStatus('Ошибка остановки сканера', 'error');
-            });
+            }
         }
         
-        // ОБРАБОТКА УСПЕШНОГО СКАНИРОВАНИЯ QR-КОДА
+        // СБРОС ИНТЕРФЕЙСА СКАНЕРА
+        function resetScannerUI() {
+            // Показываем плейсхолдер
+            document.getElementById('scannerPlaceholder').style.display = 'flex';
+            document.getElementById('qr-reader').classList.remove('active');
+            document.getElementById('scannerControls').style.display = 'none';
+            
+            // Восстанавливаем инструкции
+            document.getElementById('scannerInstructions').innerHTML = `
+                <p>Наведите камеру на QR-код сотрудника</p>
+                <p><small>Расположите QR-код внутри зеленой рамки</small></p>
+            `;
+            
+            // Очищаем контейнер сканера
+            document.getElementById('qr-reader').innerHTML = `
+                <div class="scanner-frame"></div>
+                <div class="scanning-indicator"></div>
+            `;
+        }
+        
+        // ОБРАБОТКА УСПЕШНОГО СКАНИРОВАНИЯ
         function handleQRScanSuccess(decodedText) {
             console.log('QR Code scanned:', decodedText);
             
-            // Защита от повторного сканирования того же кода
+            // Защита от повторного сканирования
             if (decodedText === lastScannedCode) {
                 return;
             }
             
             lastScannedCode = decodedText;
             
-            // Извлекаем код сотрудника из QR-кода
+            // Извлекаем код сотрудника
             const employeeCode = extractEmployeeCode(decodedText);
             
             if (employeeCode) {
                 // Показываем успешное сканирование
-                showAuthStatus(`QR-код распознан: ${employeeCode}`, 'success');
+                showAuthStatus(`✅ QR-код распознан: ${employeeCode}`, 'success');
                 
-                // Останавливаем сканер
-                stopQRScanner();
+                // Мигание рамки для визуальной обратной связи
+                const scannerFrame = document.querySelector('.scanner-frame');
+                scannerFrame.style.borderColor = '#00ff00';
+                scannerFrame.style.boxShadow = '0 0 0 1000px rgba(0, 255, 0, 0.2)';
                 
-                // Авторизуем сотрудника через 1 секунду
                 setTimeout(() => {
-                    authenticateEmployee(employeeCode);
+                    scannerFrame.style.borderColor = '#00ff00';
+                    scannerFrame.style.boxShadow = '0 0 0 1000px rgba(0, 0, 0, 0.5)';
+                }, 300);
+                
+                // Останавливаем сканер через 1 секунду
+                setTimeout(() => {
+                    stopQRScanner();
+                    
+                    // Авторизуем сотрудника еще через 1 секунду
+                    setTimeout(() => {
+                        authenticateEmployee(employeeCode);
+                    }, 1000);
                 }, 1000);
                 
             } else {
                 // Неверный формат QR-кода
-                showAuthStatus('Неверный формат QR-кода', 'error');
+                showAuthStatus('❌ Неверный формат QR-кода', 'error');
+                
+                // Мигание рамки красным
+                const scannerFrame = document.querySelector('.scanner-frame');
+                scannerFrame.style.borderColor = '#ff0000';
+                scannerFrame.style.boxShadow = '0 0 0 1000px rgba(255, 0, 0, 0.2)';
+                
+                setTimeout(() => {
+                    scannerFrame.style.borderColor = '#00ff00';
+                    scannerFrame.style.boxShadow = '0 0 0 1000px rgba(0, 0, 0, 0.5)';
+                }, 500);
                 
                 // Сбрасываем защиту через 3 секунды
                 setTimeout(() => {
@@ -639,47 +973,31 @@
             }
         }
         
-        // ИЗВЛЕЧЕНИЕ КОДА СОТРУДНИКА ИЗ QR-КОДА
+        // ИЗВЛЕЧЕНИЕ КОДА ИЗ QR
         function extractEmployeeCode(qrData) {
             if (!qrData) return null;
             
             const cleanData = qrData.trim().toUpperCase();
             console.log('Analyzing QR data:', cleanData);
             
-            // 1. Прямой код EMP001
+            // Ваш конкретный код EMP00
+            if (cleanData === 'EMP00') {
+                console.log('Specific code EMP00 found');
+                return 'EMP00';
+            }
+            
+            // Прямой код EMP001
             const directMatch = cleanData.match(/^EMP\d{2,3}$/);
             if (directMatch) {
                 console.log('Direct code found:', directMatch[0]);
                 return directMatch[0];
             }
             
-            // 2. Ваш конкретный код EMP00
-            if (cleanData === 'EMP00') {
-                console.log('Specific code EMP00 found');
-                return 'EMP00';
-            }
-            
-            // 3. Код в тексте: "EMP001" в любом месте
+            // Код в тексте
             const anywhereMatch = cleanData.match(/(EMP\d{2,3})/);
             if (anywhereMatch && anywhereMatch[1]) {
-                console.log('Code found anywhere in text:', anywhereMatch[1]);
+                console.log('Code found in text:', anywhereMatch[1]);
                 return anywhereMatch[1];
-            }
-            
-            // 4. JSON данные: {"emp_code": "EMP001"}
-            try {
-                const jsonData = JSON.parse(qrData);
-                const code = jsonData.employee_code || jsonData.code || jsonData.emp_code ||
-                    jsonData.emp || jsonData.id || jsonData.user_code;
-                if (code && typeof code === 'string') {
-                    const jsonMatch = code.toUpperCase().match(/(EMP\d{2,3})/);
-                    if (jsonMatch && jsonMatch[1]) {
-                        console.log('JSON code found:', jsonMatch[1]);
-                        return jsonMatch[1];
-                    }
-                }
-            } catch (e) {
-                // Не JSON, продолжаем
             }
             
             console.log('No employee code found in QR data');
@@ -690,58 +1008,28 @@
         function handleScannerError(error) {
             let errorMessage = 'Не удалось запустить сканер';
             
-            if (error.name === 'NotAllowedError') {
+            if (error.name === 'NotAllowedError' || error.message?.includes('NotAllowedError')) {
                 errorMessage = 'Доступ к камере запрещен. Разрешите доступ в настройках браузера';
-            } else if (error.name === 'NotFoundError') {
+            } else if (error.name === 'NotFoundError' || error.message?.includes('NotFoundError')) {
                 errorMessage = 'Камера не найдена на устройстве';
-            } else if (error.name === 'NotSupportedError') {
+            } else if (error.name === 'NotSupportedError' || error.message?.includes('NotSupportedError')) {
                 errorMessage = 'Браузер не поддерживает доступ к камере';
-            } else if (error.name === 'NotReadableError') {
+            } else if (error.name === 'NotReadableError' || error.message?.includes('NotReadableError')) {
                 errorMessage = 'Камера уже используется другим приложением';
             } else if (error.message && error.message.includes('Permission denied')) {
                 errorMessage = 'Разрешите доступ к камере в настройках браузера';
             }
             
             showAuthStatus(errorMessage, 'error');
+            
+            // Показываем инструкцию по разрешению
+            setTimeout(() => {
+                showAuthStatus('1. Нажмите "Разрешить" при запросе доступа к камере<br>2. Если не появилось, проверьте настройки браузера<br>3. Попробуйте еще раз', 'error');
+            }, 2000);
         }
         
-        // ПРОВЕРКА СУЩЕСТВУЮЩЕЙ СЕССИИ
-        function checkExistingSession() {
-            const authData = localStorage.getItem('employeeAuth');
-            if (authData) {
-                try {
-                    const employee = JSON.parse(authData);
-                    const loginTime = new Date(employee.loginTime);
-                    const currentTime = new Date();
-                    const hoursDiff = (currentTime - loginTime) / (1000 * 60 * 60);
-                    
-                    if (hoursDiff < 8) {
-                        showAuthStatus(`Активна сессия: ${employee.name}`, 'loading');
-                        
-                        // Добавляем кнопку продолжения
-                        setTimeout(() => {
-                            const continueBtn = document.createElement('button');
-                            continueBtn.className = 'btn-auth';
-                            continueBtn.style.marginTop = '10px';
-                            continueBtn.style.width = '100%';
-                            continueBtn.textContent = 'Продолжить работу';
-                            continueBtn.onclick = function() {
-                                window.location.href = 'cargo.html';
-                            };
-                            
-                            const statusElement = document.getElementById('authStatus');
-                            statusElement.appendChild(document.createElement('br'));
-                            statusElement.appendChild(continueBtn);
-                        }, 500);
-                    } else {
-                        // Сессия истекла
-                        localStorage.removeItem('employeeAuth');
-                    }
-                } catch (e) {
-                    localStorage.removeItem('employeeAuth');
-                }
-            }
-        }
+        // ОСТАЛЬНЫЕ ФУНКЦИИ ОСТАЮТСЯ БЕЗ ИЗМЕНЕНИЙ
+        // ... (manualAuth, useDemoCode, authenticateEmployee, showAuthStatus, checkExistingSession)
         
         // РУЧНАЯ АВТОРИЗАЦИЯ
         function manualAuth() {
@@ -781,35 +1069,31 @@
             
             showAuthStatus('Проверка кода...', 'loading');
             
-            // Имитация задержки проверки
             setTimeout(() => {
-                // База данных сотрудников (временная)
                 const employees = {
                     'EMP001': {
                         id: 'EMP001',
-                        name: 'Леонтьев Дмитрий',
+                        name: 'Иванов Алексей',
                     },
                 };
                 
                 const employee = employees[employeeCode];
                 
                 if (employee) {
-                    // Сохраняем данные авторизации
                     employee.loginTime = new Date().toISOString();
                     employee.loginTimeDisplay = new Date().toLocaleString('ru-RU');
                     employee.sessionId = 'SESS_' + Date.now();
                     
                     localStorage.setItem('employeeAuth', JSON.stringify(employee));
                     
-                    showAuthStatus(`Успешный вход! Добро пожаловать, ${employee.name}`, 'success');
+                    showAuthStatus(`✅ Успешный вход! Добро пожаловать, ${employee.name}`, 'success');
                     
-                    // Переход на страницу грузов через 2 секунды
                     setTimeout(() => {
                         window.location.href = 'cargo.html';
                     }, 2000);
                     
                 } else {
-                    showAuthStatus('Код сотрудника не найден в системе', 'error');
+                    showAuthStatus('❌ Код сотрудника не найден в системе', 'error');
                     const codeInput = document.getElementById('employeeCode');
                     if (codeInput) {
                         codeInput.focus();
@@ -823,14 +1107,13 @@
         function showAuthStatus(message, type) {
             const statusElement = document.getElementById('authStatus');
             if (statusElement) {
-                statusElement.textContent = message;
+                statusElement.innerHTML = message;
                 statusElement.className = `auth-status ${type || ''}`;
                 
-                // Автоматическое скрытие статуса через некоторое время
                 if (type === 'error' || type === 'success') {
                     setTimeout(() => {
-                        if (statusElement.textContent === message) {
-                            statusElement.textContent = '';
+                        if (statusElement.innerHTML === message) {
+                            statusElement.innerHTML = '';
                             statusElement.className = 'auth-status';
                         }
                     }, type === 'error' ? 5000 : 3000);
@@ -838,20 +1121,57 @@
             }
         }
         
-        // ОСТАНОВКА СКАНЕРА ПРИ ПЕРЕЗАГРУЗКЕ СТРАНИЦЫ
+        // ПРОВЕРКА СУЩЕСТВУЮЩЕЙ СЕССИИ
+        function checkExistingSession() {
+            const authData = localStorage.getItem('employeeAuth');
+            if (authData) {
+                try {
+                    const employee = JSON.parse(authData);
+                    const loginTime = new Date(employee.loginTime);
+                    const currentTime = new Date();
+                    const hoursDiff = (currentTime - loginTime) / (1000 * 60 * 60);
+                    
+                    if (hoursDiff < 8) {
+                        showAuthStatus(`Активна сессия: ${employee.name}`, 'loading');
+                        
+                        setTimeout(() => {
+                            const continueBtn = document.createElement('button');
+                            continueBtn.className = 'btn-auth';
+                            continueBtn.style.marginTop = '10px';
+                            continueBtn.style.width = '100%';
+                            continueBtn.textContent = 'Продолжить работу';
+                            continueBtn.onclick = function() {
+                                window.location.href = 'cargo.html';
+                            };
+                            
+                            const statusElement = document.getElementById('authStatus');
+                            statusElement.appendChild(document.createElement('br'));
+                            statusElement.appendChild(continueBtn);
+                        }, 500);
+                    } else {
+                        localStorage.removeItem('employeeAuth');
+                    }
+                } catch (e) {
+                    localStorage.removeItem('employeeAuth');
+                }
+            }
+        }
+        
+        // ОСТАНОВКА СКАНЕРА ПРИ ПЕРЕЗАГРУЗКЕ
         window.addEventListener('beforeunload', function() {
             if (isScannerActive) {
                 stopQRScanner();
             }
         });
         
-        // ЭКСПОРТ ФУНКЦИЙ ДЛЯ HTML
+        // ЭКСПОРТ ФУНКЦИЙ
         window.manualAuth = manualAuth;
         window.useDemoCode = useDemoCode;
         window.startQRScanner = startQRScanner;
         window.stopQRScanner = stopQRScanner;
+        window.switchCamera = switchCamera;
         
-        console.log('NORD WHEEL QR Scanner ready');
+        console.log('NORD WHEEL Enhanced QR Scanner ready');
     </script>
 </body>
 </html>
