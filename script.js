@@ -844,3 +844,172 @@ window.logout = logout;
 window.showNotification = showNotification;
 
 console.log('Все функции script.js загружены и готовы к использованию');
+// script.js - ДОБАВЛЯЕМ ПЛАНШЕТНУЮ ОПТИМИЗАЦИЮ
+
+// ОПТИМИЗАЦИЯ ДЛЯ ПЛАНШЕТОВ
+function initTabletOptimization() {
+    // Увеличиваем область клика для планшетов
+    if (window.innerWidth >= 768) {
+        // Добавляем класс для планшетов
+        document.body.classList.add('tablet-device');
+        
+        // Увеличиваем тач-таргеты для всех кликабельных элементов
+        const clickableElements = document.querySelectorAll(
+            'button, .cargo-type-item, .photo-container, .stats-header, ' +
+            '.dimension-btn, .quantity-btn, .btn-save, .btn-send, ' +
+            '.btn-quantity-change, .btn-remove-group'
+        );
+        
+        clickableElements.forEach(el => {
+            el.style.minHeight = '44px';
+            el.style.minWidth = '44px';
+            el.style.display = 'flex';
+            el.style.alignItems = 'center';
+            el.style.justifyContent = 'center';
+        });
+        
+        console.log('Планшетная оптимизация применена');
+    }
+}
+
+// ФИКС ДЛЯ КЛИКОВ НА ПЛАНШЕТАХ
+function handleTabletClicks() {
+    // Некоторые планшеты требуют особой обработки touch событий
+    document.addEventListener('touchstart', function(e) {
+        // Предотвращаем зум на быстрые тапы
+        if (e.touches.length > 1) {
+            e.preventDefault();
+        }
+    }, { passive: false });
+    
+    // Улучшаем feedback для тапов
+    document.addEventListener('touchstart', function(e) {
+        const target = e.target;
+        if (target.matches('button, .cargo-type-item, .photo-container, .stats-header')) {
+            target.classList.add('active-touch');
+        }
+    });
+    
+    document.addEventListener('touchend', function(e) {
+        const target = e.target;
+        if (target.matches('button, .cargo-type-item, .photo-container, .stats-header')) {
+            target.classList.remove('active-touch');
+        }
+    });
+}
+
+// ОПТИМИЗАЦИЯ МОДАЛЬНОГО ОКНА ДЛЯ ПЛАНШЕТОВ
+function optimizeModalForTablet() {
+    const modal = document.getElementById('cargoListModal');
+    if (modal && window.innerWidth >= 768) {
+        const modalContent = modal.querySelector('.modal-content');
+        if (modalContent) {
+            modalContent.style.maxWidth = '600px';
+            modalContent.style.padding = '25px';
+            
+            // Увеличиваем кнопки в модальном окне
+            const modalButtons = modalContent.querySelectorAll('button');
+            modalButtons.forEach(btn => {
+                btn.style.minHeight = '50px';
+                btn.style.fontSize = '16px';
+                btn.style.padding = '12px 20px';
+            });
+        }
+    }
+}
+
+// ИНИЦИАЛИЗАЦИЯ ПЛАНШЕТНОЙ ОПТИМИЗАЦИИ
+document.addEventListener('DOMContentLoaded', function() {
+    // Запускаем оптимизацию
+    initTabletOptimization();
+    handleTabletClicks();
+    
+    // Отслеживаем изменение ориентации
+    window.addEventListener('resize', function() {
+        initTabletOptimization();
+        optimizeModalForTablet();
+    });
+    
+    // Оптимизируем модальное окно при показе
+    const originalShowModal = window.showCargoListModal;
+    window.showCargoListModal = function() {
+        originalShowModal();
+        optimizeModalForTablet();
+    };
+});
+
+// ДОБАВЛЯЕМ СТИЛИ ДЛЯ АКТИВНОГО ТАЧА
+const touchStyles = document.createElement('style');
+touchStyles.textContent = `
+    .active-touch {
+        opacity: 0.8 !important;
+        transform: scale(0.98) !important;
+        transition: all 0.1s ease !important;
+    }
+    
+    /* Увеличенные тач-таргеты для планшетов */
+    @media (min-width: 768px) {
+        button,
+        .cargo-type-item,
+        .photo-container,
+        .stats-header,
+        .dimension-btn,
+        .quantity-btn,
+        .btn-save,
+        .btn-send,
+        .btn-quantity-change,
+        .btn-remove-group {
+            min-height: 44px !important;
+            min-width: 44px !important;
+        }
+        
+        .dimension-btn,
+        .quantity-btn {
+            width: 44px !important;
+            height: 44px !important;
+        }
+        
+        /* Улучшаем видимость фокуса */
+        *:focus {
+            outline: 3px solid #3498db !important;
+            outline-offset: 3px !important;
+        }
+    }
+    
+    /* Исправление для вертикальных планшетов */
+    @media (min-width: 768px) and (max-width: 1024px) and (orientation: portrait) {
+        .cargo-container {
+            max-width: 800px !important;
+            margin: 10px auto !important;
+        }
+        
+        .cargo-content-columns {
+            flex-direction: column !important;
+        }
+        
+        .right-column {
+            flex-direction: row !important;
+            margin-top: 15px;
+        }
+        
+        .action-buttons {
+            flex-direction: row !important;
+            gap: 15px;
+        }
+        
+        .btn-save,
+        .btn-send {
+            flex: 1;
+        }
+        
+        .stats-section {
+            flex: 1;
+            min-height: auto !important;
+        }
+        
+        .photo-section {
+            flex: 1;
+        }
+    }
+`;
+document.head.appendChild(touchStyles);
