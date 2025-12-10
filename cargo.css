@@ -1,4 +1,4 @@
-/* cargo.css - Стили для страницы замера грузов - КОМПАКТНАЯ ВЕРСИЯ */
+/* cargo.css - КОМПАКТНЫЙ ИНТЕРФЕЙС */
 
 .cargo-container {
     height: 100vh;
@@ -11,17 +11,17 @@
 
 .cargo-main {
     flex: 1;
-    overflow: hidden;
+    overflow: auto;
     min-height: 0;
-    padding: 6px;
+    padding: 4px;
     display: flex;
     flex-direction: column;
     background: white;
 }
 
 h1 {
-    font-size: 1.1em !important;
-    margin: 0 0 8px 0 !important;
+    font-size: 1em !important;
+    margin: 0 0 6px 0 !important;
     text-align: center;
     padding: 0;
     flex-shrink: 0;
@@ -29,8 +29,8 @@ h1 {
 }
 
 h2 {
-    font-size: 0.9em !important;
-    margin: 0 0 8px 0 !important;
+    font-size: 0.85em !important;
+    margin: 0 0 6px 0 !important;
     text-align: center;
     color: #2c3e50;
     padding: 0;
@@ -39,11 +39,11 @@ h2 {
 /* ВЕРХНЯЯ СТРОЧКА ТИПОВ ГРУЗОВ */
 .cargo-types-row {
     display: flex;
-    gap: 5px;
-    margin-bottom: 8px;
-    padding: 5px;
+    gap: 4px;
+    margin-bottom: 6px;
+    padding: 4px;
     background: #f8f9fa;
-    border-radius: 6px;
+    border-radius: 4px;
     flex-shrink: 0;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
@@ -53,8 +53,8 @@ h2 {
     flex: 0 0 auto;
     width: 23%;
     border: 1px solid #e0e0e0;
-    border-radius: 6px;
-    padding: 4px 2px;
+    border-radius: 4px;
+    padding: 3px 1px;
     cursor: pointer;
     display: flex;
     flex-direction: column;
@@ -63,24 +63,24 @@ h2 {
     text-align: center;
     background: white;
     transition: all 0.2s;
-    min-height: 50px;
+    min-height: 45px;
 }
 
 .cargo-type-item.selected {
     border-color: #3498db;
     background: #e3f2fd;
-    box-shadow: 0 2px 4px rgba(52, 152, 219, 0.3);
+    box-shadow: 0 1px 3px rgba(52, 152, 219, 0.3);
 }
 
 .cargo-type-icon {
-    width: 24px;
-    height: 24px;
+    width: 22px;
+    height: 22px;
     margin-bottom: 2px;
     display: flex;
     align-items: center;
     justify-content: center;
     overflow: hidden;
-    border-radius: 4px;
+    border-radius: 3px;
     background: white;
     border: 1px solid #ddd;
 }
@@ -89,15 +89,15 @@ h2 {
     width: 100%;
     height: 100%;
     object-fit: contain;
-    padding: 2px;
+    padding: 1px;
 }
 
 .cargo-type-icon .emoji-icon {
-    font-size: 14px;
+    font-size: 13px;
 }
 
 .cargo-type-name {
-    font-size: 8px;
+    font-size: 7px;
     font-weight: 600;
     color: #2c3e50;
     line-height: 1.1;
@@ -108,30 +108,31 @@ h2 {
     flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 6px;
     min-height: 0;
+    overflow: hidden;
 }
 
 /* СЕКЦИЯ РЕДАКТИРОВАНИЯ ПАРАМЕТРОВ */
 .params-section {
     background: #f8f9fa;
     border: 1px solid #e9ecef;
-    border-radius: 6px;
-    padding: 8px;
+    border-radius: 4px;
+    padding: 6px;
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 4px;
     flex-shrink: 0;
 }
 
 .param-group {
     display: flex;
     flex-direction: column;
-    gap: 3px;
+    gap: 2px;
 }
 
 .param-label {
-    font-size: 9px;
+    font-size: 8px;
     font-weight: 600;
     color: #495057;
     text-align: left;
@@ -140,7 +141,7 @@ h2 {
 .param-control {
     display: flex;
     align-items: center;
-    gap: 4px;
+    gap: 3px;
     width: 100%;
 }
 
@@ -148,15 +149,15 @@ h2 {
     background: #3498db;
     color: white;
     border: none;
-    border-radius: 4px;
-    width: 28px;
-    height: 28px;
+    border-radius: 3px;
+    width: 26px;
+    height: 26px;
     display: flex;
     align-items: center;
     justify-content: center;
     font-weight: bold;
     cursor: pointer;
-    font-size: 13px;
+    font-size: 12px;
     transition: all 0.2s;
     flex-shrink: 0;
 }
@@ -175,11 +176,11 @@ h2 {
 
 .param-input {
     flex: 1;
-    height: 28px;
-    padding: 0 4px;
+    height: 26px;
+    padding: 0 3px;
     border: 1px solid #3498db;
-    border-radius: 4px;
-    font-size: 12px;
+    border-radius: 3px;
+    font-size: 11px;
     text-align: center;
     font-weight: bold;
     background: white;
@@ -189,15 +190,14 @@ h2 {
 .param-input:focus {
     outline: none;
     border-color: #2980b9;
-    box-shadow: 0 0 0 1px rgba(52, 152, 219, 0.2);
 }
 
 /* СТАТИСТИКА ТЕКУЩЕГО ГРУЗА */
 .current-stats {
     display: flex;
-    gap: 6px;
-    margin-top: 4px;
-    padding-top: 4px;
+    gap: 5px;
+    margin-top: 3px;
+    padding-top: 3px;
     border-top: 1px solid #dee2e6;
 }
 
@@ -205,12 +205,12 @@ h2 {
     flex: 1;
     text-align: center;
     background: #e3f2fd;
-    border-radius: 4px;
-    padding: 4px;
+    border-radius: 3px;
+    padding: 3px;
 }
 
 .current-stats .stat-label {
-    font-size: 8px;
+    font-size: 7px;
     color: #666;
     display: block;
     margin-bottom: 1px;
@@ -218,7 +218,7 @@ h2 {
 
 .current-stats .stat-value {
     font-weight: bold;
-    font-size: 10px;
+    font-size: 9px;
     color: #2c3e50;
 }
 
@@ -226,16 +226,16 @@ h2 {
 .bottom-section {
     flex: 1;
     display: flex;
-    gap: 8px;
+    gap: 6px;
     min-height: 0;
-    margin-top: 4px;
+    margin-top: 3px;
 }
 
 .bottom-left {
     flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 6px;
     min-width: 0;
 }
 
@@ -243,43 +243,42 @@ h2 {
     flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 6px;
     min-width: 0;
 }
 
-/* ФОТО ГРУЗА (минималистичная версия) */
+/* ФОТО ГРУЗА (СУПЕР КОМПАКТНАЯ ВЕРСИЯ) */
 .photo-section-new {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 3px;
     background: #f8f9fa;
     border: 1px solid #e9ecef;
-    border-radius: 6px;
-    padding: 6px;
+    border-radius: 4px;
+    padding: 5px;
     align-items: center;
     justify-content: center;
     flex: none;
-    height: 110px;
+    height: 90px; /* ФИКСИРОВАННАЯ ВЫСОТА */
 }
 
 .photo-container-new {
-    width: 50px;
-    height: 50px;
+    width: 45px;
+    height: 45px;
     border: 1px dashed #3498db;
-    border-radius: 6px;
+    border-radius: 4px;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
     background: white;
     overflow: hidden;
-    transition: all 0.3s;
+    transition: all 0.2s;
 }
 
 .photo-container-new:hover {
     background: #e3f2fd;
     border-color: #2980b9;
-    transform: scale(1.05);
 }
 
 .photo-placeholder-new {
@@ -292,74 +291,75 @@ h2 {
 }
 
 .camera-icon-new {
-    font-size: 16px;
+    font-size: 14px;
     color: #3498db;
-    margin-bottom: 2px;
+    margin-bottom: 1px;
 }
 
 .photo-hint-new {
-    font-size: 7px;
+    font-size: 6px;
     color: #666;
     text-align: center;
-    max-width: 40px;
-    line-height: 1.1;
+    max-width: 35px;
+    line-height: 1;
 }
 
 .cargo-photo-new {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    border-radius: 4px;
+    border-radius: 3px;
 }
 
-/* КНОПКА СОХРАНИТЬ (минимальная) */
+/* КНОПКА СОХРАНИТЬ */
 .btn-save-new {
     background: linear-gradient(135deg, #27ae60, #219653);
     color: white;
     border: none;
-    border-radius: 6px;
-    padding: 8px 4px;
-    font-size: 11px;
+    border-radius: 4px;
+    padding: 6px 3px;
+    font-size: 10px;
     font-weight: 600;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 4px;
-    transition: all 0.3s;
-    min-height: 40px;
+    gap: 3px;
+    transition: all 0.2s;
+    min-height: 35px;
     width: 100%;
     flex-shrink: 0;
+    margin-top: 2px;
 }
 
 .btn-save-new:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 2px 6px rgba(39, 174, 96, 0.3);
+    background: linear-gradient(135deg, #219653, #1e8449);
 }
 
-/* ОБЩАЯ СТАТИСТИКА (компактная, без лишних отступов) */
+/* ОБЩАЯ СТАТИСТИКА (СУПЕР КОМПАКТНАЯ) */
 .total-stats-section {
     background: linear-gradient(135deg, #2c3e50, #34495e);
     color: white;
-    border-radius: 6px;
-    padding: 6px;
+    border-radius: 4px;
+    padding: 5px;
     display: flex;
     flex-direction: column;
     flex: none;
-    height: 110px;
+    height: 90px; /* ФИКСИРОВАННАЯ ВЫСОТА */
     min-height: 0;
+    justify-content: space-between;
 }
 
 .total-stats-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 4px;
+    margin-bottom: 2px;
     flex-shrink: 0;
 }
 
 .total-stats-header h3 {
-    font-size: 10px;
+    font-size: 9px;
     font-weight: 600;
     margin: 0;
 }
@@ -369,39 +369,37 @@ h2 {
     color: white;
     border: none;
     border-radius: 50%;
-    width: 18px;
-    height: 18px;
+    width: 16px;
+    height: 16px;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    font-size: 9px;
-    transition: all 0.3s;
+    font-size: 8px;
+    transition: all 0.2s;
 }
 
 .total-stats-refresh:hover {
     background: rgba(255,255,255,0.3);
-    transform: rotate(90deg);
 }
 
 .total-stats-grid {
     flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 3px;
     min-height: 0;
-    overflow-y: hidden;
+    justify-content: space-between;
 }
 
 .total-stat-item {
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 5px;
     background: rgba(255,255,255,0.1);
-    border-radius: 4px;
-    padding: 5px;
-    transition: all 0.3s;
-    flex: 1;
+    border-radius: 3px;
+    padding: 4px;
+    transition: all 0.2s;
 }
 
 .total-stat-item.clickable {
@@ -410,11 +408,10 @@ h2 {
 
 .total-stat-item.clickable:hover {
     background: rgba(255,255,255,0.15);
-    transform: translateX(2px);
 }
 
 .total-stat-icon {
-    font-size: 12px;
+    font-size: 10px;
     flex-shrink: 0;
 }
 
@@ -424,54 +421,54 @@ h2 {
 }
 
 .total-stat-label {
-    font-size: 8px;
+    font-size: 7px;
     opacity: 0.9;
-    margin-bottom: 1px;
+    margin-bottom: 0;
 }
 
 .total-stat-value {
     font-weight: bold;
-    font-size: 10px;
+    font-size: 9px;
 }
 
 .total-stat-arrow {
-    font-size: 12px;
+    font-size: 10px;
     opacity: 0.7;
 }
 
-/* КНОПКА ОТПРАВИТЬ (минимальная) */
+/* КНОПКА ОТПРАВИТЬ */
 .btn-send-new {
     background: linear-gradient(135deg, #e74c3c, #c0392b);
     color: white;
     border: none;
-    border-radius: 6px;
-    padding: 8px 4px;
-    font-size: 11px;
+    border-radius: 4px;
+    padding: 6px 3px;
+    font-size: 10px;
     font-weight: 600;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 4px;
-    transition: all 0.3s;
-    min-height: 40px;
+    gap: 3px;
+    transition: all 0.2s;
+    min-height: 35px;
     width: 100%;
     flex-shrink: 0;
+    margin-top: 2px;
 }
 
 .btn-send-new:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 2px 6px rgba(231, 76, 60, 0.3);
+    background: linear-gradient(135deg, #c0392b, #a93226);
 }
 
 .btn-icon {
-    font-size: 12px;
+    font-size: 10px;
 }
 
 /* ОКОШКО СТАТИСТИКИ ГРУЗОВ - ДОПОЛНИТЕЛЬНЫЕ СТИЛИ */
 .cargo-stats-actions {
-    margin-top: 10px;
-    padding-top: 10px;
+    margin-top: 8px;
+    padding-top: 8px;
     border-top: 1px solid #e9ecef;
 }
 
@@ -479,16 +476,16 @@ h2 {
     background: linear-gradient(135deg, #e74c3c, #c0392b);
     color: white;
     border: none;
-    border-radius: 4px;
-    padding: 6px 10px;
-    font-size: 11px;
+    border-radius: 3px;
+    padding: 5px 8px;
+    font-size: 10px;
     font-weight: 600;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 4px;
-    transition: all 0.3s;
+    gap: 3px;
+    transition: all 0.2s;
     width: 100%;
 }
 
@@ -503,20 +500,20 @@ h2 {
     left: 50%;
     transform: translate(-50%, -50%);
     background: white;
-    border-radius: 10px;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+    border-radius: 8px;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.3);
     z-index: 1001;
     width: 90%;
     max-width: 400px;
     max-height: 70vh;
     display: none;
     flex-direction: column;
-    border: 2px solid #3498db;
+    border: 1px solid #3498db;
 }
 
 .cargo-stats-popup.active {
     display: flex;
-    animation: popupFadeIn 0.3s ease;
+    animation: popupFadeIn 0.2s ease;
 }
 
 @keyframes popupFadeIn {
@@ -533,8 +530,8 @@ h2 {
 .cargo-stats-popup-header {
     background: linear-gradient(135deg, #3498db, #2980b9);
     color: white;
-    padding: 10px 14px;
-    border-radius: 8px 8px 0 0;
+    padding: 8px 12px;
+    border-radius: 6px 6px 0 0;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -542,7 +539,7 @@ h2 {
 
 .cargo-stats-popup-header h3 {
     margin: 0;
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 600;
 }
 
@@ -550,16 +547,16 @@ h2 {
     background: none;
     border: none;
     color: white;
-    font-size: 20px;
+    font-size: 18px;
     cursor: pointer;
     padding: 0;
-    width: 24px;
-    height: 24px;
+    width: 20px;
+    height: 20px;
     display: flex;
     align-items: center;
     justify-content: center;
     border-radius: 50%;
-    transition: all 0.3s;
+    transition: all 0.2s;
 }
 
 .cargo-stats-popup-close:hover {
@@ -567,7 +564,7 @@ h2 {
 }
 
 .cargo-stats-popup-content {
-    padding: 14px;
+    padding: 12px;
     overflow-y: auto;
     max-height: 50vh;
 }
@@ -575,13 +572,13 @@ h2 {
 .cargo-stats-items {
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 5px;
 }
 
 .cargo-stats-item {
     background: #f8f9fa;
-    border-radius: 6px;
-    padding: 8px;
+    border-radius: 4px;
+    padding: 6px;
     border: 1px solid #e9ecef;
 }
 
@@ -589,32 +586,32 @@ h2 {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 4px;
+    margin-bottom: 3px;
 }
 
 .cargo-stats-item-type {
     display: flex;
     align-items: center;
-    gap: 5px;
+    gap: 4px;
     font-weight: 600;
     color: #2c3e50;
-    font-size: 12px;
+    font-size: 11px;
 }
 
 .cargo-stats-item-quantity {
     background: #27ae60;
     color: white;
-    font-size: 10px;
-    padding: 1px 5px;
-    border-radius: 8px;
+    font-size: 9px;
+    padding: 1px 4px;
+    border-radius: 6px;
     font-weight: bold;
 }
 
 .cargo-stats-item-details {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 4px;
-    font-size: 10px;
+    gap: 3px;
+    font-size: 9px;
 }
 
 .cargo-stats-detail {
@@ -623,7 +620,7 @@ h2 {
 
 .cargo-stats-detail-label {
     color: #666;
-    font-size: 8px;
+    font-size: 7px;
     display: block;
     margin-bottom: 1px;
 }
@@ -637,8 +634,8 @@ h2 {
     text-align: center;
     color: #999;
     font-style: italic;
-    padding: 20px 14px;
-    font-size: 12px;
+    padding: 15px 12px;
+    font-size: 11px;
 }
 
 .cargo-stats-popup-overlay {
@@ -650,12 +647,12 @@ h2 {
     background: rgba(0,0,0,0.5);
     z-index: 1000;
     display: none;
-    backdrop-filter: blur(2px);
+    backdrop-filter: blur(1px);
 }
 
 .cargo-stats-popup-overlay.active {
     display: block;
-    animation: overlayFadeIn 0.3s ease;
+    animation: overlayFadeIn 0.2s ease;
 }
 
 @keyframes overlayFadeIn {
@@ -666,270 +663,62 @@ h2 {
 /* АДАПТИВНОСТЬ ДЛЯ МОБИЛЬНЫХ */
 @media (max-height: 600px) {
     .cargo-main {
-        padding: 4px;
-    }
-    
-    .cargo-types-row {
-        margin-bottom: 6px;
-        padding: 4px;
-    }
-    
-    .cargo-type-item {
-        min-height: 45px;
-        padding: 3px 1px;
-    }
-    
-    .cargo-type-icon {
-        width: 20px;
-        height: 20px;
-    }
-    
-    .cargo-type-icon .emoji-icon {
-        font-size: 12px;
-    }
-    
-    .cargo-type-name {
-        font-size: 7px;
-    }
-    
-    .params-section {
-        padding: 6px;
-        gap: 4px;
-    }
-    
-    .param-btn {
-        width: 24px;
-        height: 24px;
-        font-size: 11px;
-    }
-    
-    .param-input {
-        height: 24px;
-        font-size: 11px;
-        padding: 0 3px;
-    }
-    
-    .photo-section-new {
-        height: 100px;
-        padding: 4px;
-    }
-    
-    .photo-container-new {
-        width: 40px;
-        height: 40px;
-    }
-    
-    .camera-icon-new {
-        font-size: 14px;
-    }
-    
-    .photo-hint-new {
-        font-size: 6px;
-        max-width: 35px;
-    }
-    
-    .btn-save-new, .btn-send-new {
-        padding: 6px 3px;
-        font-size: 10px;
-        min-height: 35px;
-    }
-    
-    .total-stats-section {
-        height: 100px;
-        padding: 4px;
-    }
-    
-    .total-stat-item {
-        padding: 4px;
-    }
-    
-    .total-stat-value {
-        font-size: 9px;
-    }
-}
-
-/* АДАПТАЦИЯ ДЛЯ ПЛАНШЕТОВ */
-@media (min-width: 768px) and (max-width: 1024px) {
-    .cargo-container {
-        max-width: 800px;
-        margin: 10px auto;
-        border-radius: 15px;
-        height: calc(100vh - 20px);
-    }
-    
-    .cargo-main {
-        padding: 12px;
+        padding: 3px;
     }
     
     h1 {
-        font-size: 1.4em !important;
-        margin-bottom: 12px !important;
+        font-size: 0.9em !important;
+        margin-bottom: 4px !important;
     }
     
     h2 {
-        font-size: 1.1em !important;
-        margin-bottom: 12px !important;
+        font-size: 0.8em !important;
+        margin-bottom: 4px !important;
     }
     
     .cargo-types-row {
-        margin-bottom: 12px;
-        padding: 10px;
-        gap: 10px;
+        margin-bottom: 4px;
+        padding: 3px;
     }
     
     .cargo-type-item {
-        min-height: 70px;
-        padding: 10px 4px;
+        min-height: 40px;
+        padding: 2px 1px;
     }
     
     .cargo-type-icon {
-        width: 40px;
-        height: 40px;
+        width: 18px;
+        height: 18px;
     }
     
     .cargo-type-icon .emoji-icon {
-        font-size: 24px;
+        font-size: 11px;
     }
     
     .cargo-type-name {
-        font-size: 11px;
+        font-size: 6px;
     }
     
     .params-section {
-        padding: 12px;
-        gap: 10px;
-    }
-    
-    .param-label {
-        font-size: 12px;
+        padding: 4px;
+        gap: 3px;
     }
     
     .param-btn {
-        width: 40px;
-        height: 40px;
-        font-size: 18px;
+        width: 22px;
+        height: 22px;
+        font-size: 10px;
     }
     
     .param-input {
-        height: 40px;
-        font-size: 16px;
-        padding: 0 8px;
-    }
-    
-    .current-stats {
-        gap: 12px;
-        margin-top: 10px;
-        padding-top: 10px;
-    }
-    
-    .current-stats .stat-item {
-        padding: 8px;
-    }
-    
-    .current-stats .stat-label {
+        height: 22px;
         font-size: 10px;
-    }
-    
-    .current-stats .stat-value {
-        font-size: 12px;
-    }
-    
-    .bottom-section {
-        gap: 12px;
+        padding: 0 2px;
     }
     
     .photo-section-new {
-        height: 140px;
-        padding: 10px;
-    }
-    
-    .photo-container-new {
-        width: 80px;
         height: 80px;
-    }
-    
-    .camera-icon-new {
-        font-size: 28px;
-        margin-bottom: 4px;
-    }
-    
-    .photo-hint-new {
-        font-size: 10px;
-        max-width: 70px;
-    }
-    
-    .total-stats-section {
-        height: 140px;
-        padding: 10px;
-    }
-    
-    .total-stats-header h3 {
-        font-size: 12px;
-    }
-    
-    .total-stats-refresh {
-        width: 24px;
-        height: 24px;
-        font-size: 11px;
-    }
-    
-    .total-stat-item {
-        padding: 8px;
-        gap: 8px;
-    }
-    
-    .total-stat-icon {
-        font-size: 16px;
-    }
-    
-    .total-stat-label {
-        font-size: 10px;
-    }
-    
-    .total-stat-value {
-        font-size: 12px;
-    }
-    
-    .btn-save-new, .btn-send-new {
-        padding: 10px 6px;
-        font-size: 13px;
-        min-height: 50px;
-    }
-    
-    .btn-icon {
-        font-size: 16px;
-    }
-}
-
-/* ДЛЯ ГОРИЗОНТАЛЬНЫХ ПЛАНШЕТОВ */
-@media (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) {
-    .cargo-container {
-        max-width: 900px;
-    }
-    
-    .photo-section-new {
-        height: 120px;
-    }
-    
-    .photo-container-new {
-        width: 70px;
-        height: 70px;
-    }
-    
-    .total-stats-section {
-        height: 120px;
-    }
-}
-
-/* ДЛЯ ОЧЕНЬ МАЛЕНЬКИХ ЭКРАНОВ */
-@media (max-width: 320px) {
-    .bottom-section {
-        flex-direction: column;
-        gap: 6px;
-    }
-    
-    .photo-section-new {
-        height: 90px;
+        padding: 4px;
     }
     
     .photo-container-new {
@@ -942,18 +731,253 @@ h2 {
     }
     
     .photo-hint-new {
-        font-size: 6px;
+        font-size: 5px;
         max-width: 30px;
     }
     
+    .btn-save-new, .btn-send-new {
+        padding: 5px 2px;
+        font-size: 9px;
+        min-height: 30px;
+        margin-top: 1px;
+    }
+    
     .total-stats-section {
-        height: 90px;
+        height: 80px;
+        padding: 4px;
+    }
+    
+    .total-stats-header h3 {
+        font-size: 8px;
+    }
+    
+    .total-stats-refresh {
+        width: 14px;
+        height: 14px;
+        font-size: 7px;
+    }
+    
+    .total-stat-item {
+        padding: 3px;
+        gap: 4px;
+    }
+    
+    .total-stat-icon {
+        font-size: 9px;
+    }
+    
+    .total-stat-value {
+        font-size: 8px;
+    }
+}
+
+/* АДАПТАЦИЯ ДЛЯ ПЛАНШЕТОВ */
+@media (min-width: 768px) and (max-width: 1024px) {
+    .cargo-container {
+        max-width: 800px;
+        margin: 8px auto;
+        border-radius: 12px;
+        height: calc(100vh - 16px);
+    }
+    
+    .cargo-main {
+        padding: 10px;
+    }
+    
+    h1 {
+        font-size: 1.2em !important;
+        margin-bottom: 8px !important;
+    }
+    
+    h2 {
+        font-size: 1em !important;
+        margin-bottom: 8px !important;
+    }
+    
+    .cargo-types-row {
+        margin-bottom: 8px;
+        padding: 8px;
+        gap: 8px;
+    }
+    
+    .cargo-type-item {
+        min-height: 60px;
+        padding: 6px 3px;
+    }
+    
+    .cargo-type-icon {
+        width: 35px;
+        height: 35px;
+    }
+    
+    .cargo-type-icon .emoji-icon {
+        font-size: 20px;
+    }
+    
+    .cargo-type-name {
+        font-size: 9px;
+    }
+    
+    .params-section {
+        padding: 10px;
+        gap: 8px;
+    }
+    
+    .param-label {
+        font-size: 10px;
+    }
+    
+    .param-btn {
+        width: 35px;
+        height: 35px;
+        font-size: 16px;
+    }
+    
+    .param-input {
+        height: 35px;
+        font-size: 14px;
+        padding: 0 6px;
+    }
+    
+    .current-stats {
+        gap: 8px;
+        margin-top: 6px;
+        padding-top: 6px;
+    }
+    
+    .current-stats .stat-item {
+        padding: 6px;
+    }
+    
+    .current-stats .stat-label {
+        font-size: 9px;
+    }
+    
+    .current-stats .stat-value {
+        font-size: 11px;
+    }
+    
+    .bottom-section {
+        gap: 10px;
+    }
+    
+    .photo-section-new {
+        height: 110px;
+        padding: 8px;
+    }
+    
+    .photo-container-new {
+        width: 60px;
+        height: 60px;
+    }
+    
+    .camera-icon-new {
+        font-size: 20px;
+    }
+    
+    .photo-hint-new {
+        font-size: 8px;
+        max-width: 50px;
+    }
+    
+    .total-stats-section {
+        height: 110px;
+        padding: 8px;
+    }
+    
+    .total-stats-header h3 {
+        font-size: 10px;
+    }
+    
+    .total-stats-refresh {
+        width: 20px;
+        height: 20px;
+        font-size: 10px;
+    }
+    
+    .total-stat-item {
+        padding: 6px;
+        gap: 6px;
+    }
+    
+    .total-stat-icon {
+        font-size: 12px;
+    }
+    
+    .total-stat-label {
+        font-size: 8px;
+    }
+    
+    .total-stat-value {
+        font-size: 10px;
     }
     
     .btn-save-new, .btn-send-new {
-        min-height: 32px;
+        padding: 8px 4px;
+        font-size: 11px;
+        min-height: 40px;
+        margin-top: 3px;
+    }
+    
+    .btn-icon {
+        font-size: 12px;
+    }
+}
+
+/* ДЛЯ ГОРИЗОНТАЛЬНЫХ ПЛАНШЕТОВ */
+@media (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) {
+    .cargo-container {
+        max-width: 900px;
+    }
+    
+    .photo-section-new {
+        height: 100px;
+    }
+    
+    .photo-container-new {
+        width: 50px;
+        height: 50px;
+    }
+    
+    .total-stats-section {
+        height: 100px;
+    }
+}
+
+/* ДЛЯ ОЧЕНЬ МАЛЕНЬКИХ ЭКРАНОВ */
+@media (max-width: 320px) {
+    .bottom-section {
+        flex-direction: column;
+        gap: 4px;
+    }
+    
+    .photo-section-new {
+        height: 70px;
+    }
+    
+    .photo-container-new {
+        width: 30px;
+        height: 30px;
+    }
+    
+    .camera-icon-new {
         font-size: 10px;
-        padding: 5px 3px;
+    }
+    
+    .photo-hint-new {
+        font-size: 5px;
+        max-width: 25px;
+    }
+    
+    .total-stats-section {
+        height: 70px;
+    }
+    
+    .btn-save-new, .btn-send-new {
+        min-height: 28px;
+        font-size: 8px;
+        padding: 4px 2px;
+        margin-top: 0;
     }
 }
 
@@ -997,14 +1021,4 @@ h2 {
     .param-input {
         font-size: 16px;
     }
-}
-
-/* УБРАТЬ СКРОЛЛБАР В СТАТИСТИКЕ */
-.total-stats-grid::-webkit-scrollbar {
-    display: none;
-}
-
-.total-stats-grid {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
 }
