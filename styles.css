@@ -1,4 +1,4 @@
-/* styles.css - ОБЩИЕ СТИЛИ */
+/* styles.css - ОБЩИЕ СТИЛИ - ПОЛНЫЙ ФАЙЛ */
 
 * {
     margin: 0;
@@ -17,11 +17,12 @@ html, body {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 }
 
 body {
     overflow: hidden;
-    background: #f5f5f5;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
 }
 
 /* КОНТЕЙНЕР */
@@ -192,71 +193,7 @@ header {
     background: #7f8c8d;
 }
 
-/* АНИМАЦИИ */
-@keyframes pulse {
-    0% { opacity: 0.6; }
-    50% { opacity: 1; }
-    100% { opacity: 0.6; }
-}
-
-.loading-pulse {
-    animation: pulse 1.5s infinite;
-}
-
-/* АДАПТИВНОСТЬ */
-@media (max-width: 320px) {
-    .notification {
-        top: 60px;
-        right: 5px;
-        left: 5px;
-        max-width: none;
-        font-size: 13px;
-        padding: 10px 12px;
-    }
-    
-    .modal-content {
-        margin: 2% auto;
-        padding: 15px;
-        width: 98%;
-        max-height: 96vh;
-    }
-    
-    .logo-image {
-        height: 22px;
-    }
-    
-    .logo-text {
-        font-size: 15px;
-    }
-    
-    .employee-info {
-        padding: 6px 10px;
-    }
-}
-
-/* ОПТИМИЗАЦИЯ ДЛЯ IOS */
-@supports (-webkit-touch-callout: none) {
-    input, textarea {
-        font-size: 16px !important;
-    }
-}
-
-/* УЛУЧШЕНИЕ ДОСТУПНОСТИ */
-*:focus {
-    outline: 2px solid #3498db;
-    outline-offset: 2px;
-}
-
-button:active {
-    transform: scale(0.98);
-}
-
-/* УБИРАЕМ СТАНДАРТНОЕ ПОВЕДЕНИЕ PULL-TO-REFRESH */
-body {
-    overscroll-behavior-y: contain;
-}
 /* СТИЛИ ДЛЯ МОДАЛЬНОГО ОКНА ГРУЗОВ */
-
 .cargo-list-item {
     background: white;
     padding: 12px;
@@ -411,4 +348,334 @@ body {
 .modal-totals .total-value {
     color: #2c3e50;
     font-weight: bold;
+}
+
+.empty-state {
+    text-align: center;
+    color: #999;
+    font-style: italic;
+    padding: 30px 20px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border: 1px dashed #dee2e6;
+    font-size: 14px;
+}
+
+/* АНИМАЦИИ */
+@keyframes pulse {
+    0% { opacity: 0.6; }
+    50% { opacity: 1; }
+    100% { opacity: 0.6; }
+}
+
+.loading-pulse {
+    animation: pulse 1.5s infinite;
+}
+
+/* АДАПТИВНОСТЬ ДЛЯ МОБИЛЬНЫХ */
+@media (max-width: 320px) {
+    .notification {
+        top: 60px;
+        right: 5px;
+        left: 5px;
+        max-width: none;
+        font-size: 13px;
+        padding: 10px 12px;
+    }
+    
+    .modal-content {
+        margin: 2% auto;
+        padding: 15px;
+        width: 98%;
+        max-height: 96vh;
+    }
+    
+    .logo-image {
+        height: 22px;
+    }
+    
+    .logo-text {
+        font-size: 15px;
+    }
+    
+    .employee-info {
+        padding: 6px 10px;
+    }
+}
+
+/* АДАПТАЦИЯ ДЛЯ ПЛАНШЕТОВ */
+@media (min-width: 768px) and (max-width: 1024px) {
+    body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 10px;
+        min-height: 100vh;
+    }
+    
+    .container {
+        width: 100%;
+        max-width: 800px;
+        height: calc(100vh - 20px);
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    }
+    
+    header {
+        padding: 15px 20px;
+    }
+    
+    .logo-image {
+        height: 35px;
+    }
+    
+    .logo-text {
+        font-size: 22px;
+    }
+    
+    .employee-info {
+        padding: 12px 18px;
+    }
+    
+    .employee-details span {
+        font-size: 16px;
+    }
+    
+    .btn-logout {
+        padding: 8px 16px;
+        font-size: 14px;
+        min-height: 40px;
+    }
+    
+    .notification {
+        top: 100px;
+        right: 20px;
+        max-width: 350px;
+        font-size: 16px;
+        padding: 15px 20px;
+    }
+    
+    .modal-content {
+        max-width: 600px;
+        padding: 25px;
+        margin: 10% auto;
+    }
+    
+    .close {
+        font-size: 28px;
+        right: 20px;
+        top: 20px;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    /* Увеличиваем элементы для удобства на планшете */
+    button,
+    .cargo-type-item,
+    .photo-container,
+    .stats-header {
+        min-height: 44px;
+        min-width: 44px;
+    }
+    
+    /* Увеличиваем кнопки в модальном окне */
+    .cargo-group-controls button,
+    .btn-secondary {
+        min-height: 50px;
+        font-size: 16px;
+        padding: 12px 20px;
+    }
+    
+    .cargo-list-item {
+        padding: 15px;
+    }
+    
+    .cargo-type-badge {
+        font-size: 16px;
+    }
+    
+    .cargo-emoji-small {
+        font-size: 20px;
+    }
+    
+    .cargo-quantity-badge {
+        font-size: 12px;
+        padding: 3px 8px;
+    }
+    
+    .cargo-weight {
+        font-size: 14px;
+        padding: 5px 10px;
+    }
+    
+    .detail-label {
+        font-size: 11px;
+    }
+    
+    .detail-value {
+        font-size: 13px;
+    }
+    
+    .cargo-photo-preview {
+        width: 80px;
+        height: 80px;
+    }
+    
+    .btn-quantity-change,
+    .btn-remove-group {
+        padding: 10px;
+        font-size: 13px;
+        min-height: 44px;
+    }
+}
+
+/* ДЛЯ ГОРИЗОНТАЛЬНЫХ ПЛАНШЕТОВ */
+@media (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) {
+    .container {
+        max-width: 900px;
+        height: calc(100vh - 20px);
+    }
+}
+
+/* ДЛЯ БОЛЬШИХ ЭКРАНОВ */
+@media (min-width: 1025px) {
+    .container {
+        max-width: 800px;
+        margin: 20px auto;
+        border-radius: 20px;
+        height: calc(100vh - 40px);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    }
+}
+
+/* ОПТИМИЗАЦИЯ ДЛЯ IOS */
+@supports (-webkit-touch-callout: none) {
+    input, textarea {
+        font-size: 16px !important;
+    }
+    
+    button,
+    .cargo-type-item,
+    .photo-container,
+    .stats-header {
+        min-height: 44px;
+        cursor: pointer;
+    }
+}
+
+/* УЛУЧШЕНИЕ ДОСТУПНОСТИ */
+*:focus {
+    outline: 2px solid #3498db;
+    outline-offset: 2px;
+}
+
+button:active {
+    transform: scale(0.98);
+}
+
+/* УБИРАЕМ СТАНДАРТНОЕ ПОВЕДЕНИЕ PULL-TO-REFRESH */
+body {
+    overscroll-behavior-y: contain;
+}
+
+/* УВЕЛИЧЕНИЕ ОБЛАСТИ КЛИКА НА ПЛАНШЕТАХ */
+@media (min-width: 768px) {
+    button,
+    .cargo-type-item,
+    .photo-container,
+    .stats-header {
+        min-height: 44px;
+        cursor: pointer;
+    }
+    
+    .btn-secondary {
+        padding: 12px 24px;
+        font-size: 16px;
+        min-height: 50px;
+    }
+    
+    /* Улучшаем видимость фокуса на планшетах */
+    *:focus {
+        outline: 3px solid #3498db;
+        outline-offset: 3px;
+        box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.3);
+    }
+}
+
+/* СТИЛИ ДЛЯ АКТИВНОГО КАСАНИЯ */
+.active-touch {
+    opacity: 0.8 !important;
+    transform: scale(0.98) !important;
+    transition: all 0.1s ease !important;
+}
+
+/* ИСПРАВЛЕНИЕ ДЛЯ ВЕРТИКАЛЬНЫХ ПЛАНШЕТОВ */
+@media (min-width: 768px) and (max-width: 1024px) and (orientation: portrait) {
+    .cargo-container {
+        max-width: 800px !important;
+        margin: 10px auto !important;
+    }
+    
+    /* Увеличиваем шрифты */
+    h1 {
+        font-size: 1.8em !important;
+    }
+    
+    /* Увеличиваем элементы интерфейса */
+    .control-label {
+        font-size: 16px !important;
+    }
+    
+    .dimension-label {
+        font-size: 15px !important;
+    }
+    
+    .dimension-value {
+        font-size: 18px !important;
+    }
+    
+    .quantity-value {
+        font-size: 20px !important;
+    }
+    
+    .stat-label {
+        font-size: 14px !important;
+    }
+    
+    .stat-value {
+        font-size: 18px !important;
+    }
+}
+
+/* ПРЕДОТВРАЩЕНИЕ ВЫДЕЛЕНИЯ ТЕКСТА */
+.no-select {
+    -webkit-tap-highlight-color: transparent;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+/* УЛУЧШЕНИЕ СКРОЛЛА */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #3498db;
+    border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #2980b9;
 }
