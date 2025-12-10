@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>NORD WHEEL - Замер грузов</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="cargo.css">
+</head>
+<body>
+    <div class="container cargo-container">
+        <header>
+            <div class="logo">
+                <img src="logonwnew.png" alt="NORD WHEEL" class="logo-image" onerror="this.style.display='none'">
+                <span class="logo-text">NORD WHEEL</span>
+            </div>
+        </header>
+
+        <div class="employee-info">
+            <div class="employee-details">
+                <span id="employeeName">Загрузка...</span>
+            </div>
+            <button class="btn-logout" onclick="logout()">Выйти</button>
+        </div>
+
+        <main class="cargo-main">
+            <h1>Замер грузов</h1>
+            
+            <!-- ВЕРХНЯЯ ЧАСТЬ: ТИПЫ ГРУЗОВ В СТРОЧКУ -->
+            <div class="cargo-types-row">
+                <div class="cargo-type-item" data-type="euro-pallet" onclick="selectCargoType('euro-pallet')">
+                    <div class="cargo-type-icon">
+                        <img src="паллет.jpg" alt="Европаллет" onerror="this.innerHTML='<div class=\'emoji-icon\'>🇪🇺</div>'">
+                    </div>
+                    <div class="cargo-type-name">Европаллет</div>
+                </div>
+                
+                <div class="cargo-type-item" data-type="american-pallet" onclick="selectCargoType('american-pallet')">
+                    <div class="cargo-type-icon">
+                        <img src="паллет.jpg" alt="Американский паллет" onerror="this.innerHTML='<div class=\'emoji-icon\'>🇺🇸</div>'">
+                    </div>
+                    <div class="cargo-type-name">Американский</div>
+                </div>
+                
+                <div class="cargo-type-item" data-type="box" onclick="selectCargoType('box')">
+                    <div class="cargo-type-icon">
+                        <div class="emoji-icon">📦</div>
+                    </div>
+                    <div class="cargo-type-name">Коробка</div>
+                </div>
+                
+                <div class="cargo-type-item" data-type="non-standard" onclick="selectCargoType('non-standard')">
+                    <div class="cargo-type-icon">
+                        <div class="emoji-icon">📏</div>
+                    </div>
+                    <div class="cargo-type-name">Нестандарт</div>
+                </div>
+            </div>
+            
+            <!-- ОСНОВНОЙ КОНТЕНТ: ДВЕ КОЛОНКИ -->
+            <div class="cargo-content-columns">
+                <!-- ЛЕВАЯ КОЛОНКА: ПАРАМЕТРЫ И КНОПКИ -->
+                <div class="left-column">
+                    <!-- ВЕС -->
+                    <div class="control-group">
+                        <div class="control-label">Вес груза</div>
+                        <div class="weight-control">
+                            <input type="number" 
+                                   id="weightInput" 
+                                   class="weight-input" 
+                                   value="1" 
+                                   min="1" 
+                                   max="10000" 
+                                   step="1"
+                                   inputmode="numeric">
+                            <div class="control-unit">килограмм</div>
+                        </div>
+                    </div>
+                    
+                    <!-- РАЗМЕРЫ -->
+                    <div class="control-group">
+                        <div class="control-label">Размеры (сантиметры)</div>
+                        
+                        <div class="dimension-control">
+                            <div class="dimension-row">
+                                <span class="dimension-label">Длина:</span>
+                                <div class="dimension-buttons">
+                                    <button class="dimension-btn minus" onclick="changeDimension('length', -10)">-</button>
+                                    <span class="dimension-value" id="lengthValue">120</span>
+                                    <button class="dimension-btn plus" onclick="changeDimension('length', 10)">+</button>
+                                </div>
+                            </div>
+                            
+                            <div class="dimension-row">
+                                <span class="dimension-label">Ширина:</span>
+                                <div class="dimension-buttons">
+                                    <button class="dimension-btn minus" onclick="changeDimension('width', -10)">-</button>
+                                    <span class="dimension-value" id="widthValue">80</span>
+                                    <button class="dimension-btn plus" onclick="changeDimension('width', 10)">+</button>
+                                </div>
+                            </div>
+                            
+                            <div class="dimension-row">
+                                <span class="dimension-label">Высота:</span>
+                                <div class="dimension-buttons">
+                                    <button class="dimension-btn minus" onclick="changeDimension('height', -10)">-</button>
+                                    <span class="dimension-value" id="heightValue">30</span>
+                                    <button class="dimension-btn plus" onclick="changeDimension('height', 10)">+</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- КОЛИЧЕСТВО -->
+                    <div class="control-group">
+                        <div class="control-label">Количество одинаковых грузов</div>
+                        <div class="quantity-control">
+                            <button class="quantity-btn minus" onclick="changeQuantity(-1)">-</button>
+                            <span class="quantity-value" id="quantityValue">1</span>
+                            <button class="quantity-btn plus" onclick="changeQuantity(1)">+</button>
+                        </div>
+                    </div>
+                    
+                    <!-- КНОПКИ ДЕЙСТВИЙ -->
+                    <div class="action-buttons">
+                        <button class="btn-save" onclick="saveCargo()">
+                            <span class="btn-icon">💾</span> Сохранить груз
+                        </button>
+                        <button class="btn-send" onclick="sendToOperator()">
+                            <span class="btn-icon">📧</span> Отправить оператору
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- ПРАВАЯ КОЛОНКА: ФОТО И СТАТИСТИКА -->
+                <div class="right-column">
+                    <!-- ФОТО ГРУЗА -->
+                    <div class="photo-section">
+                        <div class="photo-container" onclick="takePhoto()">
+                            <div class="photo-placeholder" id="photoPlaceholder">
+                                <div class="camera-icon">📷</div>
+                                <div class="photo-hint">Сделать фото груза</div>
+                            </div>
+                            <img id="cargoPhoto" class="cargo-photo" style="display: none;">
+                        </div>
+                        <div class="photo-label">Фото груза</div>
+                    </div>
+                    
+                    <!-- СТАТИСТИКА -->
+                    <div class="stats-section">
+                        <div class="stats-header" onclick="showCargoStatsPopup()">
+                            <h3>Статистика загрузки</h3>
+                            <span class="stats-toggle">Показать все</span>
+                        </div>
+                        
+                        <div class="stats-grid">
+                            <div class="stat-item">
+                                <div class="stat-label">Места</div>
+                                <div class="stat-value" id="cargoCount">0</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-label">Масса</div>
+                                <div class="stat-value" id="totalWeight">0 кг</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-label">Объем</div>
+                                <div class="stat-value" id="totalVolume">0 м³</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- ОКОШКО СТАТИСТИКИ ГРУЗОВ (маленькое) -->
+    <div class="cargo-stats-popup-overlay" id="cargoStatsOverlay" onclick="closeCargoStatsPopup()"></div>
+
+    <div class="cargo-stats-popup" id="cargoStatsPopup">
+        <div class="cargo-stats-popup-header">
+            <h3>Список грузов</h3>
+            <button class="cargo-stats-popup-close" onclick="closeCargoStatsPopup()">&times;</button>
+        </div>
+        
+        <div class="cargo-stats-popup-content">
+            <div class="cargo-stats-items" id="cargoStatsItems">
+                <!-- Список грузов будет здесь -->
+            </div>
+            
+            <div class="cargo-stats-totals" id="cargoStatsTotals">
+                <!-- Итоги будут здесь -->
+            </div>
+        </div>
+    </div>
+
+    <!-- МОДАЛЬНОЕ ОКНО СПИСКА ГРУЗОВ (старое, можно скрыть) -->
+    <div id="cargoListModal" class="modal" style="display: none;">
+        <div class="modal-content cargo-list-modal">
+            <span class="close" onclick="closeCargoListModal()">&times;</span>
+            <h3>Добавленные грузы</h3>
+            <div class="cargo-list-container">
+                <div id="cargoListContent" class="cargo-list-content">
+                    <!-- Список грузов будет здесь -->
+                </div>
+            </div>
+            <div class="modal-totals">
+                <div class="total-item">
+                    <span class="total-label">Общая масса:</span>
+                    <span class="total-value" id="modalTotalWeight">0 кг</span>
+                </div>
+                <div class="total-item">
+                    <span class="total-label">Общий объем:</span>
+                    <span class="total-value" id="modalTotalVolume">0 м³</span>
+                </div>
+                <div class="total-item">
+                    <span class="total-label">Количество мест:</span>
+                    <span class="total-value" id="modalCargoCount">0</span>
+                </div>
+            </div>
+            <div class="cargo-list-actions">
+                <button class="btn-secondary" onclick="closeCargoListModal()">Закрыть</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- СКРЫТЫЙ INPUT ДЛЯ ФОТО -->
+    <input type="file" id="photoInput" accept="image/*" capture="environment" style="display: none;">
+
+    <script src="script.js"></script>
+    <script src="cargo.js"></script>
+</body>
+</html>
