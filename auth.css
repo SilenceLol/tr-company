@@ -1,4 +1,5 @@
-/* auth.css - Стили для страницы авторизации */
+/* auth.css - Стили для страницы авторизации - ПОЛНЫЙ ФАЙЛ */
+
 .auth-container {
     height: 100vh;
     display: flex;
@@ -336,7 +337,7 @@
     100% { transform: rotate(360deg); }
 }
 
-/* АДАПТАЦИЯ */
+/* АДАПТАЦИЯ ДЛЯ МОБИЛЬНЫХ */
 @media (max-height: 700px) {
     #qr-reader, .scanner-placeholder {
         height: 250px;
@@ -394,4 +395,154 @@
     .scanner-controls {
         flex-direction: column;
     }
+}
+
+/* АДАПТАЦИЯ ДЛЯ ПЛАНШЕТОВ */
+@media (min-width: 768px) and (max-width: 1024px) {
+    .auth-container {
+        justify-content: center;
+        padding: 20px;
+    }
+    
+    .auth-main {
+        padding: 20px;
+        max-width: 500px;
+        margin: 0 auto;
+    }
+    
+    .auth-card {
+        max-width: 500px;
+        padding: 30px;
+    }
+    
+    #qr-reader, .scanner-placeholder {
+        height: 350px;
+    }
+    
+    .scanner-frame {
+        width: 250px;
+        height: 250px;
+    }
+    
+    .scanner-placeholder-icon {
+        font-size: 60px;
+    }
+    
+    .scanner-placeholder-text {
+        font-size: 22px;
+    }
+    
+    .scanner-placeholder-hint {
+        font-size: 16px;
+    }
+    
+    .manual-auth-section h3 {
+        font-size: 20px;
+    }
+    
+    #employeeCode {
+        height: 50px;
+        font-size: 18px;
+    }
+    
+    .btn-auth {
+        height: 50px;
+        font-size: 18px;
+        min-width: 100px;
+    }
+    
+    .auth-status {
+        font-size: 16px;
+        padding: 15px;
+    }
+    
+    .demo-info h4 {
+        font-size: 18px;
+    }
+    
+    .demo-code {
+        padding: 12px 18px;
+        font-size: 16px;
+    }
+    
+    .btn-scan {
+        padding: 16px 24px;
+        font-size: 18px;
+        min-height: 60px;
+    }
+    
+    .scanner-instructions {
+        font-size: 16px;
+    }
+    
+    /* Увеличиваем touch targets для планшетов */
+    .btn-scan,
+    .btn-auth,
+    .demo-code {
+        min-height: 50px;
+    }
+}
+
+/* ДЛЯ ВЕРТИКАЛЬНЫХ ПЛАНШЕТОВ */
+@media (min-width: 768px) and (max-width: 1024px) and (orientation: portrait) {
+    .auth-main {
+        padding: 30px 20px;
+    }
+    
+    h1 {
+        font-size: 2em;
+        margin-bottom: 25px;
+    }
+}
+
+/* ДЛЯ ГОРИЗОНТАЛЬНЫХ ПЛАНШЕТОВ */
+@media (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) {
+    .auth-container {
+        padding: 10px;
+    }
+    
+    .auth-main {
+        padding: 10px;
+    }
+    
+    h1 {
+        font-size: 1.5em;
+        margin-bottom: 15px;
+    }
+}
+
+/* УВЕЛИЧЕНИЕ ТАЧ-ТАРГЕТОВ ДЛЯ ПЛАНШЕТОВ */
+@media (min-width: 768px) {
+    .btn-scan,
+    .btn-auth,
+    .demo-code,
+    .scanner-placeholder {
+        cursor: pointer;
+        min-height: 44px;
+    }
+    
+    /* Улучшение фокуса для планшетов */
+    *:focus {
+        outline: 3px solid #3498db;
+        outline-offset: 3px;
+    }
+}
+
+/* УЛУЧШЕНИЕ СКРОЛЛА */
+.auth-main::-webkit-scrollbar {
+    width: 6px;
+}
+
+.auth-main::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 3px;
+}
+
+.auth-main::-webkit-scrollbar-thumb {
+    background: #3498db;
+    border-radius: 3px;
+}
+
+.auth-main::-webkit-scrollbar-thumb:hover {
+    background: #2980b9;
 }
