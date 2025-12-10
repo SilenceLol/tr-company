@@ -259,7 +259,7 @@ h2 {
     align-items: center;
     justify-content: center;
     flex: none;
-    height: 100px; /* УВЕЛИЧЕНО С 90px */
+    height: 100px;
 }
 
 .photo-container-new {
@@ -311,16 +311,16 @@ h2 {
     border-radius: 3px;
 }
 
-/* ОБЩАЯ СТАТИСТИКА (УВЕЛИЧЕННАЯ) */
+/* ОБЩАЯ СТАТИСТИКА */
 .total-stats-section {
     background: linear-gradient(135deg, #2c3e50, #34495e);
     color: white;
     border-radius: 4px;
-    padding: 6px; /* УВЕЛИЧЕНО С 5px */
+    padding: 6px;
     display: flex;
     flex-direction: column;
     flex: none;
-    height: 100px; /* УВЕЛИЧЕНО С 90px */
+    height: 100px;
     min-height: 0;
     justify-content: space-between;
 }
@@ -329,7 +329,7 @@ h2 {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 3px; /* УВЕЛИЧЕНО С 2px */
+    margin-bottom: 3px;
     flex-shrink: 0;
 }
 
@@ -344,13 +344,13 @@ h2 {
     color: white;
     border: none;
     border-radius: 50%;
-    width: 18px; /* УВЕЛИЧЕНО С 16px */
-    height: 18px; /* УВЕЛИЧЕНО С 16px */
+    width: 18px;
+    height: 18px;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    font-size: 9px; /* УВЕЛИЧЕНО С 8px */
+    font-size: 9px;
     transition: all 0.2s;
 }
 
@@ -362,7 +362,7 @@ h2 {
     flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 4px; /* УВЕЛИЧЕНО С 3px */
+    gap: 4px;
     min-height: 0;
     justify-content: space-between;
 }
@@ -370,10 +370,10 @@ h2 {
 .total-stat-item {
     display: flex;
     align-items: center;
-    gap: 6px; /* УВЕЛИЧЕНО С 5px */
+    gap: 6px;
     background: rgba(255,255,255,0.1);
     border-radius: 3px;
-    padding: 5px; /* УВЕЛИЧЕНО С 4px */
+    padding: 5px;
     transition: all 0.2s;
 }
 
@@ -386,28 +386,33 @@ h2 {
 }
 
 .total-stat-icon {
-    font-size: 11px; /* УВЕЛИЧЕНО С 10px */
+    font-size: 11px;
     flex-shrink: 0;
 }
 
 .total-stat-content {
+    display: flex;
+    flex-direction: column;
     flex: 1;
     min-width: 0;
 }
 
 .total-stat-label {
-    font-size: 8px; /* УВЕЛИЧЕНО С 7px */
+    font-size: 8px;
     opacity: 0.9;
-    margin-bottom: 0;
+    margin-bottom: 2px;
+    display: block;
 }
 
 .total-stat-value {
     font-weight: bold;
-    font-size: 10px; /* УВЕЛИЧЕНО С 9px */
+    font-size: 10px;
+    display: block;
+    color: white;
 }
 
 .total-stat-arrow {
-    font-size: 11px; /* УВЕЛИЧЕНО С 10px */
+    font-size: 11px;
     opacity: 0.7;
     margin-left: auto;
     padding-left: 5px;
@@ -774,12 +779,16 @@ h2 {
         font-size: 10px;
     }
     
+    .total-stat-label {
+        font-size: 7px;
+    }
+    
     .total-stat-value {
         font-size: 9px;
     }
 }
 
-/* ОПТИМИЗАЦИЯ ДЛЯ ПЛАНШЕТОВ - ВАЖНОЕ ИСПРАВЛЕНИЕ */
+/* ОПТИМИЗАЦИЯ ДЛЯ ПЛАНШЕТОВ */
 @media (min-width: 768px) and (max-width: 1024px) {
     /* ОСНОВНОЙ КОНТЕЙНЕР */
     .cargo-container {
@@ -791,6 +800,7 @@ h2 {
     
     .cargo-main {
         padding: 10px;
+        min-height: 600px;
     }
     
     h1 {
@@ -812,12 +822,14 @@ h2 {
     
     .cargo-type-item {
         min-height: 60px;
-        padding: 6px 3px;
+        padding: 8px 3px;
+        border-radius: 8px;
     }
     
     .cargo-type-icon {
         width: 35px;
         height: 35px;
+        border-radius: 6px;
     }
     
     .cargo-type-icon .emoji-icon {
@@ -825,57 +837,68 @@ h2 {
     }
     
     .cargo-type-name {
-        font-size: 9px;
+        font-size: 10px;
     }
     
     /* ПАРАМЕТРЫ */
     .params-section {
-        padding: 10px;
-        gap: 8px;
+        padding: 12px;
+        gap: 10px;
+        border-radius: 8px;
     }
     
     .param-label {
-        font-size: 10px;
+        font-size: 12px;
+        margin-bottom: 4px;
+    }
+    
+    .param-control {
+        gap: 10px;
     }
     
     .param-btn {
-        width: 35px;
-        height: 35px;
-        font-size: 16px;
+        width: 40px;
+        height: 40px;
+        font-size: 18px;
+        border-radius: 6px;
+        min-width: 44px;
+        min-height: 44px;
     }
     
     .param-input {
-        height: 35px;
-        font-size: 14px;
-        padding: 0 6px;
+        height: 40px;
+        font-size: 16px;
+        padding: 0 8px;
+        border-radius: 6px;
     }
     
     /* ТЕКУЩАЯ СТАТИСТИКА */
     .current-stats {
-        gap: 8px;
-        margin-top: 6px;
-        padding-top: 6px;
+        gap: 10px;
+        margin-top: 10px;
+        padding-top: 10px;
     }
     
     .current-stats .stat-item {
-        padding: 6px;
+        padding: 8px;
+        border-radius: 6px;
     }
     
     .current-stats .stat-label {
-        font-size: 9px;
+        font-size: 11px;
     }
     
     .current-stats .stat-value {
-        font-size: 11px;
+        font-size: 13px;
     }
     
     /* НИЖНЯЯ ЧАСТЬ - ОПТИМИЗАЦИЯ ДЛЯ ПЛАНШЕТОВ */
     .bottom-section {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: 10px;
+        gap: 15px;
         min-height: 280px;
-        margin-top: 10px;
+        margin-top: 15px;
     }
     
     .bottom-left, .bottom-right {
@@ -884,34 +907,36 @@ h2 {
         min-height: 280px;
     }
     
-    /* ФОТО СЕКЦИЯ - УВЕЛИЧИВАЕМ */
+    /* ФОТО СЕКЦИЯ */
     .photo-section-new {
         height: 140px;
-        padding: 12px;
+        padding: 15px;
         justify-content: center;
+        border-radius: 8px;
     }
     
     .photo-container-new {
-        width: 70px;
-        height: 70px;
+        width: 80px;
+        height: 80px;
         border-width: 2px;
+        border-radius: 6px;
     }
     
     .camera-icon-new {
         font-size: 24px;
-        margin-bottom: 5px;
+        margin-bottom: 8px;
     }
     
     .photo-hint-new {
-        font-size: 10px;
-        max-width: 60px;
+        font-size: 11px;
+        max-width: 70px;
     }
     
-    /* КНОПКИ - ДЕЛАЕМ КРУПНЕЕ */
+    /* КНОПКИ */
     .action-buttons-row {
         display: flex;
-        gap: 10px;
-        margin-top: auto; /* Прижимаем к низу */
+        gap: 12px;
+        margin-top: auto;
         min-height: 60px;
         align-items: center;
     }
@@ -919,7 +944,7 @@ h2 {
     .btn-save-new, .btn-send-new {
         min-height: 50px;
         font-size: 14px;
-        padding: 12px 8px;
+        padding: 12px 10px;
         border-radius: 8px;
         flex: 1;
     }
@@ -928,10 +953,10 @@ h2 {
         font-size: 16px;
     }
     
-    /* ОБЩАЯ СТАТИСТИКА - УВЕЛИЧИВАЕМ */
+    /* ОБЩАЯ СТАТИСТИКА */
     .total-stats-section {
         height: 140px;
-        padding: 12px;
+        padding: 15px;
         border-radius: 10px;
     }
     
@@ -943,37 +968,50 @@ h2 {
         width: 28px;
         height: 28px;
         font-size: 12px;
+        min-width: 44px;
+        min-height: 44px;
     }
     
     .total-stats-grid {
-        gap: 6px;
+        gap: 8px;
         justify-content: space-evenly;
     }
     
     .total-stat-item {
-        padding: 10px 8px;
-        border-radius: 6px;
+        padding: 12px 10px;
+        border-radius: 8px;
         min-height: 50px;
+        gap: 10px;
     }
     
     .total-stat-icon {
-        font-size: 16px;
-        min-width: 30px;
+        font-size: 18px;
+        min-width: 35px;
+    }
+    
+    .total-stat-content {
+        flex: 1;
     }
     
     .total-stat-label {
-        font-size: 11px;
-        margin-bottom: 3px;
+        font-size: 12px;
+        margin-bottom: 4px;
     }
     
     .total-stat-value {
-        font-size: 14px;
+        font-size: 15px;
         font-weight: bold;
     }
     
     .total-stat-arrow {
-        font-size: 16px;
+        font-size: 18px;
         margin-left: auto;
+        padding-left: 8px;
+    }
+    
+    /* Гарантируем, что все кнопки помещаются */
+    .cargo-content-single {
+        min-height: 500px;
     }
 }
 
@@ -998,11 +1036,11 @@ h2 {
     
     /* Более компактное расположение для горизонтального режима */
     .cargo-content-single {
-        gap: 8px;
+        gap: 10px;
     }
     
     .params-section {
-        max-height: 300px;
+        max-height: 320px;
         overflow-y: auto;
     }
 }
@@ -1053,8 +1091,10 @@ h2 {
     button, 
     .cargo-type-item,
     .photo-container-new,
-    .total-stat-item.clickable {
-        min-height: 44px;
+    .total-stat-item.clickable,
+    .total-stats-refresh {
+        min-height: 44px !important;
+        min-width: 44px !important;
         cursor: pointer;
     }
     
@@ -1069,7 +1109,8 @@ h2 {
     .cargo-type-item:active,
     .photo-container-new:active,
     .total-stat-item.clickable:active,
-    button:active {
+    button:active,
+    .total-stats-refresh:active {
         opacity: 0.7;
         transform: scale(0.98);
         transition: all 0.1s ease;
@@ -1080,42 +1121,14 @@ h2 {
 @supports (-webkit-touch-callout: none) {
     .cargo-type-item,
     .photo-container-new,
-    .total-stat-item.clickable {
+    .total-stat-item.clickable,
+    .total-stats-refresh {
         cursor: pointer;
         -webkit-tap-highlight-color: rgba(0,0,0,0);
     }
     
     .param-input {
         font-size: 16px;
-    }
-}
-
-/* ДОПОЛНИТЕЛЬНАЯ ОПТИМИЗАЦИЯ ДЛЯ ПЛАНШЕТОВ */
-@media (min-width: 768px) and (max-width: 1024px) {
-    /* Обеспечиваем, что все кнопки помещаются на экране */
-    .cargo-main {
-        min-height: 600px;
-    }
-    
-    .cargo-content-single {
-        min-height: 500px;
-    }
-    
-    /* Гарантируем, что кнопки всегда видны */
-    .action-buttons-row {
-        position: relative;
-        bottom: 0;
-    }
-    
-    /* Улучшаем отображение статистики */
-    .total-stats-grid {
-        flex: 1;
-        justify-content: space-around;
-    }
-    
-    .total-stat-item {
-        flex: 1;
-        max-height: 60px;
     }
 }
 
@@ -1127,19 +1140,30 @@ h2 {
     
     .photo-section-new {
         height: 120px;
+        padding: 10px;
     }
     
     .total-stats-section {
         height: 120px;
+        padding: 12px;
     }
     
     .btn-save-new, .btn-send-new {
         min-height: 45px;
-        font-size: 12px;
+        font-size: 13px;
+        padding: 10px 8px;
     }
     
     .total-stat-item {
-        padding: 8px;
+        padding: 10px 8px;
         min-height: 45px;
+    }
+    
+    .total-stat-label {
+        font-size: 11px;
+    }
+    
+    .total-stat-value {
+        font-size: 14px;
     }
 }
