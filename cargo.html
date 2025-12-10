@@ -166,9 +166,9 @@
                 
                 <!-- НИЖНЯЯ ЧАСТЬ: КНОПКИ И ОБЩАЯ СТАТИСТИКА -->
                 <div class="bottom-section">
-                    <!-- ЛЕВАЯ КОЛОНКА: ФОТО И СОХРАНИТЬ -->
+                    <!-- ЛЕВАЯ КОЛОНКА: ФОТО И КНОПКИ -->
                     <div class="bottom-left">
-                        <!-- ФОТО ГРУЗА (только иконка) -->
+                        <!-- ФОТО ГРУЗА -->
                         <div class="photo-section-new">
                             <div class="photo-container-new" onclick="takePhoto()">
                                 <div class="photo-placeholder-new" id="photoPlaceholder">
@@ -179,15 +179,21 @@
                             </div>
                         </div>
                         
-                        <!-- КНОПКА СОХРАНИТЬ (компактная) -->
-                        <button class="btn-save-new" onclick="saveCargo()">
-                            <span class="btn-icon">💾</span> Сохранить
-                        </button>
+                        <!-- КНОПКИ В ОДНУ СТРОКУ -->
+                        <div class="action-buttons-row">
+                            <button class="btn-save-new" onclick="saveCargo()">
+                                <span class="btn-icon">💾</span> Сохранить
+                            </button>
+                            
+                            <button class="btn-send-new" onclick="sendToOperatorAndReset()">
+                                <span class="btn-icon">📤</span> Отправить
+                            </button>
+                        </div>
                     </div>
                     
-                    <!-- ПРАВАЯ КОЛОНКА: ОБЩАЯ СТАТИСТИКА И ОТПРАВИТЬ -->
+                    <!-- ПРАВАЯ КОЛОНКА: ОБЩАЯ СТАТИСТИКА -->
                     <div class="bottom-right">
-                        <!-- ОКНО ОБЩЕЙ СТАТИСТИКИ (уменьшенное) -->
+                        <!-- ОКНО ОБЩЕЙ СТАТИСТИКИ -->
                         <div class="total-stats-section">
                             <div class="total-stats-header">
                                 <h3>Общая информация</h3>
@@ -226,11 +232,6 @@
                                 </div>
                             </div>
                         </div>
-                        
-                        <!-- КНОПКА ОТПРАВИТЬ (компактная) -->
-                        <button class="btn-send-new" onclick="sendToOperatorAndReset()">
-                            <span class="btn-icon">📤</span> Отправить
-                        </button>
                     </div>
                 </div>
             </div>
