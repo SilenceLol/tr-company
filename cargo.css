@@ -409,6 +409,8 @@ h2 {
 .total-stat-arrow {
     font-size: 11px; /* УВЕЛИЧЕНО С 10px */
     opacity: 0.7;
+    margin-left: auto;
+    padding-left: 5px;
 }
 
 /* КНОПКИ В ОДНУ СТРОКУ */
@@ -777,8 +779,9 @@ h2 {
     }
 }
 
-/* АДАПТАЦИЯ ДЛЯ ПЛАНШЕТОВ */
+/* ОПТИМИЗАЦИЯ ДЛЯ ПЛАНШЕТОВ - ВАЖНОЕ ИСПРАВЛЕНИЕ */
 @media (min-width: 768px) and (max-width: 1024px) {
+    /* ОСНОВНОЙ КОНТЕЙНЕР */
     .cargo-container {
         max-width: 800px;
         margin: 8px auto;
@@ -800,6 +803,7 @@ h2 {
         margin-bottom: 8px !important;
     }
     
+    /* ТИПЫ ГРУЗОВ */
     .cargo-types-row {
         margin-bottom: 8px;
         padding: 8px;
@@ -824,6 +828,7 @@ h2 {
         font-size: 9px;
     }
     
+    /* ПАРАМЕТРЫ */
     .params-section {
         padding: 10px;
         gap: 8px;
@@ -845,6 +850,7 @@ h2 {
         padding: 0 6px;
     }
     
+    /* ТЕКУЩАЯ СТАТИСТИКА */
     .current-stats {
         gap: 8px;
         margin-top: 6px;
@@ -863,74 +869,111 @@ h2 {
         font-size: 11px;
     }
     
+    /* НИЖНЯЯ ЧАСТЬ - ОПТИМИЗАЦИЯ ДЛЯ ПЛАНШЕТОВ */
     .bottom-section {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
         gap: 10px;
+        min-height: 280px;
+        margin-top: 10px;
     }
     
+    .bottom-left, .bottom-right {
+        display: flex;
+        flex-direction: column;
+        min-height: 280px;
+    }
+    
+    /* ФОТО СЕКЦИЯ - УВЕЛИЧИВАЕМ */
     .photo-section-new {
-        height: 120px;
-        padding: 8px;
+        height: 140px;
+        padding: 12px;
+        justify-content: center;
     }
     
     .photo-container-new {
-        width: 60px;
-        height: 60px;
+        width: 70px;
+        height: 70px;
+        border-width: 2px;
     }
     
     .camera-icon-new {
-        font-size: 20px;
+        font-size: 24px;
+        margin-bottom: 5px;
     }
     
     .photo-hint-new {
-        font-size: 8px;
-        max-width: 50px;
-    }
-    
-    .total-stats-section {
-        height: 120px;
-        padding: 8px;
-    }
-    
-    .total-stats-header h3 {
         font-size: 10px;
+        max-width: 60px;
     }
     
-    .total-stats-refresh {
-        width: 22px;
-        height: 22px;
-        font-size: 10px;
-    }
-    
-    .total-stat-item {
-        padding: 7px;
-        gap: 7px;
-    }
-    
-    .total-stat-icon {
-        font-size: 13px;
-    }
-    
-    .total-stat-label {
-        font-size: 9px;
-    }
-    
-    .total-stat-value {
-        font-size: 11px;
-    }
-    
+    /* КНОПКИ - ДЕЛАЕМ КРУПНЕЕ */
     .action-buttons-row {
-        gap: 8px;
-        margin-top: 6px;
+        display: flex;
+        gap: 10px;
+        margin-top: auto; /* Прижимаем к низу */
+        min-height: 60px;
+        align-items: center;
     }
     
     .btn-save-new, .btn-send-new {
-        padding: 8px 4px;
-        font-size: 11px;
-        min-height: 40px;
+        min-height: 50px;
+        font-size: 14px;
+        padding: 12px 8px;
+        border-radius: 8px;
+        flex: 1;
     }
     
     .btn-icon {
+        font-size: 16px;
+    }
+    
+    /* ОБЩАЯ СТАТИСТИКА - УВЕЛИЧИВАЕМ */
+    .total-stats-section {
+        height: 140px;
+        padding: 12px;
+        border-radius: 10px;
+    }
+    
+    .total-stats-header h3 {
+        font-size: 14px;
+    }
+    
+    .total-stats-refresh {
+        width: 28px;
+        height: 28px;
         font-size: 12px;
+    }
+    
+    .total-stats-grid {
+        gap: 6px;
+        justify-content: space-evenly;
+    }
+    
+    .total-stat-item {
+        padding: 10px 8px;
+        border-radius: 6px;
+        min-height: 50px;
+    }
+    
+    .total-stat-icon {
+        font-size: 16px;
+        min-width: 30px;
+    }
+    
+    .total-stat-label {
+        font-size: 11px;
+        margin-bottom: 3px;
+    }
+    
+    .total-stat-value {
+        font-size: 14px;
+        font-weight: bold;
+    }
+    
+    .total-stat-arrow {
+        font-size: 16px;
+        margin-left: auto;
     }
 }
 
@@ -938,19 +981,29 @@ h2 {
 @media (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) {
     .cargo-container {
         max-width: 900px;
+        height: 90vh;
+    }
+    
+    .bottom-section {
+        min-height: 240px;
     }
     
     .photo-section-new {
-        height: 110px;
-    }
-    
-    .photo-container-new {
-        width: 50px;
-        height: 50px;
+        height: 130px;
     }
     
     .total-stats-section {
-        height: 110px;
+        height: 130px;
+    }
+    
+    /* Более компактное расположение для горизонтального режима */
+    .cargo-content-single {
+        gap: 8px;
+    }
+    
+    .params-section {
+        max-height: 300px;
+        overflow-y: auto;
     }
 }
 
@@ -1034,5 +1087,59 @@ h2 {
     
     .param-input {
         font-size: 16px;
+    }
+}
+
+/* ДОПОЛНИТЕЛЬНАЯ ОПТИМИЗАЦИЯ ДЛЯ ПЛАНШЕТОВ */
+@media (min-width: 768px) and (max-width: 1024px) {
+    /* Обеспечиваем, что все кнопки помещаются на экране */
+    .cargo-main {
+        min-height: 600px;
+    }
+    
+    .cargo-content-single {
+        min-height: 500px;
+    }
+    
+    /* Гарантируем, что кнопки всегда видны */
+    .action-buttons-row {
+        position: relative;
+        bottom: 0;
+    }
+    
+    /* Улучшаем отображение статистики */
+    .total-stats-grid {
+        flex: 1;
+        justify-content: space-around;
+    }
+    
+    .total-stat-item {
+        flex: 1;
+        max-height: 60px;
+    }
+}
+
+/* ДЛЯ ПЛАНШЕТОВ С МАЛЕНЬКОЙ ВЫСОТОЙ */
+@media (min-width: 768px) and (max-height: 900px) {
+    .bottom-left, .bottom-right {
+        min-height: 240px;
+    }
+    
+    .photo-section-new {
+        height: 120px;
+    }
+    
+    .total-stats-section {
+        height: 120px;
+    }
+    
+    .btn-save-new, .btn-send-new {
+        min-height: 45px;
+        font-size: 12px;
+    }
+    
+    .total-stat-item {
+        padding: 8px;
+        min-height: 45px;
     }
 }
