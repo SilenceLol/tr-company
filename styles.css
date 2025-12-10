@@ -255,3 +255,160 @@ button:active {
 body {
     overscroll-behavior-y: contain;
 }
+/* СТИЛИ ДЛЯ МОДАЛЬНОГО ОКНА ГРУЗОВ */
+
+.cargo-list-item {
+    background: white;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #e0e0e0;
+    margin-bottom: 10px;
+}
+
+.cargo-list-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.cargo-type-badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    color: #2c3e50;
+    font-size: 14px;
+}
+
+.cargo-emoji-small {
+    font-size: 16px;
+}
+
+.cargo-quantity-badge {
+    background: #27ae60;
+    color: white;
+    font-size: 10px;
+    padding: 2px 6px;
+    border-radius: 10px;
+    margin-left: 5px;
+    font-weight: bold;
+}
+
+.cargo-weight {
+    background: #e3f2fd;
+    color: #1976d2;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.cargo-details {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    margin-bottom: 10px;
+}
+
+.detail-item {
+    text-align: center;
+}
+
+.detail-label {
+    font-weight: 600;
+    color: #666;
+    font-size: 11px;
+    display: block;
+    margin-bottom: 2px;
+}
+
+.detail-value {
+    color: #2c3e50;
+    font-weight: bold;
+    font-size: 12px;
+}
+
+.cargo-photo-preview {
+    width: 60px;
+    height: 60px;
+    border-radius: 6px;
+    object-fit: cover;
+    margin: 0 auto 8px auto;
+    display: block;
+    border: 1px solid #e0e0e0;
+}
+
+.cargo-group-controls {
+    display: flex;
+    gap: 5px;
+    margin-top: 8px;
+}
+
+.btn-quantity-change {
+    flex: 1;
+    background: #3498db;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 6px;
+    font-size: 11px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.btn-quantity-change:hover {
+    background: #2980b9;
+}
+
+.btn-remove-group {
+    flex: 1;
+    background: #e74c3c;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 6px;
+    font-size: 11px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.btn-remove-group:hover {
+    background: #c0392b;
+}
+
+.cargo-list-actions {
+    display: flex;
+    justify-content: center;
+    margin-top: 12px;
+}
+
+.modal-totals {
+    background: #f8f9fa;
+    padding: 10px;
+    border-radius: 6px;
+    margin-bottom: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.modal-totals .total-item {
+    text-align: center;
+    border-bottom: 1px solid #dee2e6;
+    padding: 4px 0;
+    font-size: 12px;
+}
+
+.modal-totals .total-item:last-child {
+    border-bottom: none;
+}
+
+.modal-totals .total-label {
+    color: #495057;
+}
+
+.modal-totals .total-value {
+    color: #2c3e50;
+    font-weight: bold;
+}
