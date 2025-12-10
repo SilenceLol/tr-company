@@ -1,4 +1,4 @@
-/* cargo.css - Стили для страницы замера грузов - ПОЛНЫЙ ФАЙЛ */
+/* cargo.css - Стили для страницы замера грузов - ПОЛНЫЙ ОБНОВЛЕННЫЙ ФАЙЛ */
 
 .cargo-container {
     height: 100vh;
@@ -39,9 +39,9 @@ h2 {
 /* ВЕРХНЯЯ СТРОЧКА ТИПОВ ГРУЗОВ */
 .cargo-types-row {
     display: flex;
-    gap: 8px;
-    margin-bottom: 12px;
-    padding: 8px;
+    gap: 6px;
+    margin-bottom: 10px;
+    padding: 6px;
     background: #f8f9fa;
     border-radius: 8px;
     flex-shrink: 0;
@@ -54,7 +54,7 @@ h2 {
     width: 23%;
     border: 2px solid #e0e0e0;
     border-radius: 8px;
-    padding: 6px 3px;
+    padding: 5px 2px;
     cursor: pointer;
     display: flex;
     flex-direction: column;
@@ -63,7 +63,7 @@ h2 {
     text-align: center;
     background: white;
     transition: all 0.2s;
-    min-height: 60px;
+    min-height: 55px;
 }
 
 .cargo-type-item.selected {
@@ -73,9 +73,9 @@ h2 {
 }
 
 .cargo-type-icon {
-    width: 30px;
-    height: 30px;
-    margin-bottom: 4px;
+    width: 28px;
+    height: 28px;
+    margin-bottom: 3px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -93,11 +93,11 @@ h2 {
 }
 
 .cargo-type-icon .emoji-icon {
-    font-size: 18px;
+    font-size: 16px;
 }
 
 .cargo-type-name {
-    font-size: 10px;
+    font-size: 9px;
     font-weight: 600;
     color: #2c3e50;
     line-height: 1.2;
@@ -117,10 +117,10 @@ h2 {
     background: #f8f9fa;
     border: 1px solid #e9ecef;
     border-radius: 8px;
-    padding: 12px;
+    padding: 10px;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 8px;
     flex-shrink: 0;
 }
 
@@ -131,7 +131,7 @@ h2 {
 }
 
 .param-label {
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 600;
     color: #495057;
     text-align: left;
@@ -149,14 +149,14 @@ h2 {
     color: white;
     border: none;
     border-radius: 6px;
-    width: 35px;
-    height: 35px;
+    width: 32px;
+    height: 32px;
     display: flex;
     align-items: center;
     justify-content: center;
     font-weight: bold;
     cursor: pointer;
-    font-size: 16px;
+    font-size: 15px;
     transition: all 0.2s;
     flex-shrink: 0;
 }
@@ -175,11 +175,11 @@ h2 {
 
 .param-input {
     flex: 1;
-    height: 35px;
-    padding: 0 8px;
+    height: 32px;
+    padding: 0 6px;
     border: 2px solid #3498db;
     border-radius: 6px;
-    font-size: 15px;
+    font-size: 14px;
     text-align: center;
     font-weight: bold;
     background: white;
@@ -195,9 +195,9 @@ h2 {
 /* СТАТИСТИКА ТЕКУЩЕГО ГРУЗА */
 .current-stats {
     display: flex;
-    gap: 10px;
-    margin-top: 8px;
-    padding-top: 8px;
+    gap: 8px;
+    margin-top: 6px;
+    padding-top: 6px;
     border-top: 1px solid #dee2e6;
 }
 
@@ -206,19 +206,19 @@ h2 {
     text-align: center;
     background: #e3f2fd;
     border-radius: 6px;
-    padding: 6px;
+    padding: 5px;
 }
 
 .current-stats .stat-label {
-    font-size: 10px;
+    font-size: 9px;
     color: #666;
     display: block;
-    margin-bottom: 3px;
+    margin-bottom: 2px;
 }
 
 .current-stats .stat-value {
     font-weight: bold;
-    font-size: 12px;
+    font-size: 11px;
     color: #2c3e50;
 }
 
@@ -226,7 +226,7 @@ h2 {
 .bottom-section {
     flex: 1;
     display: flex;
-    gap: 12px;
+    gap: 10px;
     min-height: 0;
 }
 
@@ -234,7 +234,7 @@ h2 {
     flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 10px;
     min-width: 0;
 }
 
@@ -242,27 +242,27 @@ h2 {
     flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 10px;
     min-width: 0;
 }
 
-/* ФОТО ГРУЗА (упрощенная версия - только иконка) */
+/* ФОТО ГРУЗА (компактная версия - только иконка) */
 .photo-section-new {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 6px;
     background: #f8f9fa;
     border: 1px solid #e9ecef;
     border-radius: 8px;
-    padding: 12px;
+    padding: 10px;
     align-items: center;
     justify-content: center;
     flex: 1;
 }
 
 .photo-container-new {
-    width: 80px;
-    height: 80px;
+    width: 60px;
+    height: 60px;
     border: 2px dashed #3498db;
     border-radius: 8px;
     display: flex;
@@ -290,16 +290,16 @@ h2 {
 }
 
 .camera-icon-new {
-    font-size: 28px;
+    font-size: 20px;
     color: #3498db;
-    margin-bottom: 5px;
+    margin-bottom: 3px;
 }
 
 .photo-hint-new {
-    font-size: 10px;
+    font-size: 8px;
     color: #666;
     text-align: center;
-    max-width: 70px;
+    max-width: 50px;
     line-height: 1.2;
 }
 
@@ -316,16 +316,16 @@ h2 {
     color: white;
     border: none;
     border-radius: 8px;
-    padding: 12px 8px;
-    font-size: 14px;
+    padding: 10px 6px;
+    font-size: 13px;
     font-weight: 600;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
+    gap: 6px;
     transition: all 0.3s;
-    min-height: 50px;
+    min-height: 45px;
     width: 100%;
     flex-shrink: 0;
 }
@@ -335,12 +335,12 @@ h2 {
     box-shadow: 0 3px 8px rgba(39, 174, 96, 0.3);
 }
 
-/* ОБЩАЯ СТАТИСТИКА (уменьшенная) */
+/* ОБЩАЯ СТАТИСТИКА (компактная) */
 .total-stats-section {
     background: linear-gradient(135deg, #2c3e50, #34495e);
     color: white;
     border-radius: 8px;
-    padding: 12px;
+    padding: 10px;
     display: flex;
     flex-direction: column;
     flex: 1;
@@ -351,12 +351,12 @@ h2 {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 10px;
+    margin-bottom: 8px;
     flex-shrink: 0;
 }
 
 .total-stats-header h3 {
-    font-size: 12px;
+    font-size: 11px;
     font-weight: 600;
     margin: 0;
 }
@@ -366,13 +366,13 @@ h2 {
     color: white;
     border: none;
     border-radius: 50%;
-    width: 25px;
-    height: 25px;
+    width: 22px;
+    height: 22px;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    font-size: 12px;
+    font-size: 11px;
     transition: all 0.3s;
 }
 
@@ -385,7 +385,7 @@ h2 {
     flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 6px;
     min-height: 0;
     overflow-y: auto;
 }
@@ -393,10 +393,10 @@ h2 {
 .total-stat-item {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
     background: rgba(255,255,255,0.1);
     border-radius: 6px;
-    padding: 10px;
+    padding: 8px;
     transition: all 0.3s;
 }
 
@@ -410,7 +410,7 @@ h2 {
 }
 
 .total-stat-icon {
-    font-size: 16px;
+    font-size: 14px;
     flex-shrink: 0;
 }
 
@@ -420,18 +420,18 @@ h2 {
 }
 
 .total-stat-label {
-    font-size: 10px;
+    font-size: 9px;
     opacity: 0.9;
     margin-bottom: 2px;
 }
 
 .total-stat-value {
     font-weight: bold;
-    font-size: 14px;
+    font-size: 12px;
 }
 
 .total-stat-arrow {
-    font-size: 16px;
+    font-size: 14px;
     opacity: 0.7;
 }
 
@@ -441,16 +441,16 @@ h2 {
     color: white;
     border: none;
     border-radius: 8px;
-    padding: 12px 8px;
-    font-size: 14px;
+    padding: 10px 6px;
+    font-size: 13px;
     font-weight: 600;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
+    gap: 6px;
     transition: all 0.3s;
-    min-height: 50px;
+    min-height: 45px;
     width: 100%;
     flex-shrink: 0;
 }
@@ -461,7 +461,7 @@ h2 {
 }
 
 .btn-icon {
-    font-size: 16px;
+    font-size: 14px;
 }
 
 /* ОКОШКО СТАТИСТИКИ ГРУЗОВ - ДОПОЛНИТЕЛЬНЫЕ СТИЛИ */
@@ -678,7 +678,7 @@ h2 {
     }
     
     .cargo-type-icon .emoji-icon {
-        font-size: 15px;
+        font-size: 14px;
     }
     
     .cargo-type-name {
@@ -686,8 +686,8 @@ h2 {
     }
     
     .params-section {
-        padding: 10px;
-        gap: 8px;
+        padding: 8px;
+        gap: 6px;
     }
     
     .param-btn {
@@ -699,40 +699,45 @@ h2 {
     .param-input {
         height: 30px;
         font-size: 13px;
-        padding: 0 6px;
+        padding: 0 4px;
     }
     
     .photo-container-new {
-        width: 70px;
-        height: 70px;
+        width: 50px;
+        height: 50px;
     }
     
     .camera-icon-new {
-        font-size: 24px;
+        font-size: 16px;
+        margin-bottom: 2px;
     }
     
     .photo-hint-new {
-        font-size: 9px;
-        max-width: 60px;
+        font-size: 7px;
+        max-width: 40px;
     }
     
     .bottom-section {
         flex-direction: column;
-        gap: 10px;
+        gap: 8px;
     }
     
     .btn-save-new, .btn-send-new {
-        padding: 10px 6px;
-        font-size: 13px;
-        min-height: 45px;
+        padding: 8px 4px;
+        font-size: 12px;
+        min-height: 40px;
     }
     
-    .total-stat-item {
+    .total-stats-section {
         padding: 8px;
     }
     
+    .total-stat-item {
+        padding: 6px;
+    }
+    
     .total-stat-value {
-        font-size: 13px;
+        font-size: 11px;
     }
 }
 
@@ -829,61 +834,63 @@ h2 {
     }
     
     .photo-section-new {
-        padding: 15px;
-    }
-    
-    .photo-container-new {
-        width: 120px;
-        height: 120px;
-    }
-    
-    .camera-icon-new {
-        font-size: 36px;
-    }
-    
-    .photo-hint-new {
-        font-size: 12px;
-        max-width: 100px;
-    }
-    
-    .total-stats-section {
-        padding: 15px;
-    }
-    
-    .total-stats-header h3 {
-        font-size: 14px;
-    }
-    
-    .total-stats-refresh {
-        width: 30px;
-        height: 30px;
-        font-size: 14px;
-    }
-    
-    .total-stat-item {
         padding: 12px;
     }
     
+    .photo-container-new {
+        width: 100px;
+        height: 100px;
+    }
+    
+    .camera-icon-new {
+        font-size: 30px;
+        margin-bottom: 5px;
+    }
+    
+    .photo-hint-new {
+        font-size: 11px;
+        max-width: 80px;
+    }
+    
+    .total-stats-section {
+        padding: 12px;
+    }
+    
+    .total-stats-header h3 {
+        font-size: 13px;
+    }
+    
+    .total-stats-refresh {
+        width: 28px;
+        height: 28px;
+        font-size: 13px;
+    }
+    
+    .total-stat-item {
+        padding: 10px;
+        gap: 10px;
+    }
+    
     .total-stat-icon {
-        font-size: 20px;
+        font-size: 18px;
     }
     
     .total-stat-label {
-        font-size: 12px;
+        font-size: 11px;
     }
     
     .total-stat-value {
-        font-size: 16px;
+        font-size: 14px;
     }
     
     .btn-save-new, .btn-send-new {
-        padding: 14px 10px;
-        font-size: 16px;
-        min-height: 60px;
+        padding: 12px 8px;
+        font-size: 15px;
+        min-height: 55px;
     }
     
     .btn-icon {
-        font-size: 20px;
+        font-size: 18px;
     }
 }
 
@@ -898,8 +905,8 @@ h2 {
     }
     
     .photo-container-new {
-        width: 100px;
-        height: 100px;
+        width: 90px;
+        height: 90px;
     }
     
     .total-stats-section {
@@ -930,17 +937,24 @@ h2 {
     }
     
     .photo-container-new {
-        width: 60px;
-        height: 60px;
+        width: 45px;
+        height: 45px;
     }
     
     .camera-icon-new {
-        font-size: 20px;
+        font-size: 16px;
+        margin-bottom: 2px;
     }
     
     .photo-hint-new {
-        font-size: 8px;
-        max-width: 50px;
+        font-size: 7px;
+        max-width: 35px;
+    }
+    
+    .btn-save-new, .btn-send-new {
+        padding: 6px 3px;
+        font-size: 11px;
+        min-height: 35px;
     }
 }
 
