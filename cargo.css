@@ -385,14 +385,14 @@ h2 {
     background: rgba(255,255,255,0.15);
 }
 
-.total-stat-item.no-icon {
-    padding-left: 10px; /* Компенсируем отсутствие иконки */
-    justify-content: center;
-}
-
 .total-stat-icon {
     font-size: 11px;
     flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .total-stat-content {
@@ -780,12 +780,10 @@ h2 {
         gap: 5px;
     }
     
-    .total-stat-item.no-icon {
-        padding-left: 8px;
-    }
-    
     .total-stat-icon {
         font-size: 10px;
+        width: 18px;
+        height: 18px;
     }
     
     .total-stat-label {
@@ -993,13 +991,11 @@ h2 {
         gap: 10px;
     }
     
-    .total-stat-item.no-icon {
-        padding-left: 15px;
-    }
-    
     .total-stat-icon {
         font-size: 18px;
         min-width: 35px;
+        width: 35px;
+        height: 35px;
     }
     
     .total-stat-content {
@@ -1170,6 +1166,12 @@ h2 {
     .total-stat-item {
         padding: 10px 8px;
         min-height: 45px;
+    }
+    
+    .total-stat-icon {
+        font-size: 16px;
+        width: 30px;
+        height: 30px;
     }
     
     .total-stat-label {
