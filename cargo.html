@@ -168,29 +168,26 @@
                 <div class="bottom-section">
                     <!-- ЛЕВАЯ КОЛОНКА: ФОТО И СОХРАНИТЬ -->
                     <div class="bottom-left">
-                        <!-- ФОТО ГРУЗА -->
+                        <!-- ФОТО ГРУЗА (только иконка) -->
                         <div class="photo-section-new">
                             <div class="photo-container-new" onclick="takePhoto()">
                                 <div class="photo-placeholder-new" id="photoPlaceholder">
                                     <div class="camera-icon-new">📷</div>
-                                    <div class="photo-hint-new">Сделать фото</div>
+                                    <div class="photo-hint-new">Нажмите для фото</div>
                                 </div>
                                 <img id="cargoPhoto" class="cargo-photo-new" style="display: none;">
                             </div>
-                            <button class="btn-photo" onclick="takePhoto()">
-                                <span class="btn-icon">📷</span> Фото груза
-                            </button>
                         </div>
                         
-                        <!-- КНОПКА СОХРАНИТЬ -->
+                        <!-- КНОПКА СОХРАНИТЬ (компактная) -->
                         <button class="btn-save-new" onclick="saveCargo()">
-                            <span class="btn-icon">💾</span> Сохранить груз
+                            <span class="btn-icon">💾</span> Сохранить
                         </button>
                     </div>
                     
                     <!-- ПРАВАЯ КОЛОНКА: ОБЩАЯ СТАТИСТИКА И ОТПРАВИТЬ -->
                     <div class="bottom-right">
-                        <!-- ОКНО ОБЩЕЙ СТАТИСТИКИ -->
+                        <!-- ОКНО ОБЩЕЙ СТАТИСТИКИ (уменьшенное) -->
                         <div class="total-stats-section">
                             <div class="total-stats-header">
                                 <h3>Общая информация</h3>
@@ -214,7 +211,7 @@
                                 <div class="total-stat-item">
                                     <div class="total-stat-icon">📊</div>
                                     <div class="total-stat-content">
-                                        <div class="total-stat-label">Общий объем</div>
+                                        <div class="total-stat-label">Объем</div>
                                         <div class="total-stat-value" id="totalVolumeValue">0 м³</div>
                                     </div>
                                 </div>
@@ -223,16 +220,16 @@
                                 <div class="total-stat-item">
                                     <div class="total-stat-icon">⚖️</div>
                                     <div class="total-stat-content">
-                                        <div class="total-stat-label">Общая масса</div>
+                                        <div class="total-stat-label">Масса</div>
                                         <div class="total-stat-value" id="totalWeightValue">0 кг</div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         
-                        <!-- КНОПКА ОТПРАВИТЬ -->
+                        <!-- КНОПКА ОТПРАВИТЬ (компактная) -->
                         <button class="btn-send-new" onclick="sendToOperatorAndReset()">
-                            <span class="btn-icon">📤</span> Отправить оператору
+                            <span class="btn-icon">📤</span> Отправить
                         </button>
                     </div>
                 </div>
@@ -262,6 +259,36 @@
                 <button class="btn-clear-all" onclick="clearAllCargo()">
                     🗑️ Очистить все
                 </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- МОДАЛЬНОЕ ОКНО СПИСКА ГРУЗОВ (старое, можно скрыть) -->
+    <div id="cargoListModal" class="modal" style="display: none;">
+        <div class="modal-content cargo-list-modal">
+            <span class="close" onclick="closeCargoListModal()">&times;</span>
+            <h3>Добавленные грузы</h3>
+            <div class="cargo-list-container">
+                <div id="cargoListContent" class="cargo-list-content">
+                    <!-- Список грузов будет здесь -->
+                </div>
+            </div>
+            <div class="modal-totals">
+                <div class="total-item">
+                    <span class="total-label">Общая масса:</span>
+                    <span class="total-value" id="modalTotalWeight">0 кг</span>
+                </div>
+                <div class="total-item">
+                    <span class="total-label">Общий объем:</span>
+                    <span class="total-value" id="modalTotalVolume">0 м³</span>
+                </div>
+                <div class="total-item">
+                    <span class="total-label">Количество мест:</span>
+                    <span class="total-value" id="modalCargoCount">0</span>
+                </div>
+            </div>
+            <div class="cargo-list-actions">
+                <button class="btn-secondary" onclick="closeCargoListModal()">Закрыть</button>
             </div>
         </div>
     </div>
