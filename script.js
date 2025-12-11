@@ -1,4 +1,4 @@
-// script.js - ПОЛНЫЙ ФАЙЛ СО ВСЕМИ ФУНКЦИЯМИ - ИСПРАВЛЕН РАСЧЕТ МАССЫ
+// script.js - ПОЛНЫЙ ФАЙЛ СО ВСЕМИ ФУНКЦИЯМИ - ИСПРАВЛЕН РАСЧЕТ МАССЫ В ОБЩЕЙ ИНФОРМАЦИИ
 
 // API конфигурация (для будущей интеграции)
 const API_BASE_URL = 'http://localhost:3000/api'; // Измените на ваш сервер
@@ -451,7 +451,7 @@ function saveCargo() {
     }
     
     // Создаем ключ для группировки
-    const cargoKey = `${currentCargoType}_${weight}_${currentDimensions.length}_${currentDimensions.width}_${currentDimensions.height}`;
+    const cargoKey = `${currentCargoType}_${weight}_${currentDimensions.length}_${currentDimensions.width}_${currentDimensions.height}_${quantity}`;
     
     // Проверяем, есть ли уже такой груз в списке
     let existingCargo = null;
@@ -459,7 +459,7 @@ function saveCargo() {
     
     for (let i = 0; i < cargoList.length; i++) {
         const cargo = cargoList[i];
-        const cargoItemKey = `${cargo.type}_${cargo.weight}_${cargo.length}_${cargo.width}_${cargo.height}`;
+        const cargoItemKey = `${cargo.type}_${cargo.weight}_${cargo.length}_${cargo.width}_${cargo.height}_${cargo.quantity}`;
         
         if (cargoKey === cargoItemKey) {
             existingCargo = cargo;
@@ -550,7 +550,7 @@ function showCargoListModal() {
         const groupedCargo = {};
         
         cargoList.forEach(cargo => {
-            const key = cargo.cargoKey || `${cargo.type}_${cargo.weight}_${cargo.length}_${cargo.width}_${cargo.height}`;
+            const key = cargo.cargoKey || `${cargo.type}_${cargo.weight}_${cargo.length}_${cargo.width}_${cargo.height}_${cargo.quantity}`;
             
             if (!groupedCargo[key]) {
                 groupedCargo[key] = {
@@ -578,8 +578,8 @@ function showCargoListModal() {
             cargoItem.className = 'cargo-list-item';
             
             const totalVolume = group.volume * group.quantity;
-            // ИСПРАВЛЕНИЕ: Общая масса = вес * количество (так как каждый груз имеет свой вес)
-            const totalWeight = group.weight * group.quantity;
+            // ВНИМАНИЕ: Для отображения в списке оставляем вес как есть (без умножения на количество)
+            const displayWeight = group.weight;
             
             cargoItem.innerHTML = `
                 <div class="cargo-list-header">
@@ -588,7 +588,7 @@ function showCargoListModal() {
                         <span>${group.typeName}</span>
                         ${group.quantity > 1 ? `<span class="cargo-quantity-badge">×${group.quantity}</span>` : ''}
                     </div>
-                    <span class="cargo-weight">${totalWeight} кг</span>
+                    <span class="cargo-weight">${displayWeight} кг</span>
                 </div>
                 <div class="cargo-details">
                     <div class="detail-item">
@@ -637,11 +637,11 @@ function changeGroupQuantity(firstItemId, delta) {
     if (firstItemIndex === -1) return;
     
     const firstItem = cargoList[firstItemIndex];
-    const cargoKey = firstItem.cargoKey || `${firstItem.type}_${firstItem.weight}_${firstItem.length}_${firstItem.width}_${firstItem.height}`;
+    const cargoKey = firstItem.cargoKey || `${firstItem.type}_${firstItem.weight}_${firstItem.length}_${firstItem.width}_${firstItem.height}_${firstItem.quantity}`;
     
     // Находим все элементы этой группы
     const groupItems = cargoList.filter(item => {
-        const itemKey = item.cargoKey || `${item.type}_${item.weight}_${item.length}_${item.width}_${item.height}`;
+        const itemKey = item.cargoKey || `${item.type}_${item.weight}_${item.length}_${item.width}_${item.height}_${item.quantity}`;
         return itemKey === cargoKey;
     });
     
@@ -669,7 +669,7 @@ function changeGroupQuantity(firstItemId, delta) {
     for (let i = cargoList.length - 1; i >= 0; i--) {
         if (i !== firstItemIndex) {
             const item = cargoList[i];
-            const itemKey = item.cargoKey || `${item.type}_${item.weight}_${item.length}_${item.width}_${item.height}`;
+            const itemKey = item.cargoKey || `${item.type}_${item.weight}_${item.length}_${item.width}_${item.height}_${item.quantity}`;
             if (itemKey === cargoKey) {
                 cargoList.splice(i, 1);
             }
@@ -691,11 +691,11 @@ function removeCargoGroup(firstItemId) {
     if (firstItemIndex === -1) return;
     
     const firstItem = cargoList[firstItemIndex];
-    const cargoKey = firstItem.cargoKey || `${firstItem.type}_${firstItem.weight}_${firstItem.length}_${firstItem.width}_${firstItem.height}`;
+    const cargoKey = firstItem.cargoKey || `${firstItem.type}_${firstItem.weight}_${firstItem.length}_${firstItem.width}_${firstItem.height}_${firstItem.quantity}`;
     
     // Удаляем все элементы группы
     cargoList = cargoList.filter(item => {
-        const itemKey = item.cargoKey || `${item.type}_${item.weight}_${item.length}_${item.width}_${item.height}`;
+        const itemKey = item.cargoKey || `${item.type}_${item.weight}_${item.length}_${item.width}_${item.height}_${item.quantity}`;
         return itemKey !== cargoKey;
     });
     
@@ -745,7 +745,7 @@ function showCargoStatsPopup() {
         const groupedCargo = {};
         
         cargoList.forEach(cargo => {
-            const key = cargo.cargoKey || `${cargo.type}_${cargo.weight}_${cargo.length}_${cargo.width}_${cargo.height}`;
+            const key = cargo.cargoKey || `${cargo.type}_${cargo.weight}_${cargo.length}_${cargo.width}_${cargo.height}_${cargo.quantity}`;
             
             if (!groupedCargo[key]) {
                 groupedCargo[key] = {
@@ -772,7 +772,8 @@ function showCargoStatsPopup() {
             cargoItem.className = 'cargo-stats-item';
             
             const totalVolume = group.volume * group.quantity;
-            const totalWeight = group.weight * group.quantity;
+            // ВНИМАНИЕ: Для отображения показываем просто вес, без умножения на количество
+            const displayWeight = group.weight;
             
             cargoItem.innerHTML = `
                 <div class="cargo-stats-item-header">
@@ -781,7 +782,7 @@ function showCargoStatsPopup() {
                         <span>${group.typeName}</span>
                         ${group.quantity > 1 ? `<span class="cargo-stats-item-quantity">×${group.quantity}</span>` : ''}
                     </div>
-                    <span style="font-size: 12px; color: #666;">${totalWeight} кг</span>
+                    <span style="font-size: 12px; color: #666;">${displayWeight} кг</span>
                 </div>
                 <div class="cargo-stats-item-details">
                     <div class="cargo-stats-detail">
@@ -817,10 +818,12 @@ function showCargoStatsPopup() {
             let sumWeight = 0;
             let sumVolume = 0;
             
+            // ИСПРАВЛЕНИЕ: Теперь считаем общую массу как сумму весов каждого сохраненного груза
+            // Каждый сохраненный груз имеет свой вес, который НЕ умножается на количество
             cargoList.forEach(cargo => {
                 totalItems += cargo.quantity || 1;
-                // ИСПРАВЛЕНИЕ: Общий вес = сумма (вес * количество)
-                sumWeight += cargo.weight * (cargo.quantity || 1);
+                // ВАЖНО: Общая масса = просто сумма весов каждого груза (без умножения на количество)
+                sumWeight += cargo.weight;
                 sumVolume += cargo.volume * (cargo.quantity || 1);
             });
             
@@ -859,7 +862,7 @@ function closeCargoStatsPopup() {
     if (overlay) overlay.classList.remove('active');
 }
 
-// ОБНОВЛЕНИЕ СТАТИСТИКИ
+// ОБНОВЛЕНИЕ СТАТИСТИКИ - ВАЖНОЕ ИСПРАВЛЕНИЕ!
 function updateStats() {
     const cargoCount = document.getElementById('cargoCount');
     const totalWeight = document.getElementById('totalWeight');
@@ -880,15 +883,17 @@ function updateStats() {
         return;
     }
     
-    // Вычисляем общие показатели с учетом количества
+    // Вычисляем общие показатели
     let totalItems = 0;
-    let sumWeight = 0;
-    let sumVolume = 0;
+    let sumWeight = 0;  // Общая масса = сумма весов всех сохраненных грузов
+    let sumVolume = 0;  // Общий объем = сумма (объем * количество)
     
+    // ИСПРАВЛЕНИЕ: Теперь общая масса - это просто сумма весов всех сохраненных грузов
+    // Каждый сохраненный груз имеет свой собственный вес, который НЕ умножается на количество
     cargoList.forEach(cargo => {
         totalItems += cargo.quantity || 1;
-        // ИСПРАВЛЕНИЕ: Общая масса = сумма (вес * количество) каждого груза
-        sumWeight += cargo.weight * (cargo.quantity || 1);
+        // ВАЖНО: Общая масса = просто сумма весов каждого груза
+        sumWeight += cargo.weight;
         sumVolume += cargo.volume * (cargo.quantity || 1);
     });
     
@@ -916,15 +921,15 @@ function updateModalTotals() {
         return;
     }
     
-    // Вычисляем с учетом количества
+    // Вычисляем с учетом исправленной логики
     let totalItems = 0;
-    let sumWeight = 0;
-    let sumVolume = 0;
+    let sumWeight = 0;  // Общая масса = сумма весов всех сохраненных грузов
+    let sumVolume = 0;  // Общий объем = сумма (объем * количество)
     
     cargoList.forEach(cargo => {
         totalItems += cargo.quantity || 1;
-        // ИСПРАВЛЕНИЕ: Общая масса = сумма (вес * количество)
-        sumWeight += cargo.weight * (cargo.quantity || 1);
+        // ВАЖНО: Общая масса = просто сумма весов каждого груза
+        sumWeight += cargo.weight;
         sumVolume += cargo.volume * (cargo.quantity || 1);
     });
     
@@ -947,8 +952,8 @@ function sendToOperator() {
         timestamp: new Date().toLocaleString('ru-RU'),
         summary: {
             totalItems: cargoList.reduce((sum, cargo) => sum + (cargo.quantity || 1), 0),
-            // ИСПРАВЛЕНИЕ: Общая масса = сумма (вес * количество)
-            totalWeight: cargoList.reduce((sum, cargo) => sum + (cargo.weight * (cargo.quantity || 1)), 0),
+            // ИСПРАВЛЕНИЕ: Общая масса = сумма весов каждого груза (без умножения на количество)
+            totalWeight: cargoList.reduce((sum, cargo) => sum + cargo.weight, 0),
             totalVolume: cargoList.reduce((sum, cargo) => sum + (cargo.volume * (cargo.quantity || 1)), 0)
         }
     };
