@@ -1,4 +1,4 @@
-/* cargo.css - НОВАЯ ВЕРСИЯ С ПРАВИЛЬНОЙ СТРУКТУРОЙ */
+/* cargo.css - НОВАЯ ВЕРСИЯ С ПРАВИЛЬНОЙ СТРУКТУРОЙ - УЛУЧШЕННЫЙ ДИЗАЙН ПАРАМЕТРОВ */
 
 .cargo-container {
     height: 100vh;
@@ -113,53 +113,59 @@ h2 {
     overflow: hidden;
 }
 
-/* СЕКЦИЯ РЕДАКТИРОВАНИЯ ПАРАМЕТРОВ */
+/* СЕКЦИЯ РЕДАКТИРОВАНИЯ ПАРАМЕТРОВ - УЛУЧШЕННЫЙ ДИЗАЙН */
 .params-section {
     background: #f8f9fa;
     border: 1px solid #e9ecef;
-    border-radius: 4px;
-    padding: 6px;
+    border-radius: 6px;
+    padding: 8px;
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 6px;
     flex-shrink: 0;
+    max-width: 100%;
+    margin: 0 auto;
 }
 
 .param-group {
     display: flex;
     flex-direction: column;
-    gap: 2px;
+    gap: 4px;
 }
 
 .param-label {
-    font-size: 8px;
+    font-size: 9px;
     font-weight: 600;
     color: #495057;
     text-align: left;
+    margin-left: 2px;
 }
 
 .param-control {
     display: flex;
     align-items: center;
-    gap: 3px;
+    gap: 5px;
     width: 100%;
 }
 
+/* УВЕЛИЧЕННЫЕ КНОПКИ ДЛЯ УДОБСТВА */
 .param-btn {
     background: #3498db;
     color: white;
     border: none;
-    border-radius: 3px;
-    width: 26px;
-    height: 26px;
+    border-radius: 4px;
+    width: 36px; /* Увеличен размер */
+    height: 36px; /* Увеличен размер */
     display: flex;
     align-items: center;
     justify-content: center;
     font-weight: bold;
     cursor: pointer;
-    font-size: 12px;
+    font-size: 16px; /* Увеличен шрифт */
     transition: all 0.2s;
     flex-shrink: 0;
+    min-width: 36px;
+    min-height: 36px;
 }
 
 .param-btn:hover {
@@ -176,28 +182,30 @@ h2 {
 
 .param-input {
     flex: 1;
-    height: 26px;
-    padding: 0 3px;
-    border: 1px solid #3498db;
-    border-radius: 3px;
-    font-size: 11px;
+    height: 36px; /* Увеличен размер */
+    padding: 0 8px;
+    border: 2px solid #3498db;
+    border-radius: 4px;
+    font-size: 14px; /* Увеличен шрифт */
     text-align: center;
     font-weight: bold;
     background: white;
     min-width: 0;
+    width: 100%;
 }
 
 .param-input:focus {
     outline: none;
     border-color: #2980b9;
+    box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
 }
 
 /* СТАТИСТИКА ТЕКУЩЕГО ГРУЗА */
 .current-stats {
     display: flex;
-    gap: 5px;
-    margin-top: 3px;
-    padding-top: 3px;
+    gap: 8px;
+    margin-top: 6px;
+    padding-top: 8px;
     border-top: 1px solid #dee2e6;
 }
 
@@ -205,20 +213,20 @@ h2 {
     flex: 1;
     text-align: center;
     background: #e3f2fd;
-    border-radius: 3px;
-    padding: 3px;
+    border-radius: 4px;
+    padding: 6px;
 }
 
 .current-stats .stat-label {
-    font-size: 7px;
+    font-size: 8px;
     color: #666;
     display: block;
-    margin-bottom: 1px;
+    margin-bottom: 2px;
 }
 
 .current-stats .stat-value {
     font-weight: bold;
-    font-size: 9px;
+    font-size: 11px;
     color: #2c3e50;
 }
 
@@ -226,9 +234,9 @@ h2 {
 .bottom-section {
     flex: 1;
     display: flex;
-    gap: 6px;
+    gap: 8px;
     min-height: 0;
-    margin-top: 3px;
+    margin-top: 8px;
 }
 
 .bottom-left {
@@ -243,7 +251,7 @@ h2 {
     flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 8px;
     min-width: 0;
 }
 
@@ -251,22 +259,22 @@ h2 {
 .photo-section-new {
     display: flex;
     flex-direction: column;
-    gap: 3px;
+    gap: 4px;
     background: #f8f9fa;
     border: 1px solid #e9ecef;
-    border-radius: 4px;
-    padding: 5px;
+    border-radius: 6px;
+    padding: 8px;
     align-items: center;
     justify-content: center;
     flex: none;
-    height: 100px;
+    height: 110px;
 }
 
 .photo-container-new {
-    width: 45px;
-    height: 45px;
-    border: 1px dashed #3498db;
-    border-radius: 4px;
+    width: 55px;
+    height: 55px;
+    border: 2px dashed #3498db;
+    border-radius: 6px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -291,33 +299,33 @@ h2 {
 }
 
 .camera-icon-new {
-    font-size: 14px;
+    font-size: 18px;
     color: #3498db;
-    margin-bottom: 1px;
+    margin-bottom: 4px;
 }
 
 .photo-hint-new {
-    font-size: 6px;
+    font-size: 8px;
     color: #666;
     text-align: center;
-    max-width: 35px;
-    line-height: 1;
+    max-width: 45px;
+    line-height: 1.1;
 }
 
 .cargo-photo-new {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    border-radius: 3px;
+    border-radius: 4px;
 }
 
 /* КНОПКИ ВЕРТИКАЛЬНО */
 .action-buttons-column {
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 8px;
     width: 100%;
-    margin-top: 4px;
+    margin-top: 6px;
     flex: 1;
     justify-content: flex-start;
 }
@@ -327,17 +335,17 @@ h2 {
     background: linear-gradient(135deg, #27ae60, #219653);
     color: white;
     border: none;
-    border-radius: 4px;
-    padding: 8px 3px;
-    font-size: 10px;
+    border-radius: 6px;
+    padding: 10px 6px;
+    font-size: 12px;
     font-weight: 600;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 5px;
+    gap: 6px;
     transition: all 0.2s;
-    min-height: 40px;
+    min-height: 45px;
 }
 
 .btn-save-new:hover {
@@ -349,17 +357,17 @@ h2 {
     background: linear-gradient(135deg, #e74c3c, #c0392b);
     color: white;
     border: none;
-    border-radius: 4px;
-    padding: 8px 3px;
-    font-size: 10px;
+    border-radius: 6px;
+    padding: 10px 6px;
+    font-size: 12px;
     font-weight: 600;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 5px;
+    gap: 6px;
     transition: all 0.2s;
-    min-height: 40px;
+    min-height: 45px;
 }
 
 .btn-send-new:hover {
@@ -367,7 +375,7 @@ h2 {
 }
 
 .btn-icon {
-    font-size: 12px;
+    font-size: 14px;
 }
 
 /* НОВОЕ ОКНО ОБЩЕЙ ИНФОРМАЦИИ */
@@ -375,7 +383,7 @@ h2 {
     background: linear-gradient(135deg, #2c3e50, #34495e);
     color: white;
     border-radius: 8px;
-    padding: 10px;
+    padding: 12px;
     display: flex;
     flex-direction: column;
     flex: 1;
@@ -389,13 +397,13 @@ h2 {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 10px;
-    padding-bottom: 5px;
+    margin-bottom: 12px;
+    padding-bottom: 6px;
     border-bottom: 1px solid rgba(255,255,255,0.1);
 }
 
 .total-info-header h3 {
-    font-size: 12px;
+    font-size: 13px;
     font-weight: 600;
     margin: 0;
     color: #fff;
@@ -406,13 +414,13 @@ h2 {
     color: white;
     border: none;
     border-radius: 50%;
-    width: 22px;
-    height: 22px;
+    width: 26px;
+    height: 26px;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    font-size: 10px;
+    font-size: 12px;
     transition: all 0.2s;
     flex-shrink: 0;
 }
@@ -424,7 +432,7 @@ h2 {
 .total-info-content {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 10px;
     flex: 1;
 }
 
@@ -432,9 +440,9 @@ h2 {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 6px 8px;
+    padding: 8px 10px;
     background: rgba(255,255,255,0.08);
-    border-radius: 5px;
+    border-radius: 6px;
     border: 1px solid rgba(255,255,255,0.05);
     transition: all 0.2s;
 }
@@ -446,13 +454,13 @@ h2 {
 .total-info-label {
     display: flex;
     align-items: center;
-    gap: 6px;
-    font-size: 9px;
+    gap: 8px;
+    font-size: 11px;
     color: rgba(255,255,255,0.9);
 }
 
 .total-info-icon {
-    font-size: 10px;
+    font-size: 12px;
     opacity: 0.9;
 }
 
@@ -462,7 +470,7 @@ h2 {
 
 .total-info-value {
     font-weight: bold;
-    font-size: 11px;
+    font-size: 13px;
     color: white;
     display: flex;
     align-items: center;
@@ -471,8 +479,8 @@ h2 {
 
 .total-info-value.clickable {
     cursor: pointer;
-    padding: 2px 6px;
-    border-radius: 3px;
+    padding: 4px 8px;
+    border-radius: 4px;
     background: rgba(52, 152, 219, 0.2);
     transition: all 0.2s;
 }
@@ -482,15 +490,15 @@ h2 {
 }
 
 .total-info-arrow {
-    font-size: 12px;
+    font-size: 14px;
     opacity: 0.7;
     margin-left: 2px;
 }
 
 /* ОКОШКО СТАТИСТИКИ ГРУЗОВ - ДОПОЛНИТЕЛЬНЫЕ СТИЛИ */
 .cargo-stats-actions {
-    margin-top: 8px;
-    padding-top: 8px;
+    margin-top: 10px;
+    padding-top: 10px;
     border-top: 1px solid #e9ecef;
 }
 
@@ -498,15 +506,15 @@ h2 {
     background: linear-gradient(135deg, #e74c3c, #c0392b);
     color: white;
     border: none;
-    border-radius: 3px;
-    padding: 5px 8px;
-    font-size: 10px;
+    border-radius: 4px;
+    padding: 6px 10px;
+    font-size: 11px;
     font-weight: 600;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 3px;
+    gap: 4px;
     transition: all 0.2s;
     width: 100%;
 }
@@ -722,93 +730,93 @@ h2 {
     }
     
     .params-section {
-        padding: 4px;
-        gap: 3px;
+        padding: 6px;
+        gap: 5px;
     }
     
     .param-btn {
-        width: 22px;
-        height: 22px;
-        font-size: 10px;
+        width: 32px;
+        height: 32px;
+        font-size: 14px;
     }
     
     .param-input {
-        height: 22px;
-        font-size: 10px;
-        padding: 0 2px;
+        height: 32px;
+        font-size: 12px;
+        padding: 0 6px;
     }
     
     .photo-section-new {
-        height: 90px;
-        padding: 4px;
+        height: 100px;
+        padding: 6px;
     }
     
     .photo-container-new {
-        width: 35px;
-        height: 35px;
+        width: 45px;
+        height: 45px;
     }
     
     .camera-icon-new {
-        font-size: 12px;
+        font-size: 16px;
     }
     
     .photo-hint-new {
-        font-size: 5px;
-        max-width: 30px;
+        font-size: 7px;
+        max-width: 35px;
     }
     
     .action-buttons-column {
-        gap: 4px;
-        margin-top: 3px;
+        gap: 6px;
+        margin-top: 4px;
     }
     
     .btn-save-new, .btn-send-new {
-        padding: 6px 2px;
-        font-size: 9px;
-        min-height: 35px;
+        padding: 8px 4px;
+        font-size: 11px;
+        min-height: 40px;
     }
     
     .total-info-window {
-        padding: 8px;
+        padding: 10px;
     }
     
     .total-info-header h3 {
-        font-size: 11px;
+        font-size: 12px;
     }
     
     .total-info-refresh {
-        width: 18px;
-        height: 18px;
-        font-size: 9px;
+        width: 22px;
+        height: 22px;
+        font-size: 11px;
     }
     
     .total-info-content {
-        gap: 6px;
+        gap: 8px;
     }
     
     .total-info-item {
-        padding: 5px 6px;
+        padding: 6px 8px;
     }
     
     .total-info-label {
-        font-size: 8px;
-        gap: 4px;
+        font-size: 10px;
+        gap: 6px;
     }
     
     .total-info-icon {
-        font-size: 9px;
+        font-size: 11px;
     }
     
     .total-info-value {
-        font-size: 10px;
+        font-size: 12px;
     }
     
     .total-info-arrow {
-        font-size: 11px;
+        font-size: 13px;
     }
 }
 
-/* ОПТИМИЗАЦИЯ ДЛЯ ПЛАНШЕТОВ */
+/* ОПТИМИЗАЦИЯ ДЛЯ ПЛАНШЕТОВ - УВЕЛИЧЕННЫЕ ЭЛЕМЕНТЫ */
 @media (min-width: 768px) and (max-width: 1024px) {
     /* ОСНОВНОЙ КОНТЕЙНЕР */
     .cargo-container {
@@ -860,56 +868,58 @@ h2 {
         font-size: 10px;
     }
     
-    /* ПАРАМЕТРЫ */
+    /* ПАРАМЕТРЫ - ЕЩЕ БОЛЬШЕ УВЕЛИЧИВАЕМ ДЛЯ ПЛАНШЕТОВ */
     .params-section {
-        padding: 12px;
-        gap: 10px;
-        border-radius: 8px;
+        padding: 15px;
+        gap: 12px;
+        border-radius: 10px;
+        max-width: 95%;
     }
     
     .param-label {
-        font-size: 12px;
-        margin-bottom: 4px;
+        font-size: 14px;
+        margin-bottom: 6px;
     }
     
     .param-control {
-        gap: 10px;
+        gap: 12px;
     }
     
     .param-btn {
-        width: 40px;
-        height: 40px;
-        font-size: 18px;
-        border-radius: 6px;
-        min-width: 44px;
-        min-height: 44px;
+        width: 50px; /* Еще больше для планшетов */
+        height: 50px;
+        font-size: 22px;
+        border-radius: 8px;
+        min-width: 50px;
+        min-height: 50px;
     }
     
     .param-input {
-        height: 40px;
-        font-size: 16px;
-        padding: 0 8px;
-        border-radius: 6px;
+        height: 50px;
+        font-size: 18px;
+        padding: 0 12px;
+        border-radius: 8px;
+        border-width: 2px;
     }
     
     /* ТЕКУЩАЯ СТАТИСТИКА */
     .current-stats {
-        gap: 10px;
-        margin-top: 10px;
-        padding-top: 10px;
+        gap: 12px;
+        margin-top: 12px;
+        padding-top: 12px;
     }
     
     .current-stats .stat-item {
-        padding: 8px;
-        border-radius: 6px;
+        padding: 10px;
+        border-radius: 8px;
     }
     
     .current-stats .stat-label {
-        font-size: 11px;
+        font-size: 12px;
     }
     
     .current-stats .stat-value {
-        font-size: 13px;
+        font-size: 15px;
     }
     
     /* НИЖНЯЯ ЧАСТЬ - ОПТИМИЗАЦИЯ ДЛЯ ПЛАНШЕТОВ */
@@ -932,14 +942,14 @@ h2 {
         height: 140px;
         padding: 15px;
         justify-content: center;
-        border-radius: 8px;
+        border-radius: 10px;
     }
     
     .photo-container-new {
         width: 80px;
         height: 80px;
         border-width: 2px;
-        border-radius: 6px;
+        border-radius: 8px;
     }
     
     .camera-icon-new {
@@ -1047,6 +1057,10 @@ h2 {
         height: 90vh;
     }
     
+    .params-section {
+        max-width: 90%;
+    }
+    
     .bottom-section {
         min-height: 240px;
     }
@@ -1078,78 +1092,94 @@ h2 {
 
 /* ДЛЯ ОЧЕНЬ МАЛЕНЬКИХ ЭКРАНОВ */
 @media (max-width: 320px) {
-    .bottom-section {
-        flex-direction: column;
-        gap: 4px;
-    }
-    
-    .photo-section-new {
-        height: 80px;
-    }
-    
-    .photo-container-new {
-        width: 30px;
-        height: 30px;
-    }
-    
-    .camera-icon-new {
-        font-size: 10px;
-    }
-    
-    .photo-hint-new {
-        font-size: 5px;
-        max-width: 25px;
-    }
-    
-    .action-buttons-column {
-        gap: 3px;
-        margin-top: 2px;
-    }
-    
-    .btn-save-new, .btn-send-new {
-        min-height: 30px;
-        font-size: 8px;
-        padding: 5px 2px;
-    }
-    
-    .total-info-window {
+    .params-section {
         padding: 6px;
     }
     
-    .total-info-header h3 {
+    .param-btn {
+        width: 30px;
+        height: 30px;
+        font-size: 14px;
+    }
+    
+    .param-input {
+        height: 30px;
+        font-size: 12px;
+        padding: 0 4px;
+    }
+    
+    .bottom-section {
+        flex-direction: column;
+        gap: 6px;
+    }
+    
+    .photo-section-new {
+        height: 90px;
+    }
+    
+    .photo-container-new {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .camera-icon-new {
+        font-size: 14px;
+    }
+    
+    .photo-hint-new {
+        font-size: 6px;
+        max-width: 30px;
+    }
+    
+    .action-buttons-column {
+        gap: 4px;
+        margin-top: 4px;
+    }
+    
+    .btn-save-new, .btn-send-new {
+        min-height: 35px;
         font-size: 10px;
+        padding: 6px 3px;
+    }
+    
+    .total-info-window {
+        padding: 8px;
+    }
+    
+    .total-info-header h3 {
+        font-size: 11px;
     }
     
     .total-info-refresh {
-        width: 16px;
-        height: 16px;
-        font-size: 8px;
+        width: 20px;
+        height: 20px;
+        font-size: 10px;
     }
     
     .total-info-content {
-        gap: 4px;
+        gap: 6px;
     }
     
     .total-info-item {
-        padding: 4px 5px;
-        min-height: 35px;
+        padding: 6px 8px;
+        min-height: 40px;
     }
     
     .total-info-label {
-        font-size: 7px;
-        gap: 3px;
+        font-size: 9px;
+        gap: 4px;
     }
     
     .total-info-icon {
-        font-size: 8px;
+        font-size: 10px;
     }
     
     .total-info-value {
-        font-size: 9px;
+        font-size: 11px;
     }
     
     .total-info-arrow {
-        font-size: 10px;
+        font-size: 12px;
     }
 }
 
@@ -1159,15 +1189,11 @@ h2 {
     .cargo-type-item,
     .photo-container-new,
     .total-info-value.clickable,
-    .total-info-refresh {
+    .total-info-refresh,
+    .param-btn {
         min-height: 44px !important;
         min-width: 44px !important;
         cursor: pointer;
-    }
-    
-    .param-btn {
-        min-width: 44px;
-        min-height: 44px;
     }
 }
 
@@ -1177,7 +1203,8 @@ h2 {
     .photo-container-new:active,
     .total-info-value.clickable:active,
     button:active,
-    .total-info-refresh:active {
+    .total-info-refresh:active,
+    .param-btn:active {
         opacity: 0.7;
         transform: scale(0.98);
         transition: all 0.1s ease;
@@ -1189,7 +1216,8 @@ h2 {
     .cargo-type-item,
     .photo-container-new,
     .total-info-value.clickable,
-    .total-info-refresh {
+    .total-info-refresh,
+    .param-btn {
         cursor: pointer;
         -webkit-tap-highlight-color: rgba(0,0,0,0);
     }
