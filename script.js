@@ -1,4 +1,4 @@
-// script.js - ПОЛНЫЙ ФАЙЛ СО ВСЕМИ ФУНКЦИЯМИ
+// script.js - ПОЛНЫЙ ФАЙЛ СО ВСЕМИ ФУНКЦИЯМИ - ИСПРАВЛЕН РАСЧЕТ МАССЫ
 
 // API конфигурация (для будущей интеграции)
 const API_BASE_URL = 'http://localhost:3000/api'; // Измените на ваш сервер
@@ -252,8 +252,8 @@ function updateCurrentStats() {
         }
     }
     
-    // Рассчитываем общий вес
-    const totalWeight = currentWeight * (currentQuantity || 1);
+    // ИСПРАВЛЕНИЕ: Общий вес = просто введенный вес, НЕ умножаем на количество
+    const totalWeight = currentWeight; // Просто текущий вес, без умножения на количество
     const currentTotalWeightElement = document.getElementById('currentTotalWeight');
     if (currentTotalWeightElement) {
         currentTotalWeightElement.textContent = totalWeight + ' кг';
@@ -578,6 +578,7 @@ function showCargoListModal() {
             cargoItem.className = 'cargo-list-item';
             
             const totalVolume = group.volume * group.quantity;
+            // ИСПРАВЛЕНИЕ: Общая масса = вес * количество (так как каждый груз имеет свой вес)
             const totalWeight = group.weight * group.quantity;
             
             cargoItem.innerHTML = `
@@ -818,6 +819,7 @@ function showCargoStatsPopup() {
             
             cargoList.forEach(cargo => {
                 totalItems += cargo.quantity || 1;
+                // ИСПРАВЛЕНИЕ: Общий вес = сумма (вес * количество)
                 sumWeight += cargo.weight * (cargo.quantity || 1);
                 sumVolume += cargo.volume * (cargo.quantity || 1);
             });
@@ -885,6 +887,7 @@ function updateStats() {
     
     cargoList.forEach(cargo => {
         totalItems += cargo.quantity || 1;
+        // ИСПРАВЛЕНИЕ: Общая масса = сумма (вес * количество) каждого груза
         sumWeight += cargo.weight * (cargo.quantity || 1);
         sumVolume += cargo.volume * (cargo.quantity || 1);
     });
@@ -920,6 +923,7 @@ function updateModalTotals() {
     
     cargoList.forEach(cargo => {
         totalItems += cargo.quantity || 1;
+        // ИСПРАВЛЕНИЕ: Общая масса = сумма (вес * количество)
         sumWeight += cargo.weight * (cargo.quantity || 1);
         sumVolume += cargo.volume * (cargo.quantity || 1);
     });
@@ -943,6 +947,7 @@ function sendToOperator() {
         timestamp: new Date().toLocaleString('ru-RU'),
         summary: {
             totalItems: cargoList.reduce((sum, cargo) => sum + (cargo.quantity || 1), 0),
+            // ИСПРАВЛЕНИЕ: Общая масса = сумма (вес * количество)
             totalWeight: cargoList.reduce((sum, cargo) => sum + (cargo.weight * (cargo.quantity || 1)), 0),
             totalVolume: cargoList.reduce((sum, cargo) => sum + (cargo.volume * (cargo.quantity || 1)), 0)
         }
