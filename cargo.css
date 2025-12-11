@@ -1,4 +1,4 @@
-/* cargo.css - ФИНАЛЬНАЯ КОМПАКТНАЯ ВЕРСИЯ */
+/* cargo.css - НОВАЯ ВЕРСИЯ С ПРАВИЛЬНОЙ СТРУКТУРОЙ */
 
 .cargo-container {
     height: 100vh;
@@ -235,7 +235,7 @@ h2 {
     flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 8px;
     min-width: 0;
 }
 
@@ -311,142 +311,33 @@ h2 {
     border-radius: 3px;
 }
 
-/* ОБЩАЯ СТАТИСТИКА */
-.total-stats-section {
-    background: linear-gradient(135deg, #2c3e50, #34495e);
-    color: white;
-    border-radius: 4px;
-    padding: 6px;
+/* КНОПКИ ВЕРТИКАЛЬНО */
+.action-buttons-column {
     display: flex;
     flex-direction: column;
-    flex: none;
-    height: 100px;
-    min-height: 0;
-    justify-content: space-between;
-}
-
-.total-stats-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 3px;
-    flex-shrink: 0;
-}
-
-.total-stats-header h3 {
-    font-size: 9px;
-    font-weight: 600;
-    margin: 0;
-}
-
-.total-stats-refresh {
-    background: rgba(255,255,255,0.2);
-    color: white;
-    border: none;
-    border-radius: 50%;
-    width: 18px;
-    height: 18px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    font-size: 9px;
-    transition: all 0.2s;
-}
-
-.total-stats-refresh:hover {
-    background: rgba(255,255,255,0.3);
-}
-
-.total-stats-grid {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    min-height: 0;
-    justify-content: space-between;
-}
-
-.total-stat-item {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    background: rgba(255,255,255,0.1);
-    border-radius: 3px;
-    padding: 5px;
-    transition: all 0.2s;
-}
-
-.total-stat-item.clickable {
-    cursor: pointer;
-}
-
-.total-stat-item.clickable:hover {
-    background: rgba(255,255,255,0.15);
-}
-
-.total-stat-icon {
-    font-size: 11px;
-    flex-shrink: 0;
-    width: 20px;
-    height: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.total-stat-content {
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-    min-width: 0;
-}
-
-.total-stat-label {
-    font-size: 8px;
-    opacity: 0.9;
-    margin-bottom: 2px;
-    display: block;
-}
-
-.total-stat-value {
-    font-weight: bold;
-    font-size: 10px;
-    display: block;
-    color: white;
-}
-
-.total-stat-arrow {
-    font-size: 11px;
-    opacity: 0.7;
-    margin-left: auto;
-    padding-left: 5px;
-}
-
-/* КНОПКИ В ОДНУ СТРОКУ */
-.action-buttons-row {
-    display: flex;
     gap: 6px;
     width: 100%;
     margin-top: 4px;
+    flex: 1;
+    justify-content: flex-start;
 }
 
 .btn-save-new {
-    flex: 1;
+    width: 100%;
     background: linear-gradient(135deg, #27ae60, #219653);
     color: white;
     border: none;
     border-radius: 4px;
-    padding: 6px 3px;
+    padding: 8px 3px;
     font-size: 10px;
     font-weight: 600;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 3px;
+    gap: 5px;
     transition: all 0.2s;
-    min-height: 35px;
+    min-height: 40px;
 }
 
 .btn-save-new:hover {
@@ -454,21 +345,21 @@ h2 {
 }
 
 .btn-send-new {
-    flex: 1;
+    width: 100%;
     background: linear-gradient(135deg, #e74c3c, #c0392b);
     color: white;
     border: none;
     border-radius: 4px;
-    padding: 6px 3px;
+    padding: 8px 3px;
     font-size: 10px;
     font-weight: 600;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 3px;
+    gap: 5px;
     transition: all 0.2s;
-    min-height: 35px;
+    min-height: 40px;
 }
 
 .btn-send-new:hover {
@@ -476,7 +367,124 @@ h2 {
 }
 
 .btn-icon {
+    font-size: 12px;
+}
+
+/* НОВОЕ ОКНО ОБЩЕЙ ИНФОРМАЦИИ */
+.total-info-window {
+    background: linear-gradient(135deg, #2c3e50, #34495e);
+    color: white;
+    border-radius: 8px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+    height: 100%;
+    border: 1px solid #3a5068;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+.total-info-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.total-info-header h3 {
+    font-size: 12px;
+    font-weight: 600;
+    margin: 0;
+    color: #fff;
+}
+
+.total-info-refresh {
+    background: rgba(255,255,255,0.15);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 22px;
+    height: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
     font-size: 10px;
+    transition: all 0.2s;
+    flex-shrink: 0;
+}
+
+.total-info-refresh:hover {
+    background: rgba(255,255,255,0.25);
+}
+
+.total-info-content {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex: 1;
+}
+
+.total-info-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 8px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 5px;
+    border: 1px solid rgba(255,255,255,0.05);
+    transition: all 0.2s;
+}
+
+.total-info-item:hover {
+    background: rgba(255,255,255,0.12);
+}
+
+.total-info-label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 9px;
+    color: rgba(255,255,255,0.9);
+}
+
+.total-info-icon {
+    font-size: 10px;
+    opacity: 0.9;
+}
+
+.total-info-text {
+    font-weight: 500;
+}
+
+.total-info-value {
+    font-weight: bold;
+    font-size: 11px;
+    color: white;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.total-info-value.clickable {
+    cursor: pointer;
+    padding: 2px 6px;
+    border-radius: 3px;
+    background: rgba(52, 152, 219, 0.2);
+    transition: all 0.2s;
+}
+
+.total-info-value.clickable:hover {
+    background: rgba(52, 152, 219, 0.3);
+}
+
+.total-info-arrow {
+    font-size: 12px;
+    opacity: 0.7;
+    margin-left: 2px;
 }
 
 /* ОКОШКО СТАТИСТИКИ ГРУЗОВ - ДОПОЛНИТЕЛЬНЫЕ СТИЛИ */
@@ -749,49 +757,54 @@ h2 {
         max-width: 30px;
     }
     
-    .action-buttons-row {
+    .action-buttons-column {
         gap: 4px;
         margin-top: 3px;
     }
     
     .btn-save-new, .btn-send-new {
-        padding: 5px 2px;
+        padding: 6px 2px;
         font-size: 9px;
-        min-height: 30px;
+        min-height: 35px;
     }
     
-    .total-stats-section {
-        height: 90px;
-        padding: 4px;
+    .total-info-window {
+        padding: 8px;
     }
     
-    .total-stats-header h3 {
-        font-size: 8px;
+    .total-info-header h3 {
+        font-size: 11px;
     }
     
-    .total-stats-refresh {
-        width: 16px;
-        height: 16px;
-        font-size: 8px;
-    }
-    
-    .total-stat-item {
-        padding: 4px;
-        gap: 5px;
-    }
-    
-    .total-stat-icon {
-        font-size: 10px;
+    .total-info-refresh {
         width: 18px;
         height: 18px;
-    }
-    
-    .total-stat-label {
-        font-size: 7px;
-    }
-    
-    .total-stat-value {
         font-size: 9px;
+    }
+    
+    .total-info-content {
+        gap: 6px;
+    }
+    
+    .total-info-item {
+        padding: 5px 6px;
+    }
+    
+    .total-info-label {
+        font-size: 8px;
+        gap: 4px;
+    }
+    
+    .total-info-icon {
+        font-size: 9px;
+    }
+    
+    .total-info-value {
+        font-size: 10px;
+    }
+    
+    .total-info-arrow {
+        font-size: 11px;
     }
 }
 
@@ -939,83 +952,86 @@ h2 {
         max-width: 70px;
     }
     
-    /* КНОПКИ */
-    .action-buttons-row {
-        display: flex;
+    /* КНОПКИ ВЕРТИКАЛЬНО ДЛЯ ПЛАНШЕТОВ */
+    .action-buttons-column {
         gap: 12px;
-        margin-top: auto;
-        min-height: 60px;
-        align-items: center;
+        margin-top: 15px;
+        justify-content: center;
     }
     
     .btn-save-new, .btn-send-new {
-        min-height: 50px;
-        font-size: 14px;
-        padding: 12px 10px;
-        border-radius: 8px;
-        flex: 1;
+        min-height: 60px;
+        font-size: 16px;
+        padding: 15px 10px;
+        border-radius: 10px;
+        gap: 10px;
     }
     
     .btn-icon {
+        font-size: 20px;
+    }
+    
+    /* ОБЩАЯ ИНФОРМАЦИЯ ДЛЯ ПЛАНШЕТОВ */
+    .total-info-window {
+        padding: 20px;
+        border-radius: 12px;
+        border-width: 2px;
+    }
+    
+    .total-info-header {
+        margin-bottom: 15px;
+        padding-bottom: 10px;
+    }
+    
+    .total-info-header h3 {
+        font-size: 18px;
+    }
+    
+    .total-info-refresh {
+        width: 40px;
+        height: 40px;
         font-size: 16px;
-    }
-    
-    /* ОБЩАЯ СТАТИСТИКА */
-    .total-stats-section {
-        height: 140px;
-        padding: 15px;
-        border-radius: 10px;
-    }
-    
-    .total-stats-header h3 {
-        font-size: 14px;
-    }
-    
-    .total-stats-refresh {
-        width: 28px;
-        height: 28px;
-        font-size: 12px;
         min-width: 44px;
         min-height: 44px;
     }
     
-    .total-stats-grid {
-        gap: 8px;
-        justify-content: space-evenly;
+    .total-info-content {
+        gap: 15px;
     }
     
-    .total-stat-item {
-        padding: 12px 10px;
-        border-radius: 8px;
-        min-height: 50px;
-        gap: 10px;
+    .total-info-item {
+        padding: 15px 12px;
+        border-radius: 10px;
+        min-height: 60px;
     }
     
-    .total-stat-icon {
-        font-size: 18px;
-        min-width: 35px;
-        width: 35px;
-        height: 35px;
+    .total-info-label {
+        font-size: 16px;
+        gap: 12px;
     }
     
-    .total-stat-content {
-        flex: 1;
+    .total-info-icon {
+        font-size: 20px;
     }
     
-    .total-stat-label {
-        font-size: 12px;
-        margin-bottom: 4px;
+    .total-info-text {
+        font-weight: 600;
     }
     
-    .total-stat-value {
-        font-size: 15px;
+    .total-info-value {
+        font-size: 20px;
         font-weight: bold;
+        gap: 8px;
     }
     
-    .total-stat-arrow {
+    .total-info-value.clickable {
+        padding: 8px 12px;
+        border-radius: 8px;
         font-size: 18px;
-        margin-left: auto;
-        padding-left: 8px;
+    }
+    
+    .total-info-arrow {
+        font-size: 22px;
     }
     
     /* Гарантируем, что все кнопки помещаются */
@@ -1039,8 +1055,8 @@ h2 {
         height: 130px;
     }
     
-    .total-stats-section {
-        height: 130px;
+    .total-info-window {
+        min-height: 240px;
     }
     
     /* Более компактное расположение для горизонтального режима */
@@ -1051,6 +1067,12 @@ h2 {
     .params-section {
         max-height: 320px;
         overflow-y: auto;
+    }
+    
+    .btn-save-new, .btn-send-new {
+        min-height: 55px;
+        font-size: 14px;
+        padding: 12px 10px;
     }
 }
 
@@ -1079,19 +1101,55 @@ h2 {
         max-width: 25px;
     }
     
-    .total-stats-section {
-        height: 80px;
-    }
-    
-    .action-buttons-row {
+    .action-buttons-column {
         gap: 3px;
         margin-top: 2px;
     }
     
     .btn-save-new, .btn-send-new {
-        min-height: 28px;
+        min-height: 30px;
         font-size: 8px;
-        padding: 4px 2px;
+        padding: 5px 2px;
+    }
+    
+    .total-info-window {
+        padding: 6px;
+    }
+    
+    .total-info-header h3 {
+        font-size: 10px;
+    }
+    
+    .total-info-refresh {
+        width: 16px;
+        height: 16px;
+        font-size: 8px;
+    }
+    
+    .total-info-content {
+        gap: 4px;
+    }
+    
+    .total-info-item {
+        padding: 4px 5px;
+        min-height: 35px;
+    }
+    
+    .total-info-label {
+        font-size: 7px;
+        gap: 3px;
+    }
+    
+    .total-info-icon {
+        font-size: 8px;
+    }
+    
+    .total-info-value {
+        font-size: 9px;
+    }
+    
+    .total-info-arrow {
+        font-size: 10px;
     }
 }
 
@@ -1100,8 +1158,8 @@ h2 {
     button, 
     .cargo-type-item,
     .photo-container-new,
-    .total-stat-item.clickable,
-    .total-stats-refresh {
+    .total-info-value.clickable,
+    .total-info-refresh {
         min-height: 44px !important;
         min-width: 44px !important;
         cursor: pointer;
@@ -1117,9 +1175,9 @@ h2 {
 @media (hover: none) and (pointer: coarse) {
     .cargo-type-item:active,
     .photo-container-new:active,
-    .total-stat-item.clickable:active,
+    .total-info-value.clickable:active,
     button:active,
-    .total-stats-refresh:active {
+    .total-info-refresh:active {
         opacity: 0.7;
         transform: scale(0.98);
         transition: all 0.1s ease;
@@ -1130,8 +1188,8 @@ h2 {
 @supports (-webkit-touch-callout: none) {
     .cargo-type-item,
     .photo-container-new,
-    .total-stat-item.clickable,
-    .total-stats-refresh {
+    .total-info-value.clickable,
+    .total-info-refresh {
         cursor: pointer;
         -webkit-tap-highlight-color: rgba(0,0,0,0);
     }
@@ -1152,33 +1210,30 @@ h2 {
         padding: 10px;
     }
     
-    .total-stats-section {
-        height: 120px;
-        padding: 12px;
+    .total-info-window {
+        padding: 15px;
     }
     
     .btn-save-new, .btn-send-new {
-        min-height: 45px;
-        font-size: 13px;
-        padding: 10px 8px;
-    }
-    
-    .total-stat-item {
-        padding: 10px 8px;
-        min-height: 45px;
-    }
-    
-    .total-stat-icon {
-        font-size: 16px;
-        width: 30px;
-        height: 30px;
-    }
-    
-    .total-stat-label {
-        font-size: 11px;
-    }
-    
-    .total-stat-value {
+        min-height: 50px;
         font-size: 14px;
+        padding: 12px 8px;
+    }
+    
+    .total-info-item {
+        padding: 12px 10px;
+        min-height: 50px;
+    }
+    
+    .total-info-label {
+        font-size: 14px;
+    }
+    
+    .total-info-icon {
+        font-size: 18px;
+    }
+    
+    .total-info-value {
+        font-size: 16px;
     }
 }
