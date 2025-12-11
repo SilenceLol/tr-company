@@ -1,4 +1,4 @@
-// script.js - ПОЛНЫЙ ФАЙЛ СО ВСЕМИ ФУНКЦИЯМИ - ИСПРАВЛЕН РАСЧЕТ МАССЫ В ОБЩЕЙ ИНФОРМАЦИИ
+// script.js - ПОЛНЫЙ ФАЙЛ СО ВСЕМИ ФУНКЦИЯМИ - ОЧИСТКА ПОСЛЕ ОТПРАВКИ
 
 // API конфигурация (для будущей интеграции)
 const API_BASE_URL = 'http://localhost:3000/api'; // Измените на ваш сервер
@@ -269,7 +269,7 @@ function updateTotalStats() {
     showNotification('Статистика обновлена');
 }
 
-// ОТПРАВКА И СБРОС
+// ОТПРАВКА И СБРОС - ВАЖНОЕ ИСПРАВЛЕНИЕ!
 function sendToOperatorAndReset() {
     if (!cargoList || cargoList.length === 0) {
         showNotification('Нет грузов для отправки', true);
@@ -281,6 +281,9 @@ function sendToOperatorAndReset() {
     
     // Сбрасываем все параметры к начальным значениям
     resetAllParams();
+    
+    // Закрываем окно статистики если оно открыто
+    closeCargoStatsPopup();
     
     // Показываем уведомление
     showNotification('Данные отправлены и параметры сброшены');
@@ -578,7 +581,7 @@ function showCargoListModal() {
             cargoItem.className = 'cargo-list-item';
             
             const totalVolume = group.volume * group.quantity;
-            // ВНИМАНИЕ: Для отображения в списке оставляем вес как есть (без умножения на количество)
+            // ВНИМАНИЕ: Для отображения показываем просто вес, без умножения на количество
             const displayWeight = group.weight;
             
             cargoItem.innerHTML = `
@@ -938,7 +941,7 @@ function updateModalTotals() {
     if (modalCargoCount) modalCargoCount.textContent = totalItems;
 }
 
-// ФУНКЦИЯ ОТПРАВКИ ОПЕРАТОРУ
+// ФУНКЦИЯ ОТПРАВКИ ОПЕРАТОРУ - ВАЖНОЕ ИСПРАВЛЕНИЕ!
 function sendToOperator() {
     if (!cargoList || cargoList.length === 0) {
         showNotification('Нет грузов для отправки', true);
@@ -969,10 +972,13 @@ function sendToOperator() {
     shipments.push(dataToSend);
     localStorage.setItem('shipments', JSON.stringify(shipments));
     
-    // Можно очистить список после отправки (раскомментировать если нужно)
-    // cargoList = [];
-    // localStorage.removeItem('cargoList');
-    // updateStats();
+    // ВАЖНОЕ ИСПРАВЛЕНИЕ: Очищаем список после отправки!
+    cargoList = [];
+    localStorage.removeItem('cargoList');
+    updateStats();
+    
+    // Закрываем окно статистики если оно открыто
+    closeCargoStatsPopup();
 }
 
 // ПОЛУЧЕНИЕ ID ТЕКУЩЕГО СОТРУДНИКА
