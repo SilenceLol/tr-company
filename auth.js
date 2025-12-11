@@ -306,12 +306,12 @@ function authenticateEmployee(employeeCode) {
     const employees = {
         'EMP001': {
             id: 'EMP001',
-            name: 'Иванов Алексей',
+            name: 'Тест Тестович',
             position: 'Грузчик'
         },
         'EMP002': {
             id: 'EMP002',
-            name: 'Петров Сергей',
+            name: 'Тест Тестович2',
             position: 'Водитель'
         },
         'EMP00': {
