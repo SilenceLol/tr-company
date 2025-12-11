@@ -179,55 +179,61 @@
                             </div>
                         </div>
                         
-                        <!-- КНОПКИ В ОДНУ СТРОКУ -->
-                        <div class="action-buttons-row">
+                        <!-- КНОПКИ ВЕРТИКАЛЬНО -->
+                        <div class="action-buttons-column">
                             <button class="btn-save-new" onclick="saveCargo()">
-                                <span class="btn-icon">💾</span> Сохранить
+                                <span class="btn-icon">💾</span> Сохранить груз
                             </button>
                             
                             <button class="btn-send-new" onclick="sendToOperatorAndReset()">
-                                <span class="btn-icon">📤</span> Отправить
+                                <span class="btn-icon">📤</span> Отправить все
                             </button>
                         </div>
                     </div>
                     
                     <!-- ПРАВАЯ КОЛОНКА: ОБЩАЯ СТАТИСТИКА -->
                     <div class="bottom-right">
-                        <!-- ОКНО ОБЩЕЙ СТАТИСТИКИ -->
-                        <div class="total-stats-section">
-                            <div class="total-stats-header">
+                        <!-- НОВОЕ ОКНО ОБЩЕЙ СТАТИСТИКИ -->
+                        <div class="total-info-window">
+                            <div class="total-info-header">
                                 <h3>Общая информация</h3>
-                                <div class="total-stats-refresh" onclick="updateTotalStats()" title="Обновить">
+                                <div class="total-info-refresh" onclick="updateTotalStats()" title="Обновить">
                                     🔄
                                 </div>
                             </div>
                             
-                            <div class="total-stats-grid">
-                                <!-- КОЛИЧЕСТВО МЕСТ (кликабельное) -->
-                                <div class="total-stat-item clickable" onclick="showCargoStatsPopup()">
-                                    <div class="total-stat-icon">📦</div>
-                                    <div class="total-stat-content">
-                                        <div class="total-stat-label">Места</div>
-                                        <div class="total-stat-value" id="totalCargoCount">0</div>
+                            <div class="total-info-content">
+                                <!-- КОЛИЧЕСТВО МЕСТ -->
+                                <div class="total-info-item">
+                                    <div class="total-info-label">
+                                        <span class="total-info-icon">📦</span>
+                                        <span class="total-info-text">Места:</span>
                                     </div>
-                                    <div class="total-stat-arrow">›</div>
+                                    <div class="total-info-value clickable" onclick="showCargoStatsPopup()" id="totalCargoCount">
+                                        0
+                                        <span class="total-info-arrow">›</span>
+                                    </div>
                                 </div>
                                 
                                 <!-- ОБЩИЙ ОБЪЕМ -->
-                                <div class="total-stat-item">
-                                    <div class="total-stat-icon">📊</div>
-                                    <div class="total-stat-content">
-                                        <div class="total-stat-label">Объем</div>
-                                        <div class="total-stat-value" id="totalVolumeValue">0 м³</div>
+                                <div class="total-info-item">
+                                    <div class="total-info-label">
+                                        <span class="total-info-icon">📊</span>
+                                        <span class="total-info-text">Общий объем:</span>
+                                    </div>
+                                    <div class="total-info-value" id="totalVolumeValue">
+                                        0 м³
                                     </div>
                                 </div>
                                 
                                 <!-- ОБЩАЯ МАССА -->
-                                <div class="total-stat-item">
-                                    <div class="total-stat-icon">⚖️</div>
-                                    <div class="total-stat-content">
-                                        <div class="total-stat-label">Масса</div>
-                                        <div class="total-stat-value" id="totalWeightValue">0 кг</div>
+                                <div class="total-info-item">
+                                    <div class="total-info-label">
+                                        <span class="total-info-icon">⚖️</span>
+                                        <span class="total-info-text">Общая масса:</span>
+                                    </div>
+                                    <div class="total-info-value" id="totalWeightValue">
+                                        0 кг
                                     </div>
                                 </div>
                             </div>
