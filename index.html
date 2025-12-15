@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="auth.css">
     <script src="https://unpkg.com/html5-qrcode"></script>
+    <script src="jsQR.js"></script>
 </head>
 <body>
     <div class="container auth-container">
@@ -19,7 +20,7 @@
 
         <main class="auth-main">
             <h1>Авторизация</h1>
-            
+
             <div class="auth-card">
                 <div class="qr-scanner-section">
                     <div class="scanner-placeholder" id="scannerPlaceholder" onclick="startQRScanner()">
@@ -29,17 +30,17 @@
                             Нажмите чтобы включить камеру и отсканировать QR-код сотрудника
                         </div>
                     </div>
-                    
+
                     <div id="qr-reader">
                         <div class="scanner-frame"></div>
                         <div class="scanning-indicator"></div>
                     </div>
-                    
+
                     <div class="scanner-instructions" id="scannerInstructions">
                         <p>Наведите камеру на QR-код сотрудника</p>
                         <p><small>Расположите QR-код внутри зеленой рамки</small></p>
                     </div>
-                    
+
                     <div class="scanner-controls" id="scannerControls" style="display: none;">
                         <button id="stopScannerBtn" class="btn-scan btn-scan-stop" onclick="stopQRScanner()">
                             <span>⏹️</span> Остановить сканер
@@ -50,9 +51,9 @@
                 <div class="manual-auth-section">
                     <h3>Или введите код вручную</h3>
                     <div class="manual-input">
-                        <input type="text" 
-                               id="employeeCode" 
-                               placeholder="EMP001" 
+                        <input type="text"
+                               id="employeeCode"
+                               placeholder="EMP001"
                                maxlength="10"
                                pattern="[A-Z0-9]{3,10}"
                                inputmode="text"
