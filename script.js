@@ -1,12 +1,11 @@
-// script.js - ПОЛНЫЙ ФАЙЛ СО ВСЕМИ ФУНКЦИЯМИ - ОЧИСТКА ПОСЛЕ ОТПРАВКИ
+// script.js - УПРОЩЕННАЯ ВЕРСИЯ БЕЗ КОЛИЧЕСТВА
 
 // API конфигурация (для будущей интеграции)
-const API_BASE_URL = 'http://localhost:3000/api'; // Измените на ваш сервер
+const API_BASE_URL = 'http://localhost:3000/api';
 
 // Глобальные переменные
 let currentCargoType = 'euro-pallet';
 let currentWeight = 1;
-let currentQuantity = 1;
 let currentDimensions = {
     length: 120,
     width: 80,
@@ -28,17 +27,13 @@ document.addEventListener('DOMContentLoaded', function() {
     // Обновляем статистику
     updateStats();
     updateEmployeeInfo();
-    updateCurrentStats(); // Обновляем статистику текущего груза
+    updateCurrentStats();
     
     // Настройка полей ввода
     setupInputFields();
     
-    // Настройка поля ввода веса (для обратной совместимости)
-    setupWeightInput();
-    
-    // Обновляем отображения (для обратной совместимости)
+    // Обновляем отображения
     updateDimensionDisplays();
-    updateQuantityDisplay();
     
     // Получаем ссылку на модальное окно
     cargoListModal = document.getElementById('cargoListModal');
@@ -46,6 +41,9 @@ document.addEventListener('DOMContentLoaded', function() {
     // Инициализация планшетной оптимизации
     initTabletOptimization();
     handleTabletClicks();
+    
+    // Выбираем тип груза по умолчанию
+    selectCargoType('euro-pallet');
     
     console.log('Инициализация завершена. Грузов в списке:', cargoList.length);
 });
@@ -95,7 +93,7 @@ function resetPhoto() {
     }
 }
 
-// НАСТРОЙКА ПОЛЕЙ ВВОДА (НОВАЯ ФУНКЦИЯ)
+// НАСТРОЙКА ПОЛЕЙ ВВОДА
 function setupInputFields() {
     // Вес
     const weightInput = document.getElementById('weightInput');
@@ -126,41 +124,6 @@ function setupInputFields() {
             });
         }
     });
-    
-    // Количество
-    const quantityInput = document.getElementById('quantityInput');
-    if (quantityInput) {
-        quantityInput.value = currentQuantity || 1;
-        quantityInput.addEventListener('change', function() {
-            this.value = this.value.replace(/[^0-9]/g, '');
-            const quantity = parseInt(this.value) || 1;
-            if (quantity >= 1 && quantity <= 100) {
-                currentQuantity = quantity;
-                updateCurrentStats();
-            }
-        });
-    }
-}
-
-// НАСТРОЙКА ПОЛЯ ВВОДА ВЕСА (для обратной совместимости)
-function setupWeightInput() {
-    const weightInput = document.getElementById('weightInput');
-    if (weightInput) {
-        weightInput.value = currentWeight || 1;
-        
-        weightInput.addEventListener('input', function() {
-            this.value = this.value.replace(/[^0-9]/g, '');
-            const weight = parseInt(this.value) || 1;
-            if (weight >= 1 && weight <= 10000) {
-                currentWeight = weight;
-                updateCurrentStats();
-            }
-        });
-        
-        weightInput.addEventListener('focus', function() {
-            this.select();
-        });
-    }
 }
 
 // НОВЫЕ ФУНКЦИИ ДЛЯ ОБНОВЛЕННОГО ИНТЕРФЕЙСА
@@ -184,17 +147,6 @@ function updateDimensionFromInput(dimension) {
         if (value < 10) value = 10;
         if (value > 1000) value = 1000;
         currentDimensions[dimension] = value;
-        updateCurrentStats();
-    }
-}
-
-function updateQuantityFromInput() {
-    const quantityInput = document.getElementById('quantityInput');
-    if (quantityInput) {
-        let quantity = parseInt(quantityInput.value) || 1;
-        if (quantity < 1) quantity = 1;
-        if (quantity > 100) quantity = 100;
-        currentQuantity = quantity;
         updateCurrentStats();
     }
 }
@@ -225,16 +177,6 @@ function changeParam(param, delta) {
                 }
             }
             break;
-            
-        case 'quantity':
-            let newQuantity = (currentQuantity || 1) + delta;
-            if (newQuantity >= 1 && newQuantity <= 100) {
-                currentQuantity = newQuantity;
-                const quantityInput = document.getElementById('quantityInput');
-                if (quantityInput) quantityInput.value = currentQuantity;
-                updateCurrentStats();
-            }
-            break;
     }
 }
 
@@ -244,7 +186,7 @@ function updateCurrentStats() {
     if (currentDimensions) {
         const volume = (currentDimensions.length * 
                        currentDimensions.width * 
-                       currentDimensions.height) / 1000000; // в м³
+                       currentDimensions.height) / 1000000;
         
         const currentVolumeElement = document.getElementById('currentVolume');
         if (currentVolumeElement) {
@@ -252,24 +194,20 @@ function updateCurrentStats() {
         }
     }
     
-    // ИСПРАВЛЕНИЕ: Общий вес = просто введенный вес, НЕ умножаем на количество
-    const totalWeight = currentWeight; // Просто текущий вес, без умножения на количество
+    // Общий вес = просто введенный вес
     const currentTotalWeightElement = document.getElementById('currentTotalWeight');
     if (currentTotalWeightElement) {
-        currentTotalWeightElement.textContent = totalWeight + ' кг';
+        currentTotalWeightElement.textContent = currentWeight + ' кг';
     }
 }
 
 // ОБНОВЛЕНИЕ ОБЩЕЙ СТАТИСТИКИ
 function updateTotalStats() {
-    // Обновляем статистику из общего списка
     updateStats();
-    
-    // Показываем уведомление
     showNotification('Статистика обновлена');
 }
 
-// ОТПРАВКА И СБРОС - ВАЖНОЕ ИСПРАВЛЕНИЕ!
+// ОТПРАВКА И СБРОС
 function sendToOperatorAndReset() {
     if (!cargoList || cargoList.length === 0) {
         showNotification('Нет грузов для отправки', true);
@@ -309,11 +247,6 @@ function resetAllParams() {
         if (input) input.value = currentDimensions[dim];
     });
     
-    // Сбрасываем количество
-    currentQuantity = 1;
-    const quantityInput = document.getElementById('quantityInput');
-    if (quantityInput) quantityInput.value = currentQuantity;
-    
     // Сбрасываем фото
     resetPhoto();
     
@@ -332,7 +265,7 @@ function clearAllCargo() {
     }
 }
 
-// ФУНКЦИИ ДЛЯ РАЗМЕРОВ (для обратной совместимости)
+// ФУНКЦИИ ДЛЯ РАЗМЕРОВ
 function changeDimension(dimension, delta) {
     if (currentDimensions && currentDimensions[dimension] !== undefined) {
         let newValue = currentDimensions[dimension] + delta;
@@ -341,7 +274,7 @@ function changeDimension(dimension, delta) {
             // Обновляем поле ввода
             const input = document.getElementById(dimension + 'Input');
             if (input) input.value = newValue;
-            // Обновляем отображение (для обратной совместимости)
+            // Обновляем отображение
             updateDimensionDisplay(dimension);
             // Обновляем статистику
             updateCurrentStats();
@@ -360,28 +293,6 @@ function updateDimensionDisplays() {
     updateDimensionDisplay('length');
     updateDimensionDisplay('width');
     updateDimensionDisplay('height');
-}
-
-// ФУНКЦИИ ДЛЯ КОЛИЧЕСТВА (для обратной совместимости)
-function changeQuantity(delta) {
-    let newQuantity = (currentQuantity || 1) + delta;
-    if (newQuantity >= 1 && newQuantity <= 100) {
-        currentQuantity = newQuantity;
-        // Обновляем поле ввода
-        const quantityInput = document.getElementById('quantityInput');
-        if (quantityInput) quantityInput.value = newQuantity;
-        // Обновляем отображение (для обратной совместимости)
-        updateQuantityDisplay();
-        // Обновляем статистику
-        updateCurrentStats();
-    }
-}
-
-function updateQuantityDisplay() {
-    const element = document.getElementById('quantityValue');
-    if (element && currentQuantity !== undefined) {
-        element.textContent = currentQuantity;
-    }
 }
 
 // ФУНКЦИИ ДЛЯ ТИПОВ ГРУЗОВ
@@ -425,13 +336,13 @@ function setDefaultDimensionsForType(type) {
             input.value = currentDimensions[dim];
         }
     });
-    // Обновляем отображения (для обратной совместимости)
+    // Обновляем отображения
     updateDimensionDisplays();
     // Обновляем статистику
     updateCurrentStats();
 }
 
-// ОСНОВНАЯ ФУНКЦИЯ СОХРАНЕНИЯ С УЧЕТОМ КОЛИЧЕСТВА
+// ОСНОВНАЯ ФУНКЦИЯ СОХРАНЕНИЯ ГРУЗА (теперь сохраняет только один экземпляр)
 function saveCargo() {
     console.log('Сохранение груза...');
     
@@ -445,69 +356,37 @@ function saveCargo() {
         currentWeight = weight;
     }
     
-    const quantity = currentQuantity || 1;
-    
     // Проверяем, что все данные есть
     if (!currentCargoType || !currentDimensions) {
         showNotification('Ошибка: не выбран тип груза', true);
         return;
     }
     
-    // Создаем ключ для группировки
-    const cargoKey = `${currentCargoType}_${weight}_${currentDimensions.length}_${currentDimensions.width}_${currentDimensions.height}_${quantity}`;
-    
-    // Проверяем, есть ли уже такой груз в списке
-    let existingCargo = null;
-    let existingIndex = -1;
-    
-    for (let i = 0; i < cargoList.length; i++) {
-        const cargo = cargoList[i];
-        const cargoItemKey = `${cargo.type}_${cargo.weight}_${cargo.length}_${cargo.width}_${cargo.height}_${cargo.quantity}`;
-        
-        if (cargoKey === cargoItemKey) {
-            existingCargo = cargo;
-            existingIndex = i;
-            break;
-        }
-    }
-    
     const photo = document.getElementById('cargoPhoto')?.src || null;
     
-    if (existingCargo) {
-        // Обновляем существующий груз - увеличиваем количество
-        cargoList[existingIndex].quantity += quantity;
-        cargoList[existingIndex].timestamp = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-        cargoList[existingIndex].photo = photo || cargoList[existingIndex].photo;
-        
-        showNotification(`Добавлено ${quantity} шт. к существующему грузу. Всего: ${cargoList[existingIndex].quantity} шт.`);
-    } else {
-        // Создаем новый груз
-        const volume = (currentDimensions.length * 
-                        currentDimensions.width * 
-                        currentDimensions.height) / 1000000;
-        
-        const cargo = {
-            id: Date.now(),
-            type: currentCargoType,
-            typeName: getCargoTypeName(currentCargoType),
-            weight: weight,
-            length: currentDimensions.length,
-            width: currentDimensions.width,
-            height: currentDimensions.height,
-            volume: volume,
-            quantity: quantity,
-            timestamp: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
-            photo: photo,
-            cargoKey: cargoKey,
-            // Дополнительные поля для SQL
-            employeeId: getCurrentEmployeeId(),
-            date: new Date().toISOString().split('T')[0],
-            time: new Date().toLocaleTimeString('ru-RU', {hour12: false})
-        };
-        
-        cargoList.push(cargo);
-        showNotification(`Добавлен новый груз: ${quantity} шт.`);
-    }
+    // Рассчитываем объем
+    const volume = (currentDimensions.length * 
+                   currentDimensions.width * 
+                   currentDimensions.height) / 1000000;
+    
+    // Создаем новый груз (всегда один экземпляр)
+    const cargo = {
+        id: Date.now(),
+        type: currentCargoType,
+        typeName: getCargoTypeName(currentCargoType),
+        weight: weight,
+        length: currentDimensions.length,
+        width: currentDimensions.width,
+        height: currentDimensions.height,
+        volume: volume,
+        timestamp: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
+        photo: photo,
+        employeeId: getCurrentEmployeeId(),
+        date: new Date().toISOString().split('T')[0],
+        time: new Date().toLocaleTimeString('ru-RU', {hour12: false})
+    };
+    
+    cargoList.push(cargo);
     
     // Сохраняем в localStorage
     localStorage.setItem('cargoList', JSON.stringify(cargoList));
@@ -518,21 +397,16 @@ function saveCargo() {
     // Сбрасываем фото
     resetPhoto();
     
-    // Сбрасываем количество к 1
-    if (currentQuantity !== undefined) {
-        currentQuantity = 1;
-        const quantityInput = document.getElementById('quantityInput');
-        if (quantityInput) quantityInput.value = 1;
-        updateQuantityDisplay();
-    }
-    
     // Обновляем статистику текущего груза
     updateCurrentStats();
+    
+    // Показываем уведомление
+    showNotification(`Груз сохранен! Всего грузов: ${cargoList.length}`);
     
     console.log('Груз сохранен. Всего грузов:', cargoList.length);
 }
 
-// ФУНКЦИЯ ОТОБРАЖЕНИЯ СПИСКА ГРУЗОВ С ГРУППИРОВКОЙ
+// ФУНКЦИЯ ОТОБРАЖЕНИЯ СПИСКА ГРУЗОВ
 function showCargoListModal() {
     console.log('Показываем модальное окно списка грузов...');
     
@@ -549,73 +423,40 @@ function showCargoListModal() {
     if (!cargoList || cargoList.length === 0) {
         content.innerHTML = '<div class="empty-state">Нет сохраненных грузов</div>';
     } else {
-        // Группируем грузы по ключу
-        const groupedCargo = {};
-        
-        cargoList.forEach(cargo => {
-            const key = cargo.cargoKey || `${cargo.type}_${cargo.weight}_${cargo.length}_${cargo.width}_${cargo.height}_${cargo.quantity}`;
-            
-            if (!groupedCargo[key]) {
-                groupedCargo[key] = {
-                    type: cargo.type,
-                    typeName: cargo.typeName,
-                    weight: cargo.weight,
-                    length: cargo.length,
-                    width: cargo.width,
-                    height: cargo.height,
-                    volume: cargo.volume,
-                    quantity: cargo.quantity,
-                    photo: cargo.photo,
-                    items: [cargo],
-                    firstItemId: cargo.id
-                };
-            } else {
-                groupedCargo[key].quantity += cargo.quantity;
-                groupedCargo[key].items.push(cargo);
-            }
-        });
-        
-        // Создаем элементы для сгруппированных грузов
-        Object.values(groupedCargo).forEach((group, index) => {
+        // Отображаем каждый груз отдельно (теперь нет группировки)
+        cargoList.forEach((cargo, index) => {
             const cargoItem = document.createElement('div');
             cargoItem.className = 'cargo-list-item';
-            
-            const totalVolume = group.volume * group.quantity;
-            // ВНИМАНИЕ: Для отображения показываем просто вес, без умножения на количество
-            const displayWeight = group.weight;
             
             cargoItem.innerHTML = `
                 <div class="cargo-list-header">
                     <div class="cargo-type-badge">
-                        <span class="cargo-emoji-small">${getCargoEmoji(group.type)}</span>
-                        <span>${group.typeName}</span>
-                        ${group.quantity > 1 ? `<span class="cargo-quantity-badge">×${group.quantity}</span>` : ''}
+                        <span class="cargo-emoji-small">${getCargoEmoji(cargo.type)}</span>
+                        <span>${cargo.typeName}</span>
                     </div>
-                    <span class="cargo-weight">${displayWeight} кг</span>
+                    <span class="cargo-weight">${cargo.weight} кг</span>
                 </div>
                 <div class="cargo-details">
                     <div class="detail-item">
-                        <span class="detail-label">Вес (шт.)</span>
-                        <span class="detail-value">${group.weight} кг</span>
+                        <span class="detail-label">Вес</span>
+                        <span class="detail-value">${cargo.weight} кг</span>
                     </div>
                     <div class="detail-item">
                         <span class="detail-label">Размеры</span>
-                        <span class="detail-value">${group.length}×${group.width}×${group.height}</span>
+                        <span class="detail-value">${cargo.length}×${cargo.width}×${cargo.height}</span>
                     </div>
                     <div class="detail-item">
-                        <span class="detail-label">Объем (шт.)</span>
-                        <span class="detail-value">${group.volume.toFixed(2)} м³</span>
+                        <span class="detail-label">Объем</span>
+                        <span class="detail-value">${cargo.volume.toFixed(2)} м³</span>
                     </div>
                     <div class="detail-item">
-                        <span class="detail-label">Общий объем</span>
-                        <span class="detail-value">${totalVolume.toFixed(2)} м³</span>
+                        <span class="detail-label">Время</span>
+                        <span class="detail-value">${cargo.timestamp || ''}</span>
                     </div>
                 </div>
-                ${group.photo ? `<img src="${group.photo}" class="cargo-photo-preview" alt="Фото груза">` : ''}
+                ${cargo.photo ? `<img src="${cargo.photo}" class="cargo-photo-preview" alt="Фото груза">` : ''}
                 <div class="cargo-group-controls">
-                    <button class="btn-quantity-change" onclick="changeGroupQuantity(${group.firstItemId}, -1)">-1</button>
-                    <button class="btn-quantity-change" onclick="changeGroupQuantity(${group.firstItemId}, 1)">+1</button>
-                    <button class="btn-remove-group" onclick="removeCargoGroup(${group.firstItemId})">Удалить все</button>
+                    <button class="btn-remove-group" onclick="removeCargoItem(${cargo.id})">Удалить</button>
                 </div>
             `;
             
@@ -632,88 +473,13 @@ function showCargoListModal() {
     console.log('Модальное окно показано');
 }
 
-// ФУНКЦИЯ ИЗМЕНЕНИЯ КОЛИЧЕСТВА В ГРУППЕ
-function changeGroupQuantity(firstItemId, delta) {
-    // Находим первый элемент группы
-    const firstItemIndex = cargoList.findIndex(item => item.id === firstItemId);
-    
-    if (firstItemIndex === -1) return;
-    
-    const firstItem = cargoList[firstItemIndex];
-    const cargoKey = firstItem.cargoKey || `${firstItem.type}_${firstItem.weight}_${firstItem.length}_${firstItem.width}_${firstItem.height}_${firstItem.quantity}`;
-    
-    // Находим все элементы этой группы
-    const groupItems = cargoList.filter(item => {
-        const itemKey = item.cargoKey || `${item.type}_${item.weight}_${item.length}_${item.width}_${item.height}_${item.quantity}`;
-        return itemKey === cargoKey;
-    });
-    
-    if (groupItems.length === 0) return;
-    
-    // Если уменьшаем количество и оно станет 0, удаляем всю группу
-    if (delta === -1 && groupItems.length === 1 && groupItems[0].quantity === 1) {
-        removeCargoGroup(firstItemId);
-        return;
-    }
-    
-    // Изменяем количество в первом элементе группы
-    const newQuantity = groupItems[0].quantity + delta;
-    
-    if (newQuantity < 1) {
-        // Если количество стало 0, удаляем группу
-        removeCargoGroup(firstItemId);
-        return;
-    }
-    
-    // Обновляем количество в первом элементе
-    cargoList[firstItemIndex].quantity = newQuantity;
-    
-    // Удаляем остальные элементы группы (они теперь не нужны)
-    for (let i = cargoList.length - 1; i >= 0; i--) {
-        if (i !== firstItemIndex) {
-            const item = cargoList[i];
-            const itemKey = item.cargoKey || `${item.type}_${item.weight}_${item.length}_${item.width}_${item.height}_${item.quantity}`;
-            if (itemKey === cargoKey) {
-                cargoList.splice(i, 1);
-            }
-        }
-    }
-    
-    // Сохраняем изменения
+// УДАЛЕНИЕ ОДНОГО ГРУЗА
+function removeCargoItem(cargoId) {
+    cargoList = cargoList.filter(item => item.id !== cargoId);
     localStorage.setItem('cargoList', JSON.stringify(cargoList));
     updateStats();
-    showCargoListModal(); // Обновляем отображение
-    showNotification(`Количество изменено: ${newQuantity} шт.`);
-}
-
-// ФУНКЦИЯ УДАЛЕНИЯ ВСЕЙ ГРУППЫ
-function removeCargoGroup(firstItemId) {
-    // Находим первый элемент группы
-    const firstItemIndex = cargoList.findIndex(item => item.id === firstItemId);
-    
-    if (firstItemIndex === -1) return;
-    
-    const firstItem = cargoList[firstItemIndex];
-    const cargoKey = firstItem.cargoKey || `${firstItem.type}_${firstItem.weight}_${firstItem.length}_${firstItem.width}_${firstItem.height}_${firstItem.quantity}`;
-    
-    // Удаляем все элементы группы
-    cargoList = cargoList.filter(item => {
-        const itemKey = item.cargoKey || `${item.type}_${item.weight}_${item.length}_${item.width}_${item.height}_${item.quantity}`;
-        return itemKey !== cargoKey;
-    });
-    
-    // Сохраняем изменения
-    localStorage.setItem('cargoList', JSON.stringify(cargoList));
-    updateStats();
-    
-    // Закрываем модальное окно если список пуст
-    if (cargoList.length === 0) {
-        closeCargoListModal();
-    } else {
-        showCargoListModal(); // Обновляем отображение
-    }
-    
-    showNotification('Группа грузов удалена');
+    showCargoListModal();
+    showNotification('Груз удален');
 }
 
 // ФУНКЦИЯ ЗАКРЫТИЯ МОДАЛЬНОГО ОКНА
@@ -734,7 +500,7 @@ function showCargoStatsPopup() {
     
     if (!popup || !overlay || !itemsContainer) {
         console.error('Не найдены элементы окна статистики');
-        showCargoListModal(); // Показываем старое окно как запасной вариант
+        showCargoListModal();
         return;
     }
     
@@ -744,65 +510,31 @@ function showCargoStatsPopup() {
     if (!cargoList || cargoList.length === 0) {
         itemsContainer.innerHTML = '<div class="cargo-stats-empty">Нет сохраненных грузов</div>';
     } else {
-        // Группируем грузы по ключу (как в старой функции)
-        const groupedCargo = {};
-        
-        cargoList.forEach(cargo => {
-            const key = cargo.cargoKey || `${cargo.type}_${cargo.weight}_${cargo.length}_${cargo.width}_${cargo.height}_${cargo.quantity}`;
-            
-            if (!groupedCargo[key]) {
-                groupedCargo[key] = {
-                    type: cargo.type,
-                    typeName: cargo.typeName,
-                    weight: cargo.weight,
-                    length: cargo.length,
-                    width: cargo.width,
-                    height: cargo.height,
-                    volume: cargo.volume,
-                    quantity: cargo.quantity,
-                    items: [cargo],
-                    firstItemId: cargo.id
-                };
-            } else {
-                groupedCargo[key].quantity += cargo.quantity;
-                groupedCargo[key].items.push(cargo);
-            }
-        });
-        
-        // Создаем элементы для сгруппированных грузов (упрощенный вид)
-        Object.values(groupedCargo).forEach((group, index) => {
+        // Отображаем каждый груз отдельно
+        cargoList.forEach((cargo, index) => {
             const cargoItem = document.createElement('div');
             cargoItem.className = 'cargo-stats-item';
-            
-            const totalVolume = group.volume * group.quantity;
-            // ВНИМАНИЕ: Для отображения показываем просто вес, без умножения на количество
-            const displayWeight = group.weight;
             
             cargoItem.innerHTML = `
                 <div class="cargo-stats-item-header">
                     <div class="cargo-stats-item-type">
-                        <span>${getCargoEmoji(group.type)}</span>
-                        <span>${group.typeName}</span>
-                        ${group.quantity > 1 ? `<span class="cargo-stats-item-quantity">×${group.quantity}</span>` : ''}
+                        <span>${getCargoEmoji(cargo.type)}</span>
+                        <span>${cargo.typeName}</span>
                     </div>
-                    <span style="font-size: 12px; color: #666;">${displayWeight} кг</span>
+                    <span style="font-size: 12px; color: #666;">${cargo.weight} кг</span>
                 </div>
                 <div class="cargo-stats-item-details">
                     <div class="cargo-stats-detail">
                         <span class="cargo-stats-detail-label">Размеры</span>
-                        <span class="cargo-stats-detail-value">${group.length}×${group.width}×${group.height}</span>
+                        <span class="cargo-stats-detail-value">${cargo.length}×${cargo.width}×${cargo.height}</span>
                     </div>
                     <div class="cargo-stats-detail">
                         <span class="cargo-stats-detail-label">Объем</span>
-                        <span class="cargo-stats-detail-value">${totalVolume.toFixed(2)} м³</span>
-                    </div>
-                    <div class="cargo-stats-detail">
-                        <span class="cargo-stats-detail-label">Вес (шт.)</span>
-                        <span class="cargo-stats-detail-value">${group.weight} кг</span>
+                        <span class="cargo-stats-detail-value">${cargo.volume.toFixed(2)} м³</span>
                     </div>
                     <div class="cargo-stats-detail">
                         <span class="cargo-stats-detail-label">Время</span>
-                        <span class="cargo-stats-detail-value">${group.items[0].timestamp || ''}</span>
+                        <span class="cargo-stats-detail-value">${cargo.timestamp || ''}</span>
                     </div>
                 </div>
             `;
@@ -817,23 +549,14 @@ function showCargoStatsPopup() {
             totalsContainer.innerHTML = '';
         } else {
             // Вычисляем общие показатели
-            let totalItems = 0;
-            let sumWeight = 0;
-            let sumVolume = 0;
-            
-            // ИСПРАВЛЕНИЕ: Теперь считаем общую массу как сумму весов каждого сохраненного груза
-            // Каждый сохраненный груз имеет свой вес, который НЕ умножается на количество
-            cargoList.forEach(cargo => {
-                totalItems += cargo.quantity || 1;
-                // ВАЖНО: Общая масса = просто сумма весов каждого груза (без умножения на количество)
-                sumWeight += cargo.weight;
-                sumVolume += cargo.volume * (cargo.quantity || 1);
-            });
+            let totalItems = cargoList.length;
+            let sumWeight = cargoList.reduce((sum, cargo) => sum + cargo.weight, 0);
+            let sumVolume = cargoList.reduce((sum, cargo) => sum + cargo.volume, 0);
             
             totalsContainer.innerHTML = `
                 <div style="margin-top: 15px; padding: 10px; background: #f8f9fa; border-radius: 6px; font-size: 12px;">
                     <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
-                        <span>Всего мест:</span>
+                        <span>Всего грузов:</span>
                         <span style="font-weight: bold;">${totalItems}</span>
                     </div>
                     <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
@@ -865,21 +588,14 @@ function closeCargoStatsPopup() {
     if (overlay) overlay.classList.remove('active');
 }
 
-// ОБНОВЛЕНИЕ СТАТИСТИКИ - ВАЖНОЕ ИСПРАВЛЕНИЕ!
+// ОБНОВЛЕНИЕ СТАТИСТИКИ
 function updateStats() {
-    const cargoCount = document.getElementById('cargoCount');
-    const totalWeight = document.getElementById('totalWeight');
-    const totalVolume = document.getElementById('totalVolume');
-    
-    // Также обновляем новые элементы
+    // Обновляем новые элементы
     const totalCargoCount = document.getElementById('totalCargoCount');
     const totalWeightValue = document.getElementById('totalWeightValue');
     const totalVolumeValue = document.getElementById('totalVolumeValue');
     
     if (!cargoList || cargoList.length === 0) {
-        if (cargoCount) cargoCount.textContent = '0';
-        if (totalWeight) totalWeight.textContent = '0 кг';
-        if (totalVolume) totalVolume.textContent = '0 м³';
         if (totalCargoCount) totalCargoCount.textContent = '0';
         if (totalWeightValue) totalWeightValue.textContent = '0 кг';
         if (totalVolumeValue) totalVolumeValue.textContent = '0 м³';
@@ -887,25 +603,11 @@ function updateStats() {
     }
     
     // Вычисляем общие показатели
-    let totalItems = 0;
-    let sumWeight = 0;  // Общая масса = сумма весов всех сохраненных грузов
-    let sumVolume = 0;  // Общий объем = сумма (объем * количество)
+    let totalItems = cargoList.length;
+    let sumWeight = cargoList.reduce((sum, cargo) => sum + cargo.weight, 0);
+    let sumVolume = cargoList.reduce((sum, cargo) => sum + cargo.volume, 0);
     
-    // ИСПРАВЛЕНИЕ: Теперь общая масса - это просто сумма весов всех сохраненных грузов
-    // Каждый сохраненный груз имеет свой собственный вес, который НЕ умножается на количество
-    cargoList.forEach(cargo => {
-        totalItems += cargo.quantity || 1;
-        // ВАЖНО: Общая масса = просто сумма весов каждого груза
-        sumWeight += cargo.weight;
-        sumVolume += cargo.volume * (cargo.quantity || 1);
-    });
-    
-    // Обновляем старые элементы (для обратной совместимости)
-    if (cargoCount) cargoCount.textContent = totalItems;
-    if (totalWeight) totalWeight.textContent = sumWeight + ' кг';
-    if (totalVolume) totalVolume.textContent = sumVolume.toFixed(2) + ' м³';
-    
-    // Обновляем новые элементы
+    // Обновляем элементы
     if (totalCargoCount) totalCargoCount.textContent = totalItems;
     if (totalWeightValue) totalWeightValue.textContent = sumWeight + ' кг';
     if (totalVolumeValue) totalVolumeValue.textContent = sumVolume.toFixed(2) + ' м³';
@@ -924,24 +626,16 @@ function updateModalTotals() {
         return;
     }
     
-    // Вычисляем с учетом исправленной логики
-    let totalItems = 0;
-    let sumWeight = 0;  // Общая масса = сумма весов всех сохраненных грузов
-    let sumVolume = 0;  // Общий объем = сумма (объем * количество)
-    
-    cargoList.forEach(cargo => {
-        totalItems += cargo.quantity || 1;
-        // ВАЖНО: Общая масса = просто сумма весов каждого груза
-        sumWeight += cargo.weight;
-        sumVolume += cargo.volume * (cargo.quantity || 1);
-    });
+    let totalItems = cargoList.length;
+    let sumWeight = cargoList.reduce((sum, cargo) => sum + cargo.weight, 0);
+    let sumVolume = cargoList.reduce((sum, cargo) => sum + cargo.volume, 0);
     
     if (modalTotalWeight) modalTotalWeight.textContent = sumWeight + ' кг';
     if (modalTotalVolume) modalTotalVolume.textContent = sumVolume.toFixed(2) + ' м³';
     if (modalCargoCount) modalCargoCount.textContent = totalItems;
 }
 
-// ФУНКЦИЯ ОТПРАВКИ ОПЕРАТОРУ - ВАЖНОЕ ИСПРАВЛЕНИЕ!
+// ФУНКЦИЯ ОТПРАВКИ ОПЕРАТОРУ
 function sendToOperator() {
     if (!cargoList || cargoList.length === 0) {
         showNotification('Нет грузов для отправки', true);
@@ -954,10 +648,9 @@ function sendToOperator() {
         cargoList: cargoList,
         timestamp: new Date().toLocaleString('ru-RU'),
         summary: {
-            totalItems: cargoList.reduce((sum, cargo) => sum + (cargo.quantity || 1), 0),
-            // ИСПРАВЛЕНИЕ: Общая масса = сумма весов каждого груза (без умножения на количество)
+            totalItems: cargoList.length,
             totalWeight: cargoList.reduce((sum, cargo) => sum + cargo.weight, 0),
-            totalVolume: cargoList.reduce((sum, cargo) => sum + (cargo.volume * (cargo.quantity || 1)), 0)
+            totalVolume: cargoList.reduce((sum, cargo) => sum + cargo.volume, 0)
         }
     };
     
@@ -972,7 +665,7 @@ function sendToOperator() {
     shipments.push(dataToSend);
     localStorage.setItem('shipments', JSON.stringify(shipments));
     
-    // ВАЖНОЕ ИСПРАВЛЕНИЕ: Очищаем список после отправки!
+    // Очищаем список после отправки
     cargoList = [];
     localStorage.removeItem('cargoList');
     updateStats();
@@ -1180,11 +873,11 @@ window.onclick = function(event) {
 document.addEventListener('keydown', function(event) {
     if (event.key === 'Escape') {
         closeCargoStatsPopup();
-        closeCargoListModal(); // Закрываем и старое окно тоже
+        closeCargoListModal();
     }
 });
 
-// ДОБАВЛЯЕМ СТИЛИ ДЛЯ АНИМАЦИЙ И ГРУППИРОВКИ
+// ДОБАВЛЯЕМ СТИЛИ ДЛЯ АНИМАЦИЙ
 function addAdditionalStyles() {
     const additionalStyles = document.createElement('style');
     additionalStyles.textContent = `
@@ -1240,15 +933,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // ЭКСПОРТ ФУНКЦИЙ ДЛЯ HTML
 window.changeDimension = changeDimension;
-window.changeQuantity = changeQuantity;
 window.takePhoto = takePhoto;
 window.selectCargoType = selectCargoType;
 window.saveCargo = saveCargo;
 window.sendToOperator = sendToOperator;
 window.showCargoListModal = showCargoListModal;
 window.closeCargoListModal = closeCargoListModal;
-window.changeGroupQuantity = changeGroupQuantity;
-window.removeCargoGroup = removeCargoGroup;
+window.removeCargoItem = removeCargoItem;
 window.updateEmployeeInfo = updateEmployeeInfo;
 window.logout = logout;
 window.showNotification = showNotification;
@@ -1259,7 +950,6 @@ window.closeCargoStatsPopup = closeCargoStatsPopup;
 window.changeParam = changeParam;
 window.updateWeightFromInput = updateWeightFromInput;
 window.updateDimensionFromInput = updateDimensionFromInput;
-window.updateQuantityFromInput = updateQuantityFromInput;
 window.updateCurrentStats = updateCurrentStats;
 window.updateTotalStats = updateTotalStats;
 window.sendToOperatorAndReset = sendToOperatorAndReset;
