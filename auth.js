@@ -346,13 +346,15 @@ function resetScannerUI() {
     `;
 }
 
-// ОБРАБОТКА УСПЕШНОГО СКАНИРОВАНИЯ
+// Улучшенная функция обработки QR
 function handleQRScanSuccess(decodedText) {
     console.log('=== QR SCAN SUCCESS ===');
     console.log('Raw decoded text:', decodedText);
 
+    // Защита от повторного сканирования
     if (decodedText === lastScannedCode) {
         console.log('Duplicate scan, ignoring');
+        showAuthStatus('✅ Код уже считан', 'info');
         return;
     }
 
@@ -368,37 +370,37 @@ function handleQRScanSuccess(decodedText) {
         const scannerFrame = document.querySelector('.scanner-frame');
         if (scannerFrame) {
             scannerFrame.style.borderColor = '#00ff00';
-            scannerFrame.style.boxShadow = '0 0 0 1000px rgba(0, 255, 0, 0.2)';
+            scannerFrame.style.boxShadow = '0 0 0 1000px rgba(0, 255, 0, 0.3)';
 
+            // Сброс через время
             setTimeout(() => {
                 scannerFrame.style.borderColor = '#00ff00';
-                scannerFrame.style.boxShadow = '0 0 0 1000px rgba(0, 0, 0, 0.5)';
-            }, 300);
+                scannerFrame.style.boxShadow = '0 0 0 1000px rgba(0, 0, 0, 0.7)';
+            }, 1000);
         }
 
-        // Авторизуемся
+        // Авторизация с небольшой задержкой
         setTimeout(() => {
-            stopQRScanner();
-            setTimeout(() => {
-                authenticateEmployee(employeeCode);
-            }, 300);
-        }, 800);
+            authenticateEmployee(employeeCode);
+        }, 500);
 
     } else {
         console.log('Invalid QR format:', decodedText);
-        showAuthStatus(`❌ Неверный формат: "${decodedText}"`, 'error');
+        showAuthStatus(`❌ Неверный формат QR-кода`, 'error');
 
+        // Визуальная обратная связь об ошибке
         const scannerFrame = document.querySelector('.scanner-frame');
         if (scannerFrame) {
             scannerFrame.style.borderColor = '#ff0000';
-            scannerFrame.style.boxShadow = '0 0 0 1000px rgba(255, 0, 0, 0.2)';
+            scannerFrame.style.boxShadow = '0 0 0 1000px rgba(255, 0, 0, 0.3)';
 
             setTimeout(() => {
                 scannerFrame.style.borderColor = '#00ff00';
-                scannerFrame.style.boxShadow = '0 0 0 1000px rgba(0, 0, 0, 0.5)';
-            }, 500);
+                scannerFrame.style.boxShadow = '0 0 0 1000px rgba(0, 0, 0, 0.7)';
+            }, 1000);
         }
 
+        // Сброс через 3 секунды для нового сканирования
         setTimeout(() => {
             lastScannedCode = '';
         }, 3000);
