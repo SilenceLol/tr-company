@@ -1,4 +1,4 @@
-// auth.js - Исправленная версия для работы с window.jsQR
+// auth.js - Исправленная версия с правильным доступом к jsQR
 
 let videoStream = null;
 let isScannerActive = false;
@@ -8,21 +8,41 @@ let videoElement = null;
 let canvas = null;
 let ctx = null;
 
+// Получаем правильную ссылку на jsQR
+function getJsQR() {
+    // Пробуем разные способы доступа к jsQR
+    if (typeof window.jsQR !== 'undefined') {
+        if (typeof window.jsQR === 'function') {
+            return window.jsQR; // window.jsQR напрямую
+        } else if (typeof window.jsQR.default === 'function') {
+            return window.jsQR.default; // window.jsQR.default
+        } else if (window.jsQR.jsQR && typeof window.jsQR.jsQR === 'function') {
+            return window.jsQR.jsQR; // window.jsQR.jsQR
+        }
+    }
+
+    if (typeof jsQR !== 'undefined') {
+        if (typeof jsQR === 'function') {
+            return jsQR; // глобальный jsQR
+        } else if (typeof jsQR.default === 'function') {
+            return jsQR.default; // jsQR.default
+        }
+    }
+
+    console.error('jsQR not found in any accessible format');
+    return null;
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     console.log('NORD WHEEL Auth initialized');
-    console.log('jsQR available on window:', typeof window.jsQR !== 'undefined');
-    console.log('jsQR global:', typeof jsQR !== 'undefined');
 
-    // Проверяем, где находится функция
-    if (typeof window.jsQR !== 'undefined') {
-        console.log('✅ jsQR found on window.jsQR');
-        window.jsQR = window.jsQR; // Делаем глобально доступной
-    } else if (typeof jsQR !== 'undefined') {
-        console.log('✅ jsQR found as global jsQR');
-        window.jsQR = jsQR; // Копируем на window
-    } else {
-        console.error('❌ jsQR NOT found anywhere!');
-    }
+    // Проверяем доступность jsQR
+    const qrDecoder = getJsQR();
+    console.log('jsQR decoder:', qrDecoder ? 'AVAILABLE' : 'NOT FOUND');
+    console.log('window.jsQR:', window.jsQR);
+    console.log('typeof window.jsQR:', typeof window.jsQR);
+    console.log('window.jsQR?.default:', window.jsQR?.default);
+    console.log('typeof window.jsQR?.default:', typeof window.jsQR?.default);
 
     checkExistingSession();
 
@@ -41,14 +61,24 @@ async function startQRScanner() {
         return;
     }
 
-    // Проверяем, доступна ли библиотека jsQR
-    if (typeof window.jsQR === 'undefined') {
+    // Проверяем доступность jsQR
+    const qrDecoder = getJsQR();
+    if (!qrDecoder) {
         showAuthStatus('❌ Ошибка: библиотека сканера не загружена. Обновите страницу', 'error');
-        console.error('window.jsQR is not defined!');
+        console.error('jsQR decoder not available!');
+
+        // Показываем детали для отладки
+        console.log('Debug info:');
+        console.log('- window.jsQR:', window.jsQR);
+        console.log('- window.jsQR?.default:', window.jsQR?.default);
+        console.log('- typeof window.jsQR:', typeof window.jsQR);
+        console.log('- typeof window.jsQR?.default:', typeof window.jsQR?.default);
+        console.log('- window.jsQR keys:', Object.keys(window.jsQR || {}));
+
         return;
     }
 
-    console.log('jsQR function available:', typeof window.jsQR);
+    console.log('Using jsQR decoder:', qrDecoder);
 
     try {
         showAuthStatus('Запуск камеры...', 'loading');
@@ -67,7 +97,7 @@ async function startQRScanner() {
             <div class="scanning-indicator"></div>
         `;
 
-        await initQRScanner();
+        await initQRScanner(qrDecoder);
 
     } catch (error) {
         console.error('Scanner initialization error:', error);
@@ -77,9 +107,9 @@ async function startQRScanner() {
 }
 
 // ИНИЦИАЛИЗАЦИЯ QR-СКАНЕРА
-async function initQRScanner() {
+async function initQRScanner(qrDecoder) {
     try {
-        console.log('Initializing QR scanner...');
+        console.log('Initializing QR scanner with decoder:', qrDecoder);
 
         const qrReader = document.getElementById('qr-reader');
 
@@ -153,8 +183,8 @@ async function initQRScanner() {
             <p><small>Расположите QR-код внутри зеленой рамки</small></p>
         `;
 
-        // Запускаем сканирование
-        startQRScanning();
+        // Запускаем сканирование с правильным декодером
+        startQRScanning(qrDecoder);
 
     } catch (error) {
         console.error('Failed to initialize camera:', error);
@@ -163,14 +193,13 @@ async function initQRScanner() {
 }
 
 // ЗАПУСК ПРОЦЕССА СКАНИРОВАНИЯ
-function startQRScanning() {
-    if (!isScannerActive || !videoElement || !ctx) {
+function startQRScanning(qrDecoder) {
+    if (!isScannerActive || !videoElement || !ctx || !qrDecoder) {
         console.log('Cannot start scanning, missing components');
         return;
     }
 
-    console.log('Starting QR scanning process...');
-    console.log('Using window.jsQR:', typeof window.jsQR);
+    console.log('Starting QR scanning process with decoder:', qrDecoder);
 
     let lastScanTime = 0;
     const scanDelay = 500; // Сканируем каждые 500мс
@@ -214,15 +243,9 @@ function startQRScanning() {
             // Получаем данные изображения
             const imageData = ctx.getImageData(0, 0, width, height);
 
-            // Проверяем доступность jsQR
-            if (typeof window.jsQR === 'undefined') {
-                console.error('window.jsQR is undefined!');
-                return;
-            }
-
-            // Декодируем QR-код с помощью window.jsQR
-            console.log('Attempting to decode QR with window.jsQR...');
-            const code = window.jsQR(imageData.data, width, height, {
+            // Декодируем QR-код с помощью правильного декодера
+            console.log('Attempting to decode QR...');
+            const code = qrDecoder(imageData.data, width, height, {
                 inversionAttempts: 'dontInvert',
             });
 
@@ -609,34 +632,30 @@ function checkExistingSession() {
     }
 }
 
-// ДЛЯ ОТЛАДКИ - создаем глобальную переменную
-window.testQRScanner = function() {
-    console.log('Testing QR scanner...');
-    console.log('window.jsQR:', typeof window.jsQR);
+// ДЛЯ ОТЛАДКИ
+window.testQRDecoder = function() {
+    console.log('=== Testing QR Decoder ===');
+    const decoder = getJsQR();
+    console.log('Decoder function:', decoder);
+    console.log('Decoder type:', typeof decoder);
 
-    // Создаем тестовый canvas
-    const testCanvas = document.createElement('canvas');
-    const testCtx = testCanvas.getContext('2d');
-    testCanvas.width = 100;
-    testCanvas.height = 100;
+    if (decoder) {
+        console.log('✅ QR decoder available');
 
-    // Заполняем тестовыми данными
-    testCtx.fillStyle = 'white';
-    testCtx.fillRect(0, 0, 100, 100);
-    testCtx.fillStyle = 'black';
-    testCtx.fillRect(20, 20, 60, 60);
-
-    const testImageData = testCtx.getImageData(0, 0, 100, 100);
-
-    if (typeof window.jsQR === 'function') {
-        console.log('Calling window.jsQR...');
-        const result = window.jsQR(testImageData.data, 100, 100, {
-            inversionAttempts: 'dontInvert'
-        });
-        console.log('Test result:', result);
-        return result;
+        // Тестируем с пустыми данными
+        const testData = new Uint8ClampedArray(10000); // Пустой массив
+        try {
+            const result = decoder(testData, 100, 100, { inversionAttempts: 'dontInvert' });
+            console.log('Test result:', result);
+            return decoder;
+        } catch (e) {
+            console.error('Decoder test error:', e);
+            return null;
+        }
     } else {
-        console.error('window.jsQR is not a function!');
+        console.error('❌ QR decoder NOT available');
+        console.log('window.jsQR:', window.jsQR);
+        console.log('Object.keys(window.jsQR || {}):', Object.keys(window.jsQR || {}));
         return null;
     }
 };
@@ -651,5 +670,4 @@ window.addEventListener('beforeunload', function() {
 // ЭКСПОРТ ФУНКЦИЙ
 window.manualAuth = manualAuth;
 window.useDemoCode = useDemoCode;
-window.startQRScanner = startQRScanner;
-window.stopQRScanner = stopQRScanner;
+window.startQRScanner = startQR
