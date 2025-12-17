@@ -1,4 +1,4 @@
-/* cargo.css - НОВАЯ ВЕРСИЯ С ПРАВИЛЬНОЙ СТРУКТУРОЙ - УЛУЧШЕННЫЙ ДИЗАЙН ПАРАМЕТРОВ */
+/* cargo.css - НОВАЯ ВЕРСИЯ С ПРАВИЛЬНОЙ СТРУКТУРОЙ - УЛУЧШЕННЫЙ ДИЗАЙН */
 
 .cargo-container {
     height: 100vh;
@@ -13,48 +13,49 @@
     flex: 1;
     overflow: auto;
     min-height: 0;
-    padding: 4px;
+    padding: 6px; /* Увеличено с 4px */
     display: flex;
     flex-direction: column;
     background: white;
 }
 
 h1 {
-    font-size: 1em !important;
-    margin: 0 0 6px 0 !important;
+    font-size: 1.1em !important; /* Увеличено с 1em */
+    margin: 0 0 8px 0 !important; /* Увеличено с 6px */
     text-align: center;
     padding: 0;
     flex-shrink: 0;
     color: #2c3e50;
+    font-weight: 600; /* Добавлена жирность */
 }
 
 h2 {
-    font-size: 0.85em !important;
-    margin: 0 0 6px 0 !important;
+    font-size: 0.95em !important; /* Увеличено с 0.85em */
+    margin: 0 0 8px 0 !important; /* Увеличено с 6px */
     text-align: center;
     color: #2c3e50;
     padding: 0;
+    font-weight: 600; /* Добавлена жирность */
 }
 
-/* ВЕРХНЯЯ СТРОЧКА ТИПОВ ГРУЗОВ */
+/* ВЕРХНЯЯ СТРОЧКА ТИПОВ ГРУЗОВ - УВЕЛИЧЕННЫЕ КНОПКИ */
 .cargo-types-row {
     display: flex;
-    gap: 4px;
-    margin-bottom: 6px;
-    padding: 4px;
+    gap: 6px; /* Увеличено с 4px */
+    margin-bottom: 8px; /* Увеличено с 6px */
+    padding: 8px; /* Увеличено с 4px */
     background: #f8f9fa;
-    border-radius: 4px;
+    border-radius: 8px; /* Увеличено с 4px */
     flex-shrink: 0;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
 }
 
 .cargo-type-item {
-    flex: 0 0 auto;
-    width: 23%;
-    border: 1px solid #e0e0e0;
-    border-radius: 4px;
-    padding: 3px 1px;
+    flex: 1; /* Изменено с width: 23% */
+    border: 2px solid #e0e0e0; /* Увеличено с 1px */
+    border-radius: 8px; /* Увеличено с 4px */
+    padding: 10px 3px; /* Увеличено с 3px 1px */
     cursor: pointer;
     display: flex;
     flex-direction: column;
@@ -63,24 +64,31 @@ h2 {
     text-align: center;
     background: white;
     transition: all 0.2s;
-    min-height: 45px;
+    min-height: 65px; /* Увеличено с 45px */
+    min-width: 70px; /* Минимальная ширина */
 }
 
 .cargo-type-item.selected {
     border-color: #3498db;
     background: #e3f2fd;
-    box-shadow: 0 1px 3px rgba(52, 152, 219, 0.3);
+    box-shadow: 0 2px 6px rgba(52, 152, 219, 0.3); /* Усилена тень */
+    transform: translateY(-1px);
+}
+
+.cargo-type-item:active {
+    transform: scale(0.98);
+    opacity: 0.9;
 }
 
 .cargo-type-icon {
-    width: 22px;
-    height: 22px;
-    margin-bottom: 2px;
+    width: 32px; /* Увеличено с 22px */
+    height: 32px; /* Увеличено с 22px */
+    margin-bottom: 6px; /* Увеличено с 2px */
     display: flex;
     align-items: center;
     justify-content: center;
     overflow: hidden;
-    border-radius: 3px;
+    border-radius: 6px; /* Увеличено с 3px */
     background: white;
     border: 1px solid #ddd;
 }
@@ -89,18 +97,18 @@ h2 {
     width: 100%;
     height: 100%;
     object-fit: contain;
-    padding: 1px;
+    padding: 2px; /* Увеличено с 1px */
 }
 
 .cargo-type-icon .emoji-icon {
-    font-size: 13px;
+    font-size: 20px; /* Увеличено с 13px */
 }
 
 .cargo-type-name {
-    font-size: 7px;
+    font-size: 10px; /* Увеличено с 7px */
     font-weight: 600;
     color: #2c3e50;
-    line-height: 1.1;
+    line-height: 1.2;
 }
 
 /* ОСНОВНОЙ КОНТЕНТ: ОДНА КОЛОНКА */
@@ -108,7 +116,7 @@ h2 {
     flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 8px; /* Увеличено с 6px */
     min-height: 0;
     overflow: hidden;
 }
@@ -117,11 +125,11 @@ h2 {
 .params-section {
     background: #f8f9fa;
     border: 1px solid #e9ecef;
-    border-radius: 6px;
-    padding: 8px;
+    border-radius: 8px; /* Увеличено с 6px */
+    padding: 12px; /* Увеличено с 8px */
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 8px; /* Увеличено с 6px */
     flex-shrink: 0;
     max-width: 100%;
     margin: 0 auto;
@@ -130,11 +138,11 @@ h2 {
 .param-group {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 6px; /* Увеличено с 4px */
 }
 
 .param-label {
-    font-size: 9px;
+    font-size: 11px; /* Увеличено с 9px */
     font-weight: 600;
     color: #495057;
     text-align: left;
@@ -144,7 +152,7 @@ h2 {
 .param-control {
     display: flex;
     align-items: center;
-    gap: 5px;
+    gap: 8px; /* Увеличено с 5px */
     width: 100%;
 }
 
@@ -153,26 +161,26 @@ h2 {
     background: #3498db;
     color: white;
     border: none;
-    border-radius: 6px; /* Более округлые углы */
-    width: 44px; /* Увеличено с 36px */
-    height: 44px; /* Увеличено с 36px */
+    border-radius: 8px; /* Увеличено с 6px */
+    width: 48px; /* Увеличено с 44px */
+    height: 48px; /* Увеличено с 44px */
     display: flex;
     align-items: center;
     justify-content: center;
     font-weight: bold;
     cursor: pointer;
-    font-size: 20px; /* Увеличено с 16px */
+    font-size: 24px; /* Увеличено с 20px */
     transition: all 0.2s;
     flex-shrink: 0;
-    min-width: 44px;
-    min-height: 44px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Добавим тень для лучшей видимости */
+    min-width: 48px;
+    min-height: 48px;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.15); /* Усилена тень */
 }
 
 .param-btn:hover {
     background: #2980b9;
-    transform: translateY(-1px);
-    box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 10px rgba(0,0,0,0.2);
 }
 
 .param-btn.minus {
@@ -185,31 +193,31 @@ h2 {
 
 .param-input {
     flex: 1;
-    height: 44px; /* Увеличено с 36px */
-    padding: 0 10px;
+    height: 48px; /* Увеличено с 44px */
+    padding: 0 12px;
     border: 2px solid #3498db;
-    border-radius: 6px;
-    font-size: 16px; /* Увеличено с 14px */
+    border-radius: 8px;
+    font-size: 18px; /* Увеличено с 16px */
     text-align: center;
     font-weight: bold;
     background: white;
     min-width: 0;
     width: 100%;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 .param-input:focus {
     outline: none;
     border-color: #2980b9;
-    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+    box-shadow: 0 0 0 4px rgba(52, 152, 219, 0.2);
 }
 
 /* СТАТИСТИКА ТЕКУЩЕГО ГРУЗА */
 .current-stats {
     display: flex;
-    gap: 8px;
-    margin-top: 6px;
-    padding-top: 8px;
+    gap: 10px; /* Увеличено с 8px */
+    margin-top: 8px; /* Увеличено с 6px */
+    padding-top: 10px; /* Увеличено с 8px */
     border-top: 1px solid #dee2e6;
 }
 
@@ -217,20 +225,20 @@ h2 {
     flex: 1;
     text-align: center;
     background: #e3f2fd;
-    border-radius: 4px;
-    padding: 6px;
+    border-radius: 6px; /* Увеличено с 4px */
+    padding: 8px; /* Увеличено с 6px */
 }
 
 .current-stats .stat-label {
-    font-size: 8px;
+    font-size: 10px; /* Увеличено с 8px */
     color: #666;
     display: block;
-    margin-bottom: 2px;
+    margin-bottom: 3px; /* Увеличено с 2px */
 }
 
 .current-stats .stat-value {
     font-weight: bold;
-    font-size: 11px;
+    font-size: 13px; /* Увеличено с 11px */
     color: #2c3e50;
 }
 
@@ -238,16 +246,16 @@ h2 {
 .bottom-section {
     flex: 1;
     display: flex;
-    gap: 8px;
+    gap: 10px; /* Увеличено с 8px */
     min-height: 0;
-    margin-top: 8px;
+    margin-top: 10px; /* Увеличено с 8px */
 }
 
 .bottom-left {
     flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 10px; /* Увеличено с 8px */
     min-width: 0;
 }
 
@@ -255,7 +263,7 @@ h2 {
     flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 10px; /* Увеличено с 8px */
     min-width: 0;
 }
 
@@ -263,22 +271,22 @@ h2 {
 .photo-section-new {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 6px; /* Увеличено с 4px */
     background: #f8f9fa;
     border: 1px solid #e9ecef;
-    border-radius: 6px;
-    padding: 8px;
+    border-radius: 8px; /* Увеличено с 6px */
+    padding: 10px; /* Увеличено с 8px */
     align-items: center;
     justify-content: center;
     flex: none;
-    height: 110px;
+    height: 120px; /* Увеличено с 110px */
 }
 
 .photo-container-new {
-    width: 55px;
-    height: 55px;
+    width: 60px; /* Увеличено с 55px */
+    height: 60px; /* Увеличено с 55px */
     border: 2px dashed #3498db;
-    border-radius: 6px;
+    border-radius: 8px; /* Увеличено с 6px */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -303,33 +311,33 @@ h2 {
 }
 
 .camera-icon-new {
-    font-size: 18px;
+    font-size: 22px; /* Увеличено с 18px */
     color: #3498db;
-    margin-bottom: 4px;
+    margin-bottom: 6px; /* Увеличено с 4px */
 }
 
 .photo-hint-new {
-    font-size: 8px;
+    font-size: 10px; /* Увеличено с 8px */
     color: #666;
     text-align: center;
-    max-width: 45px;
-    line-height: 1.1;
+    max-width: 50px; /* Увеличено с 45px */
+    line-height: 1.2;
 }
 
 .cargo-photo-new {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    border-radius: 4px;
+    border-radius: 6px; /* Увеличено с 4px */
 }
 
 /* КНОПКИ ВЕРТИКАЛЬНО */
 .action-buttons-column {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 10px; /* Увеличено с 8px */
     width: 100%;
-    margin-top: 6px;
+    margin-top: 8px; /* Увеличено с 6px */
     flex: 1;
     justify-content: flex-start;
 }
@@ -339,21 +347,24 @@ h2 {
     background: linear-gradient(135deg, #27ae60, #219653);
     color: white;
     border: none;
-    border-radius: 6px;
-    padding: 10px 6px;
-    font-size: 12px;
+    border-radius: 8px; /* Увеличено с 6px */
+    padding: 12px 8px; /* Увеличено с 10px 6px */
+    font-size: 14px; /* Увеличено с 12px */
     font-weight: 600;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 6px;
+    gap: 8px; /* Увеличено с 6px */
     transition: all 0.2s;
-    min-height: 45px;
+    min-height: 50px; /* Увеличено с 45px */
+    box-shadow: 0 3px 6px rgba(0,0,0,0.1);
 }
 
 .btn-save-new:hover {
     background: linear-gradient(135deg, #219653, #1e8449);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
 }
 
 .btn-send-new {
@@ -361,53 +372,56 @@ h2 {
     background: linear-gradient(135deg, #e74c3c, #c0392b);
     color: white;
     border: none;
-    border-radius: 6px;
-    padding: 10px 6px;
-    font-size: 12px;
+    border-radius: 8px; /* Увеличено с 6px */
+    padding: 12px 8px; /* Увеличено с 10px 6px */
+    font-size: 14px; /* Увеличено с 12px */
     font-weight: 600;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 6px;
+    gap: 8px; /* Увеличено с 6px */
     transition: all 0.2s;
-    min-height: 45px;
+    min-height: 50px; /* Увеличено с 45px */
+    box-shadow: 0 3px 6px rgba(0,0,0,0.1);
 }
 
 .btn-send-new:hover {
     background: linear-gradient(135deg, #c0392b, #a93226);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
 }
 
 .btn-icon {
-    font-size: 14px;
+    font-size: 18px; /* Увеличено с 14px */
 }
 
 /* НОВОЕ ОКНО ОБЩЕЙ ИНФОРМАЦИИ */
 .total-info-window {
     background: linear-gradient(135deg, #2c3e50, #34495e);
     color: white;
-    border-radius: 8px;
-    padding: 12px;
+    border-radius: 10px; /* Увеличено с 8px */
+    padding: 15px; /* Увеличено с 12px */
     display: flex;
     flex-direction: column;
     flex: 1;
     min-height: 0;
     height: 100%;
     border: 1px solid #3a5068;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    box-shadow: 0 3px 10px rgba(0,0,0,0.25); /* Усилена тень */
 }
 
 .total-info-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 12px;
-    padding-bottom: 6px;
+    margin-bottom: 15px; /* Увеличено с 12px */
+    padding-bottom: 8px; /* Увеличено с 6px */
     border-bottom: 1px solid rgba(255,255,255,0.1);
 }
 
 .total-info-header h3 {
-    font-size: 13px;
+    font-size: 15px; /* Увеличено с 13px */
     font-weight: 600;
     margin: 0;
     color: #fff;
@@ -418,13 +432,13 @@ h2 {
     color: white;
     border: none;
     border-radius: 50%;
-    width: 26px;
-    height: 26px;
+    width: 32px; /* Увеличено с 26px */
+    height: 32px; /* Увеличено с 26px */
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    font-size: 12px;
+    font-size: 14px; /* Увеличено с 12px */
     transition: all 0.2s;
     flex-shrink: 0;
 }
@@ -436,7 +450,7 @@ h2 {
 .total-info-content {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 12px; /* Увеличено с 10px */
     flex: 1;
 }
 
@@ -444,11 +458,12 @@ h2 {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 8px 10px;
+    padding: 10px 12px; /* Увеличено с 8px 10px */
     background: rgba(255,255,255,0.08);
-    border-radius: 6px;
+    border-radius: 8px; /* Увеличено с 6px */
     border: 1px solid rgba(255,255,255,0.05);
     transition: all 0.2s;
+    min-height: 50px; /* Добавлено */
 }
 
 .total-info-item:hover {
@@ -458,13 +473,13 @@ h2 {
 .total-info-label {
     display: flex;
     align-items: center;
-    gap: 8px;
-    font-size: 11px;
+    gap: 10px; /* Увеличено с 8px */
+    font-size: 13px; /* Увеличено с 11px */
     color: rgba(255,255,255,0.9);
 }
 
 .total-info-icon {
-    font-size: 12px;
+    font-size: 16px; /* Увеличено с 12px */
     opacity: 0.9;
 }
 
@@ -474,17 +489,17 @@ h2 {
 
 .total-info-value {
     font-weight: bold;
-    font-size: 13px;
+    font-size: 15px; /* Увеличено с 13px */
     color: white;
     display: flex;
     align-items: center;
-    gap: 4px;
+    gap: 6px; /* Увеличено с 4px */
 }
 
 .total-info-value.clickable {
     cursor: pointer;
-    padding: 4px 8px;
-    border-radius: 4px;
+    padding: 6px 10px; /* Увеличено с 4px 8px */
+    border-radius: 6px; /* Увеличено с 4px */
     background: rgba(52, 152, 219, 0.2);
     transition: all 0.2s;
 }
@@ -494,330 +509,136 @@ h2 {
 }
 
 .total-info-arrow {
-    font-size: 14px;
+    font-size: 18px; /* Увеличено с 14px */
     opacity: 0.7;
-    margin-left: 2px;
-}
-
-/* ОКОШКО СТАТИСТИКИ ГРУЗОВ - ДОПОЛНИТЕЛЬНЫЕ СТИЛИ */
-.cargo-stats-actions {
-    margin-top: 10px;
-    padding-top: 10px;
-    border-top: 1px solid #e9ecef;
-}
-
-.btn-clear-all {
-    background: linear-gradient(135deg, #e74c3c, #c0392b);
-    color: white;
-    border: none;
-    border-radius: 4px;
-    padding: 6px 10px;
-    font-size: 11px;
-    font-weight: 600;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 4px;
-    transition: all 0.2s;
-    width: 100%;
-}
-
-.btn-clear-all:hover {
-    background: linear-gradient(135deg, #c0392b, #a93226);
-}
-
-/* ОКОШКО СТАТИСТИКИ ГРУЗОВ (маленькое) */
-.cargo-stats-popup {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: white;
-    border-radius: 8px;
-    box-shadow: 0 6px 15px rgba(0,0,0,0.3);
-    z-index: 1001;
-    width: 90%;
-    max-width: 400px;
-    max-height: 70vh;
-    display: none;
-    flex-direction: column;
-    border: 1px solid #3498db;
-}
-
-.cargo-stats-popup.active {
-    display: flex;
-    animation: popupFadeIn 0.2s ease;
-}
-
-@keyframes popupFadeIn {
-    from {
-        opacity: 0;
-        transform: translate(-50%, -50%) scale(0.9);
-    }
-    to {
-        opacity: 1;
-        transform: translate(-50%, -50%) scale(1);
-    }
-}
-
-.cargo-stats-popup-header {
-    background: linear-gradient(135deg, #3498db, #2980b9);
-    color: white;
-    padding: 8px 12px;
-    border-radius: 6px 6px 0 0;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.cargo-stats-popup-header h3 {
-    margin: 0;
-    font-size: 13px;
-    font-weight: 600;
-}
-
-.cargo-stats-popup-close {
-    background: none;
-    border: none;
-    color: white;
-    font-size: 18px;
-    cursor: pointer;
-    padding: 0;
-    width: 20px;
-    height: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-    transition: all 0.2s;
-}
-
-.cargo-stats-popup-close:hover {
-    background: rgba(255,255,255,0.2);
-}
-
-.cargo-stats-popup-content {
-    padding: 12px;
-    overflow-y: auto;
-    max-height: 50vh;
-}
-
-.cargo-stats-items {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-}
-
-.cargo-stats-item {
-    background: #f8f9fa;
-    border-radius: 4px;
-    padding: 6px;
-    border: 1px solid #e9ecef;
-}
-
-.cargo-stats-item-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 3px;
-}
-
-.cargo-stats-item-type {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    font-weight: 600;
-    color: #2c3e50;
-    font-size: 11px;
-}
-
-.cargo-stats-item-quantity {
-    background: #27ae60;
-    color: white;
-    font-size: 9px;
-    padding: 1px 4px;
-    border-radius: 6px;
-    font-weight: bold;
-}
-
-.cargo-stats-item-details {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 3px;
-    font-size: 9px;
-}
-
-.cargo-stats-detail {
-    text-align: center;
-}
-
-.cargo-stats-detail-label {
-    color: #666;
-    font-size: 7px;
-    display: block;
-    margin-bottom: 1px;
-}
-
-.cargo-stats-detail-value {
-    font-weight: bold;
-    color: #2c3e50;
-}
-
-.cargo-stats-empty {
-    text-align: center;
-    color: #999;
-    font-style: italic;
-    padding: 15px 12px;
-    font-size: 11px;
-}
-
-.cargo-stats-popup-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.5);
-    z-index: 1000;
-    display: none;
-    backdrop-filter: blur(1px);
-}
-
-.cargo-stats-popup-overlay.active {
-    display: block;
-    animation: overlayFadeIn 0.2s ease;
-}
-
-@keyframes overlayFadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+    margin-left: 4px; /* Увеличено с 2px */
 }
 
 /* АДАПТИВНОСТЬ ДЛЯ МОБИЛЬНЫХ */
 @media (max-height: 600px) {
     .cargo-main {
-        padding: 3px;
+        padding: 5px; /* Увеличено с 3px */
     }
     
     h1 {
-        font-size: 0.9em !important;
-        margin-bottom: 4px !important;
+        font-size: 1em !important;
+        margin-bottom: 6px !important;
     }
     
     h2 {
-        font-size: 0.8em !important;
-        margin-bottom: 4px !important;
+        font-size: 0.9em !important;
+        margin-bottom: 6px !important;
     }
     
     .cargo-types-row {
-        margin-bottom: 4px;
-        padding: 3px;
+        margin-bottom: 6px;
+        padding: 6px;
     }
     
     .cargo-type-item {
-        min-height: 40px;
-        padding: 2px 1px;
+        min-height: 60px; /* Остается большой */
+        padding: 8px 2px;
     }
     
     .cargo-type-icon {
-        width: 18px;
-        height: 18px;
+        width: 28px; /* Остается большим */
+        height: 28px;
     }
     
     .cargo-type-icon .emoji-icon {
-        font-size: 11px;
+        font-size: 18px; /* Остается большим */
     }
     
     .cargo-type-name {
-        font-size: 6px;
+        font-size: 9px;
     }
     
     .params-section {
-        padding: 6px;
-        gap: 5px;
+        padding: 10px;
+        gap: 6px;
     }
     
     /* Кнопки остаются большими даже на маленьких экранах */
     .param-btn {
-        width: 42px; /* Немного меньше, но все равно большие */
-        height: 42px;
-        font-size: 18px;
+        width: 44px; /* Остается большим */
+        height: 44px;
+        font-size: 22px;
     }
     
     .param-input {
-        height: 42px;
-        font-size: 14px;
-        padding: 0 8px;
+        height: 44px; /* Остается большим */
+        font-size: 16px;
+        padding: 0 10px;
     }
     
     .photo-section-new {
-        height: 100px;
-        padding: 6px;
+        height: 110px;
+        padding: 8px;
     }
     
     .photo-container-new {
-        width: 45px;
-        height: 45px;
+        width: 55px;
+        height: 55px;
     }
     
     .camera-icon-new {
-        font-size: 16px;
+        font-size: 20px;
     }
     
     .photo-hint-new {
-        font-size: 7px;
-        max-width: 35px;
+        font-size: 9px;
+        max-width: 45px;
     }
     
     .action-buttons-column {
-        gap: 6px;
-        margin-top: 4px;
+        gap: 8px;
+        margin-top: 6px;
     }
     
     .btn-save-new, .btn-send-new {
-        padding: 8px 4px;
-        font-size: 11px;
-        min-height: 40px;
+        padding: 10px 6px;
+        font-size: 13px;
+        min-height: 45px;
     }
     
     .total-info-window {
-        padding: 10px;
+        padding: 12px;
     }
     
     .total-info-header h3 {
-        font-size: 12px;
+        font-size: 14px;
     }
     
     .total-info-refresh {
-        width: 22px;
-        height: 22px;
-        font-size: 11px;
+        width: 28px;
+        height: 28px;
+        font-size: 13px;
     }
     
     .total-info-content {
-        gap: 8px;
+        gap: 10px;
     }
     
     .total-info-item {
-        padding: 6px 8px;
+        padding: 8px 10px;
+        min-height: 45px;
     }
     
     .total-info-label {
-        font-size: 10px;
-        gap: 6px;
+        font-size: 12px;
+        gap: 8px;
     }
     
     .total-info-icon {
-        font-size: 11px;
+        font-size: 14px;
     }
     
     .total-info-value {
-        font-size: 12px;
+        font-size: 14px;
     }
     
     .total-info-arrow {
-        font-size: 13px;
+        font-size: 16px;
     }
 }
 
@@ -832,208 +653,212 @@ h2 {
     }
     
     .cargo-main {
-        padding: 10px;
+        padding: 15px; /* Увеличено с 10px */
         min-height: 600px;
     }
     
     h1 {
-        font-size: 1.2em !important;
-        margin-bottom: 8px !important;
+        font-size: 1.4em !important; /* Увеличено с 1.2em */
+        margin-bottom: 12px !important; /* Увеличено с 8px */
     }
     
     h2 {
-        font-size: 1em !important;
-        margin-bottom: 8px !important;
+        font-size: 1.2em !important; /* Увеличено с 1em */
+        margin-bottom: 12px !important; /* Увеличено с 8px */
     }
     
-    /* ТИПЫ ГРУЗОВ */
+    /* ТИПЫ ГРУЗОВ - ОГРОМНЫЕ КНОПКИ */
     .cargo-types-row {
-        margin-bottom: 8px;
-        padding: 8px;
-        gap: 8px;
+        margin-bottom: 12px; /* Увеличено с 8px */
+        padding: 12px; /* Увеличено с 8px */
+        gap: 12px; /* Увеличено с 8px */
     }
     
     .cargo-type-item {
-        min-height: 60px;
-        padding: 8px 3px;
-        border-radius: 8px;
+        min-height: 85px !important; /* ОГРОМНЫЕ кнопки! */
+        padding: 12px 4px !important;
+        border-radius: 12px !important;
+        border-width: 3px !important;
     }
     
     .cargo-type-icon {
-        width: 35px;
-        height: 35px;
-        border-radius: 6px;
+        width: 45px !important; /* ОГРОМНЫЕ иконки */
+        height: 45px !important;
+        border-radius: 10px !important;
+        margin-bottom: 10px !important;
     }
     
     .cargo-type-icon .emoji-icon {
-        font-size: 20px;
+        font-size: 28px !important; /* ОГРОМНЫЕ эмодзи */
     }
     
     .cargo-type-name {
-        font-size: 10px;
+        font-size: 14px !important; /* Крупный текст */
+        font-weight: 600;
     }
     
     /* ПАРАМЕТРЫ - ОГРОМНЫЕ КНОПКИ ДЛЯ РАБОТЫ В ПЕРЧАТКАХ */
     .params-section {
-        padding: 15px;
-        gap: 12px;
-        border-radius: 10px;
+        padding: 20px; /* Увеличено с 15px */
+        gap: 15px; /* Увеличено с 12px */
+        border-radius: 12px; /* Увеличено с 10px */
         max-width: 95%;
     }
     
     .param-label {
-        font-size: 14px;
-        margin-bottom: 6px;
+        font-size: 16px; /* Увеличено с 14px */
+        margin-bottom: 8px; /* Увеличено с 6px */
     }
     
     .param-control {
-        gap: 12px;
+        gap: 15px; /* Увеличено с 12px */
     }
     
     .param-btn {
-        width: 60px !important; /* ОГРОМНЫЕ кнопки для планшетов */
-        height: 60px !important;
-        font-size: 28px !important;
-        border-radius: 10px !important;
-        min-width: 60px !important;
-        min-height: 60px !important;
-        box-shadow: 0 3px 6px rgba(0,0,0,0.2) !important;
+        width: 70px !important; /* ОГРОМНЫЕ кнопки! */
+        height: 70px !important;
+        font-size: 32px !important;
+        border-radius: 12px !important;
+        min-width: 70px !important;
+        min-height: 70px !important;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.25) !important;
     }
     
     .param-btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 5px 10px rgba(0,0,0,0.25) !important;
+        transform: translateY(-3px);
+        box-shadow: 0 6px 12px rgba(0,0,0,0.3) !important;
     }
     
     .param-input {
-        height: 60px !important;
-        font-size: 22px !important;
-        padding: 0 15px;
-        border-radius: 10px !important;
+        height: 70px !important;
+        font-size: 26px !important;
+        padding: 0 20px;
+        border-radius: 12px !important;
         border-width: 3px !important;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.15) !important;
+        box-shadow: 0 3px 6px rgba(0,0,0,0.2) !important;
     }
     
     /* ТЕКУЩАЯ СТАТИСТИКА */
     .current-stats {
-        gap: 12px;
-        margin-top: 12px;
-        padding-top: 12px;
+        gap: 15px; /* Увеличено с 12px */
+        margin-top: 15px; /* Увеличено с 12px */
+        padding-top: 15px; /* Увеличено с 12px */
     }
     
     .current-stats .stat-item {
-        padding: 10px;
-        border-radius: 8px;
+        padding: 12px; /* Увеличено с 10px */
+        border-radius: 10px; /* Увеличено с 8px */
     }
     
     .current-stats .stat-label {
-        font-size: 12px;
+        font-size: 14px; /* Увеличено с 12px */
     }
     
     .current-stats .stat-value {
-        font-size: 15px;
+        font-size: 18px; /* Увеличено с 15px */
     }
     
     /* НИЖНЯЯ ЧАСТЬ - ОПТИМИЗАЦИЯ ДЛЯ ПЛАНШЕТОВ */
     .bottom-section {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: 15px;
-        min-height: 280px;
-        margin-top: 15px;
+        gap: 20px; /* Увеличено с 15px */
+        min-height: 320px; /* Увеличено с 280px */
+        margin-top: 20px; /* Увеличено с 15px */
     }
     
     .bottom-left, .bottom-right {
         display: flex;
         flex-direction: column;
-        min-height: 280px;
+        min-height: 320px; /* Увеличено с 280px */
     }
     
     /* ФОТО СЕКЦИЯ */
     .photo-section-new {
-        height: 140px;
-        padding: 15px;
+        height: 160px; /* Увеличено с 140px */
+        padding: 20px; /* Увеличено с 15px */
         justify-content: center;
-        border-radius: 10px;
+        border-radius: 12px; /* Увеличено с 10px */
     }
     
     .photo-container-new {
-        width: 80px;
-        height: 80px;
-        border-width: 2px;
-        border-radius: 8px;
+        width: 100px; /* Увеличено с 80px */
+        height: 100px; /* Увеличено с 80px */
+        border-width: 3px; /* Увеличено с 2px */
+        border-radius: 12px; /* Увеличено с 8px */
     }
     
     .camera-icon-new {
-        font-size: 24px;
-        margin-bottom: 8px;
+        font-size: 32px; /* Увеличено с 24px */
+        margin-bottom: 12px; /* Увеличено с 8px */
     }
     
     .photo-hint-new {
-        font-size: 11px;
-        max-width: 70px;
+        font-size: 14px; /* Увеличено с 11px */
+        max-width: 90px; /* Увеличено с 70px */
     }
     
     /* КНОПКИ ВЕРТИКАЛЬНО ДЛЯ ПЛАНШЕТОВ */
     .action-buttons-column {
-        gap: 12px;
-        margin-top: 15px;
+        gap: 15px; /* Увеличено с 12px */
+        margin-top: 20px; /* Увеличено с 15px */
         justify-content: center;
     }
     
     .btn-save-new, .btn-send-new {
-        min-height: 60px;
-        font-size: 16px;
-        padding: 15px 10px;
-        border-radius: 10px;
-        gap: 10px;
+        min-height: 75px !important; /* ОГРОМНЫЕ кнопки */
+        font-size: 20px !important;
+        padding: 20px 15px !important;
+        border-radius: 12px !important;
+        gap: 12px !important;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2) !important;
     }
     
     .btn-icon {
-        font-size: 20px;
+        font-size: 28px !important;
     }
     
     /* ОБЩАЯ ИНФОРМАЦИЯ ДЛЯ ПЛАНШЕТОВ */
     .total-info-window {
-        padding: 20px;
-        border-radius: 12px;
-        border-width: 2px;
+        padding: 25px; /* Увеличено с 20px */
+        border-radius: 15px; /* Увеличено с 12px */
+        border-width: 3px; /* Увеличено с 2px */
     }
     
     .total-info-header {
-        margin-bottom: 15px;
-        padding-bottom: 10px;
+        margin-bottom: 20px; /* Увеличено с 15px */
+        padding-bottom: 15px; /* Увеличено с 10px */
     }
     
     .total-info-header h3 {
-        font-size: 18px;
+        font-size: 22px; /* Увеличено с 18px */
     }
     
     .total-info-refresh {
-        width: 40px;
-        height: 40px;
-        font-size: 16px;
-        min-width: 44px;
-        min-height: 44px;
+        width: 50px; /* Увеличено с 40px */
+        height: 50px; /* Увеличено с 40px */
+        font-size: 20px; /* Увеличено с 16px */
+        min-width: 50px; /* Увеличено с 44px */
+        min-height: 50px; /* Увеличено с 44px */
     }
     
     .total-info-content {
-        gap: 15px;
+        gap: 20px; /* Увеличено с 15px */
     }
     
     .total-info-item {
-        padding: 15px 12px;
-        border-radius: 10px;
-        min-height: 60px;
+        padding: 20px 15px; /* Увеличено с 15px 12px */
+        border-radius: 12px; /* Увеличено с 10px */
+        min-height: 75px; /* Увеличено с 60px */
     }
     
     .total-info-label {
-        font-size: 16px;
-        gap: 12px;
+        font-size: 18px; /* Увеличено с 16px */
+        gap: 15px; /* Увеличено с 12px */
     }
     
     .total-info-icon {
-        font-size: 20px;
+        font-size: 24px; /* Увеличено с 20px */
     }
     
     .total-info-text {
@@ -1041,24 +866,24 @@ h2 {
     }
     
     .total-info-value {
-        font-size: 20px;
+        font-size: 24px; /* Увеличено с 20px */
         font-weight: bold;
-        gap: 8px;
+        gap: 10px; /* Увеличено с 8px */
     }
     
     .total-info-value.clickable {
-        padding: 8px 12px;
-        border-radius: 8px;
-        font-size: 18px;
+        padding: 10px 15px; /* Увеличено с 8px 12px */
+        border-radius: 10px; /* Увеличено с 8px */
+        font-size: 22px; /* Увеличено с 18px */
     }
     
     .total-info-arrow {
-        font-size: 22px;
+        font-size: 28px; /* Увеличено с 22px */
     }
     
     /* Гарантируем, что все кнопки помещаются */
     .cargo-content-single {
-        min-height: 500px;
+        min-height: 600px; /* Увеличено с 500px */
     }
 }
 
@@ -1074,125 +899,144 @@ h2 {
     }
     
     .bottom-section {
-        min-height: 240px;
+        min-height: 280px; /* Увеличено с 240px */
     }
     
     .photo-section-new {
-        height: 130px;
+        height: 150px; /* Увеличено с 130px */
     }
     
     .total-info-window {
-        min-height: 240px;
+        min-height: 280px; /* Увеличено с 240px */
     }
     
     /* Более компактное расположение для горизонтального режима */
     .cargo-content-single {
-        gap: 10px;
+        gap: 15px; /* Увеличено с 10px */
     }
     
     .params-section {
-        max-height: 320px;
+        max-height: 350px; /* Увеличено с 320px */
         overflow-y: auto;
     }
     
     .btn-save-new, .btn-send-new {
-        min-height: 55px;
-        font-size: 14px;
-        padding: 12px 10px;
+        min-height: 65px; /* Увеличено с 55px */
+        font-size: 18px; /* Увеличено с 14px */
+        padding: 15px 12px; /* Увеличено с 12px 10px */
     }
 }
 
 /* ДЛЯ ОЧЕНЬ МАЛЕНЬКИХ ЭКРАНОВ */
 @media (max-width: 320px) {
     .params-section {
-        padding: 6px;
+        padding: 8px; /* Увеличено с 6px */
     }
     
     /* Даже на маленьких экранах делаем кнопки достаточно большими */
     .param-btn {
-        width: 40px;
-        height: 40px;
-        font-size: 18px;
+        width: 42px; /* Увеличено с 40px */
+        height: 42px;
+        font-size: 20px; /* Увеличено с 18px */
     }
     
     .param-input {
-        height: 40px;
-        font-size: 14px;
-        padding: 0 6px;
+        height: 42px; /* Увеличено с 40px */
+        font-size: 16px; /* Увеличено с 14px */
+        padding: 0 8px; /* Увеличено с 6px */
+    }
+    
+    /* Кнопки выбора грузов на маленьких экранах */
+    .cargo-type-item {
+        min-height: 55px !important; /* Остается большой */
+        padding: 6px 2px !important;
+    }
+    
+    .cargo-type-icon {
+        width: 26px !important;
+        height: 26px !important;
+    }
+    
+    .cargo-type-icon .emoji-icon {
+        font-size: 16px !important;
+    }
+    
+    .cargo-type-name {
+        font-size: 8px !important;
     }
     
     .bottom-section {
         flex-direction: column;
-        gap: 6px;
+        gap: 8px; /* Увеличено с 6px */
     }
     
     .photo-section-new {
-        height: 90px;
+        height: 100px; /* Увеличено с 90px */
     }
     
     .photo-container-new {
-        width: 40px;
-        height: 40px;
+        width: 45px; /* Увеличено с 40px */
+        height: 45px; /* Увеличено с 40px */
     }
     
     .camera-icon-new {
-        font-size: 14px;
+        font-size: 18px; /* Увеличено с 14px */
     }
     
     .photo-hint-new {
-        font-size: 6px;
-        max-width: 30px;
+        font-size: 8px; /* Увеличено с 6px */
+        max-width: 35px; /* Увеличено с 30px */
     }
     
     .action-buttons-column {
-        gap: 4px;
-        margin-top: 4px;
+        gap: 6px; /* Увеличено с 4px */
+        margin-top: 6px; /* Увеличено с 4px */
     }
     
     .btn-save-new, .btn-send-new {
-        min-height: 35px;
-        font-size: 10px;
-        padding: 6px 3px;
+        min-height: 40px; /* Увеличено с 35px */
+        font-size: 12px; /* Увеличено с 10px */
+        padding: 8px 4px; /* Увеличено с 6px 3px */
     }
     
     .total-info-window {
-        padding: 8px;
+        padding: 10px; /* Увеличено с 8px */
     }
     
     .total-info-header h3 {
-        font-size: 11px;
+        font-size: 13px; /* Увеличено с 11px */
     }
     
     .total-info-refresh {
-        width: 20px;
-        height: 20px;
-        font-size: 10px;
+        width: 24px; /* Увеличено с 20px */
+        height: 24px; /* Увеличено с 20px */
+        font-size: 12px; /* Увеличено с 10px */
     }
     
     .total-info-content {
-        gap: 6px;
+        gap: 8px; /* Увеличено с 6px */
     }
     
     .total-info-item {
-        padding: 6px 8px;
-        min-height: 40px;
+        padding: 8px 10px; /* Увеличено с 6px 8px */
+        min-height: 45px; /* Увеличено с 40px */
     }
     
     .total-info-label {
-        font-size: 9px;
-        gap: 4px;
+        font-size: 11px; /* Увеличено с 9px */
+        gap: 6px; /* Увеличено с 4px */
     }
     
     .total-info-icon {
-        font-size: 10px;
+        font-size: 12px; /* Увеличено с 10px */
     }
     
     .total-info-value {
-        font-size: 11px;
+        font-size: 13px; /* Увеличено с 11px */
     }
     
     .total-info-arrow {
-        font-size: 12px;
+        font-size: 14px; /* Увеличено с 12px */
     }
 }
 
@@ -1204,22 +1048,41 @@ h2 {
     .total-info-value.clickable,
     .total-info-refresh,
     .param-btn {
-        min-height: 60px !important; /* Очень большие для перчаток */
-        min-width: 60px !important;
+        min-height: 70px !important; /* Очень большие для перчаток */
+        min-width: 70px !important;
         cursor: pointer;
     }
     
     /* Делаем кнопки +/- еще больше на больших экранах */
     @media (min-width: 1024px) {
         .param-btn {
-            width: 65px !important;
-            height: 65px !important;
-            font-size: 32px !important;
+            width: 75px !important; /* Увеличено с 65px */
+            height: 75px !important;
+            font-size: 36px !important; /* Увеличено с 32px */
         }
         
         .param-input {
-            height: 65px !important;
-            font-size: 24px !important;
+            height: 75px !important; /* Увеличено с 65px */
+            font-size: 28px !important; /* Увеличено с 24px */
+        }
+        
+        /* Кнопки выбора грузов на больших экранах */
+        .cargo-type-item {
+            min-height: 95px !important;
+            border-radius: 15px !important;
+        }
+        
+        .cargo-type-icon {
+            width: 50px !important;
+            height: 50px !important;
+        }
+        
+        .cargo-type-icon .emoji-icon {
+            font-size: 32px !important;
+        }
+        
+        .cargo-type-name {
+            font-size: 16px !important;
         }
     }
 }
@@ -1257,39 +1120,39 @@ h2 {
 /* ДЛЯ ПЛАНШЕТОВ С МАЛЕНЬКОЙ ВЫСОТОЙ */
 @media (min-width: 768px) and (max-height: 900px) {
     .bottom-left, .bottom-right {
-        min-height: 240px;
+        min-height: 280px; /* Увеличено с 240px */
     }
     
     .photo-section-new {
-        height: 120px;
-        padding: 10px;
+        height: 140px; /* Увеличено с 120px */
+        padding: 15px; /* Увеличено с 10px */
     }
     
     .total-info-window {
-        padding: 15px;
+        padding: 20px; /* Увеличено с 15px */
     }
     
     .btn-save-new, .btn-send-new {
-        min-height: 50px;
-        font-size: 14px;
-        padding: 12px 8px;
+        min-height: 65px; /* Увеличено с 50px */
+        font-size: 18px; /* Увеличено с 14px */
+        padding: 15px 10px; /* Увеличено с 12px 8px */
     }
     
     .total-info-item {
-        padding: 12px 10px;
-        min-height: 50px;
+        padding: 15px 12px; /* Увеличено с 12px 10px */
+        min-height: 65px; /* Увеличено с 50px */
     }
     
     .total-info-label {
-        font-size: 14px;
+        font-size: 16px; /* Увеличено с 14px */
     }
     
     .total-info-icon {
-        font-size: 18px;
+        font-size: 20px; /* Увеличено с 18px */
     }
     
     .total-info-value {
-        font-size: 16px;
+        font-size: 18px; /* Увеличено с 16px */
     }
 }
 
@@ -1314,4 +1177,50 @@ h2 {
 .param-btn:active::after {
     opacity: 1;
     background: rgba(52, 152, 219, 0.2);
+}
+
+/* УВЕЛИЧЕННЫЕ ЭФФЕКТЫ ДЛЯ КНОПОК ВЫБОРА ГРУЗОВ */
+.cargo-type-item::after {
+    content: '';
+    position: absolute;
+    top: -3px;
+    left: -3px;
+    right: -3px;
+    bottom: -3px;
+    border-radius: 10px;
+    z-index: -1;
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+.cargo-type-item:active::after {
+    opacity: 1;
+    background: rgba(52, 152, 219, 0.1);
+}
+
+/* УВЕЛИЧЕНИЕ ОБЛАСТИ КЛИКА */
+.cargo-type-item {
+    position: relative;
+}
+
+.cargo-type-item * {
+    pointer-events: none; /* Все клики обрабатываются на родителе */
+}
+
+/* ПОДСВЕТКА ВЫБРАННОГО ГРУЗА */
+.cargo-type-item.selected::before {
+    content: '✓';
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    width: 20px;
+    height: 20px;
+    background: #3498db;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: bold;
 }
