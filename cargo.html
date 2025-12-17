@@ -57,166 +57,237 @@
                 </div>
             </div>
             
-            <!-- ОСНОВНОЙ КОНТЕНТ: ОДНА КОЛОНКА -->
-            <div class="cargo-content-single">
-                <!-- СЕКЦИЯ РЕДАКТИРОВАНИЯ ПАРАМЕТРОВ -->
-                <div class="params-section">
-                    <h2>Параметры груза</h2>
-                    
-                    <!-- ВЕС -->
-                    <div class="param-group">
-                        <div class="param-label">Вес груза (кг)</div>
-                        <div class="param-control">
-                            <button class="param-btn minus" onclick="changeParam('weight', -1)">-</button>
-                            <input type="number" 
-                                   id="weightInput" 
-                                   class="param-input" 
-                                   value="1" 
-                                   min="1" 
-                                   max="10000" 
-                                   step="1"
-                                   inputmode="numeric"
-                                   oninput="updateWeightFromInput()">
-                            <button class="param-btn plus" onclick="changeParam('weight', 1)">+</button>
+            <!-- ОСНОВНОЙ КОНТЕНТ: ДВЕ КОЛОНКИ -->
+            <div class="cargo-content-two-column">
+                <!-- ЛЕВАЯ КОЛОНКА: ПАРАМЕТРЫ ГРУЗА (СМЕЩЕНА ВЛЕВО) -->
+                <div class="left-column">
+                    <div class="params-section">
+                        <h2>Параметры груза</h2>
+                        
+                        <!-- ВЕС -->
+                        <div class="param-group">
+                            <div class="param-label">Вес груза (кг)</div>
+                            <div class="param-control">
+                                <button class="param-btn minus" onclick="changeParam('weight', -1)">-</button>
+                                <input type="number" 
+                                       id="weightInput" 
+                                       class="param-input" 
+                                       value="1" 
+                                       min="1" 
+                                       max="10000" 
+                                       step="1"
+                                       inputmode="numeric"
+                                       oninput="updateWeightFromInput()">
+                                <button class="param-btn plus" onclick="changeParam('weight', 1)">+</button>
+                            </div>
                         </div>
-                    </div>
-                    
-                    <!-- РАЗМЕРЫ -->
-                    <div class="param-group">
-                        <div class="param-label">Длина (см)</div>
-                        <div class="param-control">
-                            <button class="param-btn minus" onclick="changeParam('length', -10)">-</button>
-                            <input type="number" 
-                                   id="lengthInput" 
-                                   class="param-input" 
-                                   value="120" 
-                                   min="10" 
-                                   max="1000" 
-                                   step="1"
-                                   inputmode="numeric"
-                                   oninput="updateDimensionFromInput('length')">
-                            <button class="param-btn plus" onclick="changeParam('length', 10)">+</button>
+                        
+                        <!-- РАЗМЕРЫ -->
+                        <div class="param-group">
+                            <div class="param-label">Длина (см)</div>
+                            <div class="param-control">
+                                <button class="param-btn minus" onclick="changeParam('length', -10)">-</button>
+                                <input type="number" 
+                                       id="lengthInput" 
+                                       class="param-input" 
+                                       value="120" 
+                                       min="10" 
+                                       max="1000" 
+                                       step="1"
+                                       inputmode="numeric"
+                                       oninput="updateDimensionFromInput('length')">
+                                <button class="param-btn plus" onclick="changeParam('length', 10)">+</button>
+                            </div>
                         </div>
-                    </div>
-                    
-                    <div class="param-group">
-                        <div class="param-label">Ширина (см)</div>
-                        <div class="param-control">
-                            <button class="param-btn minus" onclick="changeParam('width', -10)">-</button>
-                            <input type="number" 
-                                   id="widthInput" 
-                                   class="param-input" 
-                                   value="80" 
-                                   min="10" 
-                                   max="1000" 
-                                   step="1"
-                                   inputmode="numeric"
-                                   oninput="updateDimensionFromInput('width')">
-                            <button class="param-btn plus" onclick="changeParam('width', 10)">+</button>
+                        
+                        <div class="param-group">
+                            <div class="param-label">Ширина (см)</div>
+                            <div class="param-control">
+                                <button class="param-btn minus" onclick="changeParam('width', -10)">-</button>
+                                <input type="number" 
+                                       id="widthInput" 
+                                       class="param-input" 
+                                       value="80" 
+                                       min="10" 
+                                       max="1000" 
+                                       step="1"
+                                       inputmode="numeric"
+                                       oninput="updateDimensionFromInput('width')">
+                                <button class="param-btn plus" onclick="changeParam('width', 10)">+</button>
+                            </div>
                         </div>
-                    </div>
-                    
-                    <div class="param-group">
-                        <div class="param-label">Высота (см)</div>
-                        <div class="param-control">
-                            <button class="param-btn minus" onclick="changeParam('height', -10)">-</button>
-                            <input type="number" 
-                                   id="heightInput" 
-                                   class="param-input" 
-                                   value="30" 
-                                   min="10" 
-                                   max="1000" 
-                                   step="1"
-                                   inputmode="numeric"
-                                   oninput="updateDimensionFromInput('height')">
-                            <button class="param-btn plus" onclick="changeParam('height', 10)">+</button>
+                        
+                        <div class="param-group">
+                            <div class="param-label">Высота (см)</div>
+                            <div class="param-control">
+                                <button class="param-btn minus" onclick="changeParam('height', -10)">-</button>
+                                <input type="number" 
+                                       id="heightInput" 
+                                       class="param-input" 
+                                       value="30" 
+                                       min="10" 
+                                       max="1000" 
+                                       step="1"
+                                       inputmode="numeric"
+                                       oninput="updateDimensionFromInput('height')">
+                                <button class="param-btn plus" onclick="changeParam('height', 10)">+</button>
+                            </div>
                         </div>
-                    </div>
-                    
-                    <!-- СТАТИСТИКА ТЕКУЩЕГО ГРУЗА (режим реального времени) -->
-                    <div class="current-stats">
-                        <div class="stat-item">
-                            <span class="stat-label">Текущий объем:</span>
-                            <span class="stat-value" id="currentVolume">0.288 м³</span>
-                        </div>
-                        <div class="stat-item">
-                            <span class="stat-label">Общий вес:</span>
-                            <span class="stat-value" id="currentTotalWeight">1 кг</span>
+                        
+                        <!-- СТАТИСТИКА ТЕКУЩЕГО ГРУЗА (режим реального времени) -->
+                        <div class="current-stats">
+                            <div class="stat-item">
+                                <span class="stat-label">Текущий объем:</span>
+                                <span class="stat-value" id="currentVolume">0.288 м³</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">Общий вес:</span>
+                                <span class="stat-value" id="currentTotalWeight">1 кг</span>
+                            </div>
                         </div>
                     </div>
                 </div>
                 
-                <!-- НИЖНЯЯ ЧАСТЬ: КНОПКИ И ОБЩАЯ СТАТИСТИКА -->
-                <div class="bottom-section">
-                    <!-- ЛЕВАЯ КОЛОНКА: ФОТО И КНОПКИ -->
-                    <div class="bottom-left">
-                        <!-- ФОТО ГРУЗА -->
-                        <div class="photo-section-new">
-                            <div class="photo-container-new" onclick="takePhoto()">
-                                <div class="photo-placeholder-new" id="photoPlaceholder">
-                                    <div class="camera-icon-new">📷</div>
-                                    <div class="photo-hint-new">Нажмите для фото</div>
+                <!-- ПРАВАЯ КОЛОНКА: ДОПОЛНИТЕЛЬНАЯ УПАКОВКА -->
+                <div class="right-column">
+                    <div class="packaging-section">
+                        <h2>Дополнительная упаковка</h2>
+                        
+                        <!-- ВЫБОР ТИПА УПАКОВКИ -->
+                        <div class="packaging-group">
+                            <div class="param-label">Тип упаковки</div>
+                            <div class="packaging-type-selector">
+                                <div class="packaging-type-item" data-packaging-type="none" onclick="selectPackagingType('none')">
+                                    <div class="packaging-type-icon">❌</div>
+                                    <div class="packaging-type-name">Нет</div>
                                 </div>
-                                <img id="cargoPhoto" class="cargo-photo-new" style="display: none;">
+                                <div class="packaging-type-item" data-packaging-type="obreshetka" onclick="selectPackagingType('obreshetka')">
+                                    <div class="packaging-type-icon">📐</div>
+                                    <div class="packaging-type-name">Обрешетка</div>
+                                </div>
+                                <div class="packaging-type-item" data-packaging-type="paletnyy-bort" onclick="selectPackagingType('paletnyy-bort')">
+                                    <div class="packaging-type-icon">📦</div>
+                                    <div class="packaging-type-name">Паллетный борт</div>
+                                </div>
                             </div>
                         </div>
                         
-                        <!-- КНОПКИ ВЕРТИКАЛЬНО -->
-                        <div class="action-buttons-column">
-                            <button class="btn-save-new" onclick="saveCargo()">
-                                <span class="btn-icon">💾</span> Сохранить груз
-                            </button>
-                            
-                            <button class="btn-send-new" onclick="sendToOperatorAndReset()">
-                                <span class="btn-icon">📤</span> Отправить все
-                            </button>
+                        <!-- КОЛИЧЕСТВО УПАКОВКИ -->
+                        <div class="packaging-group">
+                            <div class="param-label">Количество упаковок</div>
+                            <div class="param-control">
+                                <button class="param-btn minus" onclick="changePackagingCount(-1)">-</button>
+                                <input type="number" 
+                                       id="packagingCountInput" 
+                                       class="param-input" 
+                                       value="0" 
+                                       min="0" 
+                                       max="100" 
+                                       step="1"
+                                       inputmode="numeric"
+                                       oninput="updatePackagingCountFromInput()">
+                                <button class="param-btn plus" onclick="changePackagingCount(1)">+</button>
+                            </div>
+                        </div>
+                        
+                        <!-- ИНФОРМАЦИЯ О ВЫБРАННОЙ УПАКОВКЕ -->
+                        <div class="packaging-info">
+                            <div class="current-stats">
+                                <div class="stat-item">
+                                    <span class="stat-label">Тип упаковки:</span>
+                                    <span class="stat-value" id="currentPackagingType">Нет</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-label">Количество:</span>
+                                    <span class="stat-value" id="currentPackagingCount">0 шт</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+                
+            <!-- НИЖНЯЯ ЧАСТЬ: КНОПКИ И ОБЩАЯ СТАТИСТИКА -->
+            <div class="bottom-section">
+                <!-- ЛЕВАЯ КОЛОНКА: ФОТО И КНОПКИ -->
+                <div class="bottom-left">
+                    <!-- ФОТО ГРУЗА -->
+                    <div class="photo-section-new">
+                        <div class="photo-container-new" onclick="takePhoto()">
+                            <div class="photo-placeholder-new" id="photoPlaceholder">
+                                <div class="camera-icon-new">📷</div>
+                                <div class="photo-hint-new">Нажмите для фото</div>
+                            </div>
+                            <img id="cargoPhoto" class="cargo-photo-new" style="display: none;">
                         </div>
                     </div>
                     
-                    <!-- ПРАВАЯ КОЛОНКА: ОБЩАЯ СТАТИСТИКА -->
-                    <div class="bottom-right">
-                        <!-- НОВОЕ ОКНО ОБЩЕЙ СТАТИСТИКИ -->
-                        <div class="total-info-window">
-                            <div class="total-info-header">
-                                <h3>Общая информация</h3>
-                                <div class="total-info-refresh" onclick="updateTotalStats()" title="Обновить">
-                                    🔄
+                    <!-- КНОПКИ ВЕРТИКАЛЬНО -->
+                    <div class="action-buttons-column">
+                        <button class="btn-save-new" onclick="saveCargo()">
+                            <span class="btn-icon">💾</span> Сохранить груз
+                        </button>
+                        
+                        <button class="btn-send-new" onclick="sendToOperatorAndReset()">
+                            <span class="btn-icon">📤</span> Отправить все
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- ПРАВАЯ КОЛОНКА: ОБЩАЯ СТАТИСТИКА -->
+                <div class="bottom-right">
+                    <!-- НОВОЕ ОКНО ОБЩЕЙ СТАТИСТИКИ -->
+                    <div class="total-info-window">
+                        <div class="total-info-header">
+                            <h3>Общая информация</h3>
+                            <div class="total-info-refresh" onclick="updateTotalStats()" title="Обновить">
+                                🔄
+                            </div>
+                        </div>
+                        
+                        <div class="total-info-content">
+                            <!-- КОЛИЧЕСТВО МЕСТ -->
+                            <div class="total-info-item">
+                                <div class="total-info-label">
+                                    <span class="total-info-icon">📦</span>
+                                    <span class="total-info-text">Места:</span>
+                                </div>
+                                <div class="total-info-value clickable" onclick="showCargoStatsPopup()" id="totalCargoCount">
+                                    0
+                                    <span class="total-info-arrow">›</span>
                                 </div>
                             </div>
                             
-                            <div class="total-info-content">
-                                <!-- КОЛИЧЕСТВО МЕСТ -->
-                                <div class="total-info-item">
-                                    <div class="total-info-label">
-                                        <span class="total-info-icon">📦</span>
-                                        <span class="total-info-text">Места:</span>
-                                    </div>
-                                    <div class="total-info-value clickable" onclick="showCargoStatsPopup()" id="totalCargoCount">
-                                        0
-                                        <span class="total-info-arrow">›</span>
-                                    </div>
+                            <!-- ОБЩИЙ ОБЪЕМ -->
+                            <div class="total-info-item">
+                                <div class="total-info-label">
+                                    <span class="total-info-icon">📊</span>
+                                    <span class="total-info-text">Общий объем:</span>
                                 </div>
-                                
-                                <!-- ОБЩИЙ ОБЪЕМ -->
-                                <div class="total-info-item">
-                                    <div class="total-info-label">
-                                        <span class="total-info-icon">📊</span>
-                                        <span class="total-info-text">Общий объем:</span>
-                                    </div>
-                                    <div class="total-info-value" id="totalVolumeValue">
-                                        0 м³
-                                    </div>
+                                <div class="total-info-value" id="totalVolumeValue">
+                                    0 м³
                                 </div>
-                                
-                                <!-- ОБЩАЯ МАССА -->
-                                <div class="total-info-item">
-                                    <div class="total-info-label">
-                                        <span class="total-info-icon">⚖️</span>
-                                        <span class="total-info-text">Общая масса:</span>
-                                    </div>
-                                    <div class="total-info-value" id="totalWeightValue">
-                                        0 кг
-                                    </div>
+                            </div>
+                            
+                            <!-- ОБЩАЯ МАССА -->
+                            <div class="total-info-item">
+                                <div class="total-info-label">
+                                    <span class="total-info-icon">⚖️</span>
+                                    <span class="total-info-text">Общая масса:</span>
+                                </div>
+                                <div class="total-info-value" id="totalWeightValue">
+                                    0 кг
+                                </div>
+                            </div>
+                            
+                            <!-- ДОПОЛНИТЕЛЬНАЯ УПАКОВКА -->
+                            <div class="total-info-item">
+                                <div class="total-info-label">
+                                    <span class="total-info-icon">📦</span>
+                                    <span class="total-info-text">Упаковка:</span>
+                                </div>
+                                <div class="total-info-value" id="totalPackagingInfo">
+                                    Нет
                                 </div>
                             </div>
                         </div>
