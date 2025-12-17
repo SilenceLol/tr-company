@@ -148,28 +148,31 @@ h2 {
     width: 100%;
 }
 
-/* УВЕЛИЧЕННЫЕ КНОПКИ ДЛЯ УДОБСТВА */
+/* УВЕЛИЧЕННЫЕ КНОПКИ ДЛЯ РАБОТЫ В ПЕРЧАТКАХ */
 .param-btn {
     background: #3498db;
     color: white;
     border: none;
-    border-radius: 4px;
-    width: 36px; /* Увеличен размер */
-    height: 36px; /* Увеличен размер */
+    border-radius: 6px; /* Более округлые углы */
+    width: 44px; /* Увеличено с 36px */
+    height: 44px; /* Увеличено с 36px */
     display: flex;
     align-items: center;
     justify-content: center;
     font-weight: bold;
     cursor: pointer;
-    font-size: 16px; /* Увеличен шрифт */
+    font-size: 20px; /* Увеличено с 16px */
     transition: all 0.2s;
     flex-shrink: 0;
-    min-width: 36px;
-    min-height: 36px;
+    min-width: 44px;
+    min-height: 44px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Добавим тень для лучшей видимости */
 }
 
 .param-btn:hover {
     background: #2980b9;
+    transform: translateY(-1px);
+    box-shadow: 0 3px 6px rgba(0,0,0,0.15);
 }
 
 .param-btn.minus {
@@ -182,22 +185,23 @@ h2 {
 
 .param-input {
     flex: 1;
-    height: 36px; /* Увеличен размер */
-    padding: 0 8px;
+    height: 44px; /* Увеличено с 36px */
+    padding: 0 10px;
     border: 2px solid #3498db;
-    border-radius: 4px;
-    font-size: 14px; /* Увеличен шрифт */
+    border-radius: 6px;
+    font-size: 16px; /* Увеличено с 14px */
     text-align: center;
     font-weight: bold;
     background: white;
     min-width: 0;
     width: 100%;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
 
 .param-input:focus {
     outline: none;
     border-color: #2980b9;
-    box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
 }
 
 /* СТАТИСТИКА ТЕКУЩЕГО ГРУЗА */
@@ -734,16 +738,17 @@ h2 {
         gap: 5px;
     }
     
+    /* Кнопки остаются большими даже на маленьких экранах */
     .param-btn {
-        width: 32px;
-        height: 32px;
-        font-size: 14px;
+        width: 42px; /* Немного меньше, но все равно большие */
+        height: 42px;
+        font-size: 18px;
     }
     
     .param-input {
-        height: 32px;
-        font-size: 12px;
-        padding: 0 6px;
+        height: 42px;
+        font-size: 14px;
+        padding: 0 8px;
     }
     
     .photo-section-new {
@@ -816,7 +821,7 @@ h2 {
     }
 }
 
-/* ОПТИМИЗАЦИЯ ДЛЯ ПЛАНШЕТОВ - УВЕЛИЧЕННЫЕ ЭЛЕМЕНТЫ */
+/* ОПТИМИЗАЦИЯ ДЛЯ ПЛАНШЕТОВ - ОГРОМНЫЕ КНОПКИ ДЛЯ ПЕРЧАТОК */
 @media (min-width: 768px) and (max-width: 1024px) {
     /* ОСНОВНОЙ КОНТЕЙНЕР */
     .cargo-container {
@@ -868,7 +873,7 @@ h2 {
         font-size: 10px;
     }
     
-    /* ПАРАМЕТРЫ - ЕЩЕ БОЛЬШЕ УВЕЛИЧИВАЕМ ДЛЯ ПЛАНШЕТОВ */
+    /* ПАРАМЕТРЫ - ОГРОМНЫЕ КНОПКИ ДЛЯ РАБОТЫ В ПЕРЧАТКАХ */
     .params-section {
         padding: 15px;
         gap: 12px;
@@ -886,20 +891,27 @@ h2 {
     }
     
     .param-btn {
-        width: 50px; /* Еще больше для планшетов */
-        height: 50px;
-        font-size: 22px;
-        border-radius: 8px;
-        min-width: 50px;
-        min-height: 50px;
+        width: 60px !important; /* ОГРОМНЫЕ кнопки для планшетов */
+        height: 60px !important;
+        font-size: 28px !important;
+        border-radius: 10px !important;
+        min-width: 60px !important;
+        min-height: 60px !important;
+        box-shadow: 0 3px 6px rgba(0,0,0,0.2) !important;
+    }
+    
+    .param-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 10px rgba(0,0,0,0.25) !important;
     }
     
     .param-input {
-        height: 50px;
-        font-size: 18px;
-        padding: 0 12px;
-        border-radius: 8px;
-        border-width: 2px;
+        height: 60px !important;
+        font-size: 22px !important;
+        padding: 0 15px;
+        border-radius: 10px !important;
+        border-width: 3px !important;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.15) !important;
     }
     
     /* ТЕКУЩАЯ СТАТИСТИКА */
@@ -1096,16 +1108,17 @@ h2 {
         padding: 6px;
     }
     
+    /* Даже на маленьких экранах делаем кнопки достаточно большими */
     .param-btn {
-        width: 30px;
-        height: 30px;
-        font-size: 14px;
+        width: 40px;
+        height: 40px;
+        font-size: 18px;
     }
     
     .param-input {
-        height: 30px;
-        font-size: 12px;
-        padding: 0 4px;
+        height: 40px;
+        font-size: 14px;
+        padding: 0 6px;
     }
     
     .bottom-section {
@@ -1183,7 +1196,7 @@ h2 {
     }
 }
 
-/* УВЕЛИЧЕНИЕ ОБЛАСТИ КЛИКА ДЛЯ ПЛАНШЕТОВ */
+/* ОГРОМНЫЕ ТАЧ-ТАРГЕТЫ ДЛЯ РАБОТЫ В ПЕРЧАТКАХ */
 @media (min-width: 768px) {
     button, 
     .cargo-type-item,
@@ -1191,9 +1204,23 @@ h2 {
     .total-info-value.clickable,
     .total-info-refresh,
     .param-btn {
-        min-height: 44px !important;
-        min-width: 44px !important;
+        min-height: 60px !important; /* Очень большие для перчаток */
+        min-width: 60px !important;
         cursor: pointer;
+    }
+    
+    /* Делаем кнопки +/- еще больше на больших экранах */
+    @media (min-width: 1024px) {
+        .param-btn {
+            width: 65px !important;
+            height: 65px !important;
+            font-size: 32px !important;
+        }
+        
+        .param-input {
+            height: 65px !important;
+            font-size: 24px !important;
+        }
     }
 }
 
@@ -1206,7 +1233,7 @@ h2 {
     .total-info-refresh:active,
     .param-btn:active {
         opacity: 0.7;
-        transform: scale(0.98);
+        transform: scale(0.95);
         transition: all 0.1s ease;
     }
 }
@@ -1264,4 +1291,27 @@ h2 {
     .total-info-value {
         font-size: 16px;
     }
+}
+
+/* СПЕЦИАЛЬНЫЕ СТИЛИ ДЛЯ БОЛЬШИХ КНОПОК +/- */
+.param-btn:active {
+    transform: scale(0.95);
+}
+
+.param-btn::after {
+    content: '';
+    position: absolute;
+    top: -5px;
+    left: -5px;
+    right: -5px;
+    bottom: -5px;
+    border-radius: 10px;
+    z-index: -1;
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+.param-btn:active::after {
+    opacity: 1;
+    background: rgba(52, 152, 219, 0.2);
 }
