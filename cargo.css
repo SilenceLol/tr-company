@@ -1,32 +1,27 @@
-/* cargo.css - ПОЛНАЯ ВЕРСИЯ ОПТИМИЗИРОВАННАЯ ДЛЯ 1200×800 */
+/* cargo.css - УПРОЩЕННАЯ ОПТИМИЗАЦИЯ ДЛЯ 1200×800 */
 
 .cargo-container {
     height: 100vh;
-    max-height: 800px;
-    width: 100vw;
-    max-width: 1200px;
     display: flex;
     flex-direction: column;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     padding: 0;
-    margin: 0 auto;
-    overflow: hidden;
+    margin: 0;
 }
 
 .cargo-main {
     flex: 1;
-    overflow: hidden;
+    overflow: auto;
     min-height: 0;
-    padding: 8px;
+    padding: 6px;
     display: flex;
     flex-direction: column;
     background: white;
 }
 
-/* УПРАВЛЯЕМ РАЗМЕРАМИ ШРИФТОВ ДЛЯ 1200×800 */
 h1 {
-    font-size: 1.3em !important;
-    margin: 0 0 10px 0 !important;
+    font-size: 1em !important;
+    margin: 0 0 6px 0 !important;
     text-align: center;
     padding: 0;
     flex-shrink: 0;
@@ -35,22 +30,22 @@ h1 {
 }
 
 h2 {
-    font-size: 1.1em !important;
-    margin: 0 0 8px 0 !important;
+    font-size: 0.85em !important;
+    margin: 0 0 6px 0 !important;
     text-align: center;
     color: #2c3e50;
     padding: 0;
     font-weight: 600;
 }
 
-/* ВЕРХНЯЯ СТРОЧКА ТИПОВ ГРУЗОВ - ОПТИМИЗАЦИЯ */
+/* ВЕРХНЯЯ СТРОЧКА ТИПОВ ГРУЗОВ */
 .cargo-types-row {
     display: flex;
-    gap: 8px;
-    margin-bottom: 10px;
-    padding: 10px;
+    gap: 6px;
+    margin-bottom: 8px;
+    padding: 8px;
     background: #f8f9fa;
-    border-radius: 10px;
+    border-radius: 8px;
     flex-shrink: 0;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
@@ -59,8 +54,8 @@ h2 {
 .cargo-type-item {
     flex: 1;
     border: 2px solid #e0e0e0;
-    border-radius: 10px;
-    padding: 12px 4px;
+    border-radius: 8px;
+    padding: 10px 3px;
     cursor: pointer;
     display: flex;
     flex-direction: column;
@@ -69,8 +64,8 @@ h2 {
     text-align: center;
     background: white;
     transition: all 0.2s;
-    min-height: 75px;
-    min-width: 80px;
+    min-height: 60px;
+    min-width: 70px;
 }
 
 .cargo-type-item.selected {
@@ -86,14 +81,14 @@ h2 {
 }
 
 .cargo-type-icon {
-    width: 36px;
-    height: 36px;
-    margin-bottom: 8px;
+    width: 30px;
+    height: 30px;
+    margin-bottom: 4px;
     display: flex;
     align-items: center;
     justify-content: center;
     overflow: hidden;
-    border-radius: 8px;
+    border-radius: 6px;
     background: white;
     border: 1px solid #ddd;
 }
@@ -106,23 +101,22 @@ h2 {
 }
 
 .cargo-type-icon .emoji-icon {
-    font-size: 22px;
+    font-size: 18px;
 }
 
 .cargo-type-name {
-    font-size: 11px;
+    font-size: 9px;
     font-weight: 600;
     color: #2c3e50;
     line-height: 1.2;
 }
 
-/* ДВЕ КОЛОНКИ С ОГРАНИЧЕНИЕМ ПО ВЫСОТЕ */
+/* ОСНОВНОЙ КОНТЕНТ: ДВЕ КОЛОНКИ */
 .cargo-content-two-column {
     flex: 1;
     display: flex;
-    gap: 10px;
+    gap: 8px;
     min-height: 0;
-    max-height: 350px;
     overflow: hidden;
 }
 
@@ -131,7 +125,6 @@ h2 {
     display: flex;
     flex-direction: column;
     min-width: 0;
-    max-height: 350px;
 }
 
 .right-column {
@@ -139,56 +132,50 @@ h2 {
     display: flex;
     flex-direction: column;
     min-width: 0;
-    max-height: 350px;
 }
 
-/* КОМПАКТНАЯ СЕКЦИЯ ПАРАМЕТРОВ ГРУЗА */
+/* СЕКЦИЯ РЕДАКТИРОВАНИЯ ПАРАМЕТРОВ */
 .params-section {
     background: #f8f9fa;
     border: 1px solid #e9ecef;
-    border-radius: 10px;
-    padding: 12px;
+    border-radius: 8px;
+    padding: 10px;
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 6px;
     flex-shrink: 0;
     max-width: 100%;
+    margin: 0 auto;
     height: 100%;
-    overflow-y: auto;
-    min-height: 0;
 }
 
-/* СЕКЦИЯ УПАКОВКИ - ТАКОЙ ЖЕ РАЗМЕР */
+/* СЕКЦИЯ ДОПОЛНИТЕЛЬНОЙ УПАКОВКИ */
 .packaging-section {
     background: #f8f9fa;
     border: 1px solid #e9ecef;
-    border-radius: 10px;
-    padding: 12px;
+    border-radius: 8px;
+    padding: 10px;
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 6px;
     flex-shrink: 0;
     max-width: 100%;
+    margin: 0 auto;
     height: 100%;
-    overflow-y: auto;
-    min-height: 0;
 }
 
-/* КОМПАКТНЫЕ ПАРАМЕТРЫ ДЛЯ ВМЕСТИМОСТИ */
 .param-group {
     display: flex;
     flex-direction: column;
-    gap: 5px;
-    min-height: 70px;
+    gap: 4px;
 }
 
 .param-label {
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 600;
     color: #495057;
     text-align: left;
     margin-left: 2px;
-    margin-bottom: 2px;
 }
 
 .param-control {
@@ -196,10 +183,9 @@ h2 {
     align-items: center;
     gap: 6px;
     width: 100%;
-    height: 44px;
 }
 
-/* КОМПАКТНЫЕ КНОПКИ */
+/* КНОПКИ */
 .param-btn {
     background: #3498db;
     color: white;
@@ -234,11 +220,10 @@ h2 {
     background: #c0392b;
 }
 
-/* КОМПАКТНЫЕ ПОЛЯ ВВОДА */
 .param-input {
     flex: 1;
     height: 44px;
-    padding: 0 8px;
+    padding: 0 10px;
     border: 2px solid #3498db;
     border-radius: 8px;
     font-size: 16px;
@@ -256,47 +241,11 @@ h2 {
     box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
 }
 
-/* КОМПАКТНАЯ СТАТИСТИКА */
-.current-stats {
-    display: flex;
-    gap: 8px;
-    margin-top: 6px;
-    padding-top: 8px;
-    border-top: 1px solid #dee2e6;
-    flex-shrink: 0;
-}
-
-.current-stats .stat-item {
-    flex: 1;
-    text-align: center;
-    background: #e3f2fd;
-    border-radius: 6px;
-    padding: 6px;
-    min-height: 50px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-}
-
-.current-stats .stat-label {
-    font-size: 9px;
-    color: #666;
-    display: block;
-    margin-bottom: 2px;
-}
-
-.current-stats .stat-value {
-    font-weight: bold;
-    font-size: 12px;
-    color: #2c3e50;
-}
-
-/* ВЫБОР ТИПА УПАКОВКИ - КОМПАКТНЫЙ */
+/* ВЫБОР ТИПА УПАКОВКИ */
 .packaging-type-selector {
     display: flex;
     gap: 6px;
     justify-content: space-between;
-    margin-bottom: 5px;
 }
 
 .packaging-type-item {
@@ -339,39 +288,66 @@ h2 {
     line-height: 1.2;
 }
 
-/* НИЖНЯЯ ЧАСТЬ - ПЕРЕРАСПРЕДЕЛЕНИЕ ВЫСОТЫ */
+/* СТАТИСТИКА ТЕКУЩЕГО ГРУЗА */
+.current-stats {
+    display: flex;
+    gap: 8px;
+    margin-top: 6px;
+    padding-top: 8px;
+    border-top: 1px solid #dee2e6;
+}
+
+.current-stats .stat-item {
+    flex: 1;
+    text-align: center;
+    background: #e3f2fd;
+    border-radius: 6px;
+    padding: 6px;
+}
+
+.current-stats .stat-label {
+    font-size: 9px;
+    color: #666;
+    display: block;
+    margin-bottom: 2px;
+}
+
+.current-stats .stat-value {
+    font-weight: bold;
+    font-size: 11px;
+    color: #2c3e50;
+}
+
+/* НИЖНЯЯ ЧАСТЬ: КНОПКИ И ОБЩАЯ СТАТИСТИКА */
 .bottom-section {
     flex: 1;
     display: flex;
-    gap: 10px;
-    min-height: 200px;
-    max-height: 250px;
-    margin-top: 10px;
+    gap: 8px;
+    min-height: 0;
+    margin-top: 8px;
 }
 
 .bottom-left {
     flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 8px;
     min-width: 0;
-    min-height: 200px;
 }
 
 .bottom-right {
     flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 8px;
     min-width: 0;
-    min-height: 200px;
 }
 
-/* КОМПАКТНАЯ ФОТО СЕКЦИЯ */
+/* УМЕНЬШЕННАЯ ФОТО СЕКЦИЯ */
 .photo-section-new {
     display: flex;
     flex-direction: column;
-    gap: 5px;
+    gap: 4px;
     background: #f8f9fa;
     border: 1px solid #e9ecef;
     border-radius: 8px;
@@ -420,7 +396,7 @@ h2 {
     font-size: 9px;
     color: #666;
     text-align: center;
-    max-width: 40px;
+    max-width: 45px;
     line-height: 1.2;
 }
 
@@ -431,7 +407,7 @@ h2 {
     border-radius: 6px;
 }
 
-/* КОМПАКТНЫЕ КНОПКИ ДЕЙСТВИЙ */
+/* КНОПКИ ВЕРТИКАЛЬНО */
 .action-buttons-column {
     display: flex;
     flex-direction: column;
@@ -440,7 +416,6 @@ h2 {
     margin-top: 6px;
     flex: 1;
     justify-content: flex-start;
-    min-height: 100px;
 }
 
 .btn-save-new {
@@ -450,7 +425,7 @@ h2 {
     border: none;
     border-radius: 8px;
     padding: 10px 6px;
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 600;
     cursor: pointer;
     display: flex;
@@ -475,7 +450,7 @@ h2 {
     border: none;
     border-radius: 8px;
     padding: 10px 6px;
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 600;
     cursor: pointer;
     display: flex;
@@ -497,7 +472,7 @@ h2 {
     font-size: 16px;
 }
 
-/* КОМПАКТНОЕ ОКНО ОБЩЕЙ ИНФОРМАЦИИ */
+/* ОКНО ОБЩЕЙ ИНФОРМАЦИИ */
 .total-info-window {
     background: linear-gradient(135deg, #2c3e50, #34495e);
     color: white;
@@ -519,7 +494,6 @@ h2 {
     margin-bottom: 10px;
     padding-bottom: 6px;
     border-bottom: 1px solid rgba(255,255,255,0.1);
-    flex-shrink: 0;
 }
 
 .total-info-header h3 {
@@ -554,8 +528,6 @@ h2 {
     flex-direction: column;
     gap: 8px;
     flex: 1;
-    min-height: 0;
-    overflow-y: auto;
 }
 
 .total-info-item {
@@ -568,7 +540,6 @@ h2 {
     border: 1px solid rgba(255,255,255,0.05);
     transition: all 0.2s;
     min-height: 45px;
-    flex-shrink: 0;
 }
 
 .total-info-item:hover {
@@ -617,6 +588,554 @@ h2 {
     font-size: 16px;
     opacity: 0.7;
     margin-left: 3px;
+}
+
+/* АДАПТИВНОСТЬ ДЛЯ МОБИЛЬНЫХ */
+@media (max-height: 600px) {
+    .cargo-main {
+        padding: 4px;
+    }
+    
+    h1 {
+        font-size: 0.9em !important;
+        margin-bottom: 4px !important;
+    }
+    
+    h2 {
+        font-size: 0.8em !important;
+        margin-bottom: 4px !important;
+    }
+    
+    .cargo-types-row {
+        margin-bottom: 6px;
+        padding: 6px;
+    }
+    
+    .cargo-type-item {
+        min-height: 55px;
+        padding: 6px 2px;
+    }
+    
+    .cargo-type-icon {
+        width: 26px;
+        height: 26px;
+    }
+    
+    .cargo-type-icon .emoji-icon {
+        font-size: 16px;
+    }
+    
+    .cargo-type-name {
+        font-size: 8px;
+    }
+    
+    .params-section, .packaging-section {
+        padding: 8px;
+        gap: 4px;
+    }
+    
+    .param-btn {
+        width: 40px;
+        height: 40px;
+        font-size: 18px;
+    }
+    
+    .param-input {
+        height: 40px;
+        font-size: 14px;
+        padding: 0 8px;
+    }
+    
+    .photo-section-new {
+        height: 90px;
+        padding: 6px;
+    }
+    
+    .photo-container-new {
+        width: 45px;
+        height: 45px;
+    }
+    
+    .camera-icon-new {
+        font-size: 16px;
+    }
+    
+    .photo-hint-new {
+        font-size: 8px;
+        max-width: 40px;
+    }
+    
+    .action-buttons-column {
+        gap: 6px;
+        margin-top: 4px;
+    }
+    
+    .btn-save-new, .btn-send-new {
+        padding: 8px 4px;
+        font-size: 11px;
+        min-height: 40px;
+    }
+    
+    .total-info-window {
+        padding: 10px;
+    }
+    
+    .total-info-header h3 {
+        font-size: 12px;
+    }
+    
+    .total-info-refresh {
+        width: 24px;
+        height: 24px;
+        font-size: 11px;
+    }
+    
+    .total-info-content {
+        gap: 6px;
+    }
+    
+    .total-info-item {
+        padding: 6px 8px;
+        min-height: 40px;
+    }
+    
+    .total-info-label {
+        font-size: 11px;
+        gap: 6px;
+    }
+    
+    .total-info-icon {
+        font-size: 12px;
+    }
+    
+    .total-info-value {
+        font-size: 12px;
+    }
+    
+    .packaging-type-item {
+        min-height: 50px;
+        padding: 6px 1px;
+    }
+    
+    .packaging-type-icon {
+        font-size: 14px;
+    }
+    
+    .packaging-type-name {
+        font-size: 8px;
+    }
+}
+
+/* ОПТИМИЗАЦИЯ ДЛЯ ПЛАНШЕТОВ */
+@media (min-width: 768px) and (max-width: 1024px) {
+    /* ОСНОВНОЙ КОНТЕЙНЕР */
+    .cargo-container {
+        max-width: 800px;
+        margin: 8px auto;
+        border-radius: 12px;
+        height: calc(100vh - 16px);
+    }
+    
+    .cargo-main {
+        padding: 10px;
+    }
+    
+    h1 {
+        font-size: 1.2em !important;
+        margin-bottom: 8px !important;
+    }
+    
+    h2 {
+        font-size: 1em !important;
+        margin-bottom: 8px !important;
+    }
+    
+    /* ТИПЫ ГРУЗОВ */
+    .cargo-types-row {
+        margin-bottom: 10px;
+        padding: 10px;
+        gap: 8px;
+    }
+    
+    .cargo-type-item {
+        min-height: 75px;
+        padding: 10px 3px;
+    }
+    
+    .cargo-type-icon {
+        width: 36px;
+        height: 36px;
+    }
+    
+    .cargo-type-icon .emoji-icon {
+        font-size: 22px;
+    }
+    
+    .cargo-type-name {
+        font-size: 11px;
+    }
+    
+    /* ПАРАМЕТРЫ */
+    .params-section, .packaging-section {
+        padding: 12px;
+        gap: 8px;
+    }
+    
+    .param-label {
+        font-size: 11px;
+    }
+    
+    .param-control {
+        gap: 8px;
+    }
+    
+    .param-btn {
+        width: 48px;
+        height: 48px;
+        font-size: 22px;
+    }
+    
+    .param-input {
+        height: 48px;
+        font-size: 18px;
+    }
+    
+    /* ТЕКУЩАЯ СТАТИСТИКА */
+    .current-stats {
+        gap: 10px;
+        margin-top: 8px;
+        padding-top: 8px;
+    }
+    
+    .current-stats .stat-item {
+        padding: 8px;
+    }
+    
+    .current-stats .stat-label {
+        font-size: 10px;
+    }
+    
+    .current-stats .stat-value {
+        font-size: 12px;
+    }
+    
+    /* НИЖНЯЯ ЧАСТЬ */
+    .bottom-section {
+        gap: 10px;
+        margin-top: 10px;
+    }
+    
+    /* ФОТО СЕКЦИЯ */
+    .photo-section-new {
+        height: 110px;
+        padding: 10px;
+    }
+    
+    .photo-container-new {
+        width: 55px;
+        height: 55px;
+    }
+    
+    .camera-icon-new {
+        font-size: 20px;
+    }
+    
+    .photo-hint-new {
+        font-size: 10px;
+        max-width: 50px;
+    }
+    
+    /* КНОПКИ ВЕРТИКАЛЬНО */
+    .action-buttons-column {
+        gap: 10px;
+        margin-top: 8px;
+    }
+    
+    .btn-save-new, .btn-send-new {
+        padding: 12px 8px;
+        font-size: 13px;
+        min-height: 50px;
+    }
+    
+    .btn-icon {
+        font-size: 18px;
+    }
+    
+    /* ОБЩАЯ ИНФОРМАЦИЯ */
+    .total-info-window {
+        padding: 15px;
+    }
+    
+    .total-info-header h3 {
+        font-size: 14px;
+    }
+    
+    .total-info-refresh {
+        width: 32px;
+        height: 32px;
+        font-size: 14px;
+    }
+    
+    .total-info-content {
+        gap: 10px;
+    }
+    
+    .total-info-item {
+        padding: 10px 12px;
+        min-height: 50px;
+    }
+    
+    .total-info-label {
+        font-size: 13px;
+        gap: 10px;
+    }
+    
+    .total-info-icon {
+        font-size: 16px;
+    }
+    
+    .total-info-value {
+        font-size: 14px;
+    }
+    
+    /* УПАКОВКА */
+    .packaging-type-item {
+        min-height: 60px;
+        padding: 10px 2px;
+    }
+    
+    .packaging-type-icon {
+        font-size: 18px;
+    }
+    
+    .packaging-type-name {
+        font-size: 10px;
+    }
+}
+
+/* ДЛЯ ГОРИЗОНТАЛЬНЫХ ПЛАНШЕТОВ */
+@media (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) {
+    .cargo-container {
+        max-width: 900px;
+        height: 90vh;
+    }
+    
+    .params-section, .packaging-section {
+        max-width: 95%;
+    }
+    
+    .bottom-section {
+        min-height: 200px;
+    }
+    
+    .photo-section-new {
+        height: 100px;
+    }
+    
+    .total-info-window {
+        min-height: 200px;
+    }
+}
+
+/* ДЛЯ ОЧЕНЬ МАЛЕНЬКИХ ЭКРАНОВ */
+@media (max-width: 320px) {
+    .cargo-content-two-column {
+        flex-direction: column;
+        gap: 6px;
+    }
+    
+    .params-section, .packaging-section {
+        padding: 6px;
+    }
+    
+    .param-btn {
+        width: 38px;
+        height: 38px;
+        font-size: 16px;
+    }
+    
+    .param-input {
+        height: 38px;
+        font-size: 14px;
+        padding: 0 6px;
+    }
+    
+    .cargo-type-item {
+        min-height: 50px;
+        padding: 4px 1px;
+    }
+    
+    .cargo-type-icon {
+        width: 24px;
+        height: 24px;
+    }
+    
+    .cargo-type-icon .emoji-icon {
+        font-size: 14px;
+    }
+    
+    .cargo-type-name {
+        font-size: 7px;
+    }
+    
+    .packaging-type-item {
+        min-height: 45px;
+        padding: 4px 1px;
+    }
+    
+    .packaging-type-icon {
+        font-size: 12px;
+    }
+    
+    .packaging-type-name {
+        font-size: 7px;
+    }
+    
+    .bottom-section {
+        flex-direction: column;
+        gap: 6px;
+    }
+    
+    .photo-section-new {
+        height: 80px;
+    }
+    
+    .photo-container-new {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .camera-icon-new {
+        font-size: 14px;
+    }
+    
+    .photo-hint-new {
+        font-size: 7px;
+        max-width: 35px;
+    }
+    
+    .action-buttons-column {
+        gap: 4px;
+        margin-top: 4px;
+    }
+    
+    .btn-save-new, .btn-send-new {
+        min-height: 35px;
+        font-size: 10px;
+        padding: 6px 3px;
+    }
+    
+    .total-info-window {
+        padding: 8px;
+    }
+    
+    .total-info-header h3 {
+        font-size: 11px;
+    }
+    
+    .total-info-refresh {
+        width: 22px;
+        height: 22px;
+        font-size: 10px;
+    }
+    
+    .total-info-content {
+        gap: 4px;
+    }
+    
+    .total-info-item {
+        padding: 6px 8px;
+        min-height: 35px;
+    }
+    
+    .total-info-label {
+        font-size: 10px;
+        gap: 4px;
+    }
+    
+    .total-info-icon {
+        font-size: 10px;
+    }
+    
+    .total-info-value {
+        font-size: 11px;
+    }
+}
+
+/* ПОДСВЕТКА ВЫБРАННОГО ГРУЗА */
+.cargo-type-item.selected::before {
+    content: '✓';
+    position: absolute;
+    top: 3px;
+    right: 3px;
+    width: 16px;
+    height: 16px;
+    background: #3498db;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: bold;
+}
+
+/* ПОДСВЕТКА ВЫБРАННОЙ УПАКОВКИ */
+.packaging-type-item.selected::before {
+    content: '✓';
+    position: absolute;
+    top: 3px;
+    right: 3px;
+    width: 16px;
+    height: 16px;
+    background: #27ae60;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: bold;
+}
+
+.packaging-type-item {
+    position: relative;
+}
+
+.packaging-type-item * {
+    pointer-events: none;
+}
+
+/* ОПТИМИЗАЦИЯ ДЛЯ IOS */
+@supports (-webkit-touch-callout: none) {
+    .cargo-type-item,
+    .packaging-type-item,
+    .photo-container-new,
+    .total-info-value.clickable,
+    .total-info-refresh,
+    .param-btn {
+        cursor: pointer;
+        -webkit-tap-highlight-color: rgba(0,0,0,0);
+    }
+    
+    .param-input {
+        font-size: 16px;
+    }
+}
+
+/* ИСПРАВЛЕНИЕ ПРОБЛЕМ С КЛИКАМИ НА ПЛАНШЕТАХ */
+@media (hover: none) and (pointer: coarse) {
+    .cargo-type-item:active,
+    .packaging-type-item:active,
+    .photo-container-new:active,
+    .total-info-value.clickable:active,
+    button:active,
+    .total-info-refresh:active,
+    .param-btn:active {
+        opacity: 0.7;
+        transform: scale(0.95);
+        transition: all 0.1s ease;
+    }
 }
 
 /* СТИЛИ ДЛЯ МАЛЕНЬКОГО ОКОШКА СТАТИСТИКИ */
@@ -784,674 +1303,4 @@ h2 {
 @keyframes overlayFadeIn {
     from { opacity: 0; }
     to { opacity: 1; }
-}
-
-/* МЕДИА-ЗАПРОСЫ ДЛЯ ТОЧНОГО РАЗРЕШЕНИЯ 1200×800 */
-
-/* Вертикальные экраны с высотой менее 800px */
-@media (max-height: 800px) {
-    .cargo-container {
-        max-height: 100vh;
-    }
-    
-    .cargo-content-two-column {
-        max-height: 300px;
-    }
-    
-    .bottom-section {
-        max-height: 220px;
-        min-height: 180px;
-    }
-    
-    .param-group {
-        min-height: 60px;
-    }
-    
-    .param-btn {
-        width: 40px;
-        height: 40px;
-        font-size: 18px;
-    }
-    
-    .param-input {
-        height: 40px;
-        font-size: 15px;
-    }
-    
-    .current-stats .stat-item {
-        min-height: 45px;
-        padding: 4px;
-    }
-    
-    .photo-section-new {
-        height: 90px;
-    }
-    
-    .photo-container-new {
-        width: 45px;
-        height: 45px;
-    }
-    
-    .btn-save-new, .btn-send-new {
-        min-height: 40px;
-        font-size: 12px;
-        padding: 8px 5px;
-    }
-}
-
-/* Горизонтальные экраны с шириной менее 1200px */
-@media (max-width: 1200px) {
-    .cargo-container {
-        max-width: 100vw;
-    }
-    
-    .cargo-content-two-column {
-        gap: 8px;
-    }
-    
-    .params-section, .packaging-section {
-        padding: 10px;
-        gap: 6px;
-    }
-    
-    .cargo-type-item {
-        min-height: 70px;
-        padding: 10px 3px;
-    }
-    
-    .cargo-type-icon {
-        width: 32px;
-        height: 32px;
-    }
-    
-    .cargo-type-icon .emoji-icon {
-        font-size: 20px;
-    }
-    
-    .cargo-type-name {
-        font-size: 10px;
-    }
-}
-
-/* УЛЬТРАКОМПАКТНЫЙ РЕЖИМ ДЛЯ МАЛЕНЬКОЙ ВЫСОТЫ */
-@media (max-height: 700px) {
-    .cargo-main {
-        padding: 5px;
-    }
-    
-    h1 {
-        font-size: 1.1em !important;
-        margin-bottom: 6px !important;
-    }
-    
-    h2 {
-        font-size: 0.95em !important;
-        margin-bottom: 6px !important;
-    }
-    
-    .cargo-types-row {
-        margin-bottom: 6px;
-        padding: 6px;
-    }
-    
-    .cargo-content-two-column {
-        max-height: 280px;
-        gap: 6px;
-    }
-    
-    .param-group {
-        min-height: 55px;
-        gap: 3px;
-    }
-    
-    .param-control {
-        height: 38px;
-    }
-    
-    .param-btn {
-        width: 36px;
-        height: 36px;
-        font-size: 16px;
-    }
-    
-    .param-input {
-        height: 36px;
-        font-size: 14px;
-        padding: 0 6px;
-    }
-    
-    .current-stats {
-        gap: 6px;
-        margin-top: 4px;
-        padding-top: 6px;
-    }
-    
-    .current-stats .stat-item {
-        min-height: 40px;
-        padding: 3px;
-    }
-    
-    .current-stats .stat-label {
-        font-size: 8px;
-    }
-    
-    .current-stats .stat-value {
-        font-size: 11px;
-    }
-    
-    .packaging-type-item {
-        min-height: 50px;
-        padding: 6px 1px;
-    }
-    
-    .packaging-type-icon {
-        font-size: 14px;
-    }
-    
-    .packaging-type-name {
-        font-size: 8px;
-    }
-    
-    .bottom-section {
-        min-height: 160px;
-        max-height: 180px;
-        margin-top: 8px;
-        gap: 8px;
-    }
-    
-    .photo-section-new {
-        height: 80px;
-        padding: 6px;
-    }
-    
-    .photo-container-new {
-        width: 40px;
-        height: 40px;
-    }
-    
-    .camera-icon-new {
-        font-size: 16px;
-        margin-bottom: 3px;
-    }
-    
-    .photo-hint-new {
-        font-size: 8px;
-        max-width: 35px;
-    }
-    
-    .action-buttons-column {
-        gap: 6px;
-        margin-top: 4px;
-    }
-    
-    .btn-save-new, .btn-send-new {
-        min-height: 38px;
-        font-size: 11px;
-        padding: 6px 4px;
-    }
-    
-    .total-info-window {
-        padding: 10px;
-    }
-    
-    .total-info-header {
-        margin-bottom: 8px;
-    }
-    
-    .total-info-header h3 {
-        font-size: 12px;
-    }
-    
-    .total-info-refresh {
-        width: 24px;
-        height: 24px;
-        font-size: 11px;
-    }
-    
-    .total-info-content {
-        gap: 6px;
-    }
-    
-    .total-info-item {
-        padding: 6px 8px;
-        min-height: 40px;
-    }
-    
-    .total-info-label {
-        font-size: 11px;
-        gap: 6px;
-    }
-    
-    .total-info-icon {
-        font-size: 12px;
-    }
-    
-    .total-info-value {
-        font-size: 12px;
-    }
-}
-
-/* ГОРИЗОНТАЛЬНЫЙ РЕЖИМ ДЛЯ МАЛЕНЬКОЙ ШИРИНЫ */
-@media (max-width: 900px) {
-    .cargo-content-two-column {
-        flex-direction: column;
-        max-height: none;
-        min-height: 300px;
-    }
-    
-    .left-column, .right-column {
-        max-height: 180px;
-        min-height: 180px;
-    }
-    
-    .bottom-section {
-        min-height: 180px;
-        max-height: 200px;
-    }
-}
-
-/* ГОРИЗОНТАЛЬНЫЙ РЕЖИМ С МАЛЕНЬКОЙ ВЫСОТОЙ */
-@media (max-width: 900px) and (max-height: 700px) {
-    .left-column, .right-column {
-        max-height: 160px;
-        min-height: 160px;
-    }
-    
-    .bottom-section {
-        min-height: 150px;
-        max-height: 170px;
-    }
-}
-
-/* АВТОМАТИЧЕСКАЯ ОПТИМИЗАЦИЯ ДЛЯ ТОЧНОГО РАЗРЕШЕНИЯ 1200×800 */
-@media (width: 1200px) and (height: 800px) {
-    .cargo-container {
-        border-radius: 15px;
-        margin: 0 auto;
-        box-shadow: 0 5px 20px rgba(0,0,0,0.3);
-    }
-    
-    .cargo-main {
-        padding: 12px;
-    }
-    
-    h1 {
-        font-size: 1.5em !important;
-        margin-bottom: 12px !important;
-    }
-    
-    .cargo-types-row {
-        gap: 10px;
-        margin-bottom: 12px;
-        padding: 12px;
-    }
-    
-    .cargo-type-item {
-        min-height: 85px;
-        border-radius: 12px;
-    }
-    
-    .cargo-type-icon {
-        width: 40px;
-        height: 40px;
-    }
-    
-    .cargo-type-icon .emoji-icon {
-        font-size: 24px;
-    }
-    
-    .cargo-type-name {
-        font-size: 12px;
-    }
-    
-    .cargo-content-two-column {
-        gap: 12px;
-        max-height: 380px;
-    }
-    
-    .params-section, .packaging-section {
-        padding: 15px;
-        border-radius: 12px;
-    }
-    
-    .param-group {
-        min-height: 75px;
-        gap: 6px;
-    }
-    
-    .param-label {
-        font-size: 12px;
-    }
-    
-    .param-control {
-        height: 48px;
-        gap: 8px;
-    }
-    
-    .param-btn {
-        width: 48px;
-        height: 48px;
-        font-size: 22px;
-    }
-    
-    .param-input {
-        height: 48px;
-        font-size: 18px;
-    }
-    
-    .current-stats .stat-item {
-        min-height: 55px;
-    }
-    
-    .current-stats .stat-label {
-        font-size: 10px;
-    }
-    
-    .current-stats .stat-value {
-        font-size: 13px;
-    }
-    
-    .packaging-type-item {
-        min-height: 60px;
-        padding: 10px 2px;
-    }
-    
-    .packaging-type-icon {
-        font-size: 18px;
-    }
-    
-    .packaging-type-name {
-        font-size: 10px;
-    }
-    
-    .bottom-section {
-        gap: 12px;
-        margin-top: 12px;
-        max-height: 270px;
-        min-height: 220px;
-    }
-    
-    .photo-section-new {
-        height: 120px;
-        padding: 12px;
-        border-radius: 10px;
-    }
-    
-    .photo-container-new {
-        width: 60px;
-        height: 60px;
-    }
-    
-    .camera-icon-new {
-        font-size: 22px;
-    }
-    
-    .photo-hint-new {
-        font-size: 10px;
-        max-width: 45px;
-    }
-    
-    .btn-save-new, .btn-send-new {
-        min-height: 50px;
-        font-size: 14px;
-        padding: 12px 8px;
-        border-radius: 10px;
-    }
-    
-    .btn-icon {
-        font-size: 18px;
-    }
-    
-    .total-info-window {
-        padding: 15px;
-        border-radius: 12px;
-    }
-    
-    .total-info-header h3 {
-        font-size: 14px;
-    }
-    
-    .total-info-refresh {
-        width: 32px;
-        height: 32px;
-        font-size: 14px;
-    }
-    
-    .total-info-item {
-        padding: 10px 12px;
-        min-height: 50px;
-    }
-    
-    .total-info-label {
-        font-size: 13px;
-    }
-    
-    .total-info-value {
-        font-size: 14px;
-    }
-}
-
-/* ОПТИМИЗАЦИЯ СКРОЛЛА ДЛЯ КОМПАКТНЫХ СЕКЦИЙ */
-.params-section::-webkit-scrollbar,
-.packaging-section::-webkit-scrollbar,
-.total-info-content::-webkit-scrollbar {
-    width: 4px;
-}
-
-.params-section::-webkit-scrollbar-track,
-.packaging-section::-webkit-scrollbar-track,
-.total-info-content::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    border-radius: 2px;
-}
-
-.params-section::-webkit-scrollbar-thumb,
-.packaging-section::-webkit-scrollbar-thumb,
-.total-info-content::-webkit-scrollbar-thumb {
-    background: #3498db;
-    border-radius: 2px;
-}
-
-/* ОПТИМИЗАЦИЯ ДЛЯ IOS */
-@supports (-webkit-touch-callout: none) {
-    .cargo-type-item,
-    .packaging-type-item,
-    .photo-container-new,
-    .total-info-value.clickable,
-    .total-info-refresh,
-    .param-btn {
-        cursor: pointer;
-        -webkit-tap-highlight-color: rgba(0,0,0,0);
-    }
-    
-    .param-input {
-        font-size: 16px;
-    }
-}
-
-/* ИСПРАВЛЕНИЕ ПРОБЛЕМ С КЛИКАМИ НА ПЛАНШЕТАХ */
-@media (hover: none) and (pointer: coarse) {
-    .cargo-type-item:active,
-    .packaging-type-item:active,
-    .photo-container-new:active,
-    .total-info-value.clickable:active,
-    button:active,
-    .total-info-refresh:active,
-    .param-btn:active {
-        opacity: 0.7;
-        transform: scale(0.95);
-        transition: all 0.1s ease;
-    }
-}
-
-/* ПОДСВЕТКА ВЫБРАННОГО ГРУЗА */
-.cargo-type-item.selected::before {
-    content: '✓';
-    position: absolute;
-    top: 5px;
-    right: 5px;
-    width: 20px;
-    height: 20px;
-    background: #3498db;
-    color: white;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 12px;
-    font-weight: bold;
-}
-
-/* ПОДСВЕТКА ВЫБРАННОЙ УПАКОВКИ */
-.packaging-type-item.selected::before {
-    content: '✓';
-    position: absolute;
-    top: 5px;
-    right: 5px;
-    width: 20px;
-    height: 20px;
-    background: #27ae60;
-    color: white;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 12px;
-    font-weight: bold;
-}
-
-/* УПАКОВКА: АКТИВНЫЕ ЭФФЕКТЫ */
-.packaging-type-item {
-    position: relative;
-}
-
-.packaging-type-item * {
-    pointer-events: none;
-}
-
-.packaging-type-item::after {
-    content: '';
-    position: absolute;
-    top: -2px;
-    left: -2px;
-    right: -2px;
-    bottom: -2px;
-    border-radius: 10px;
-    z-index: -1;
-    opacity: 0;
-    transition: opacity 0.2s;
-}
-
-.packaging-type-item:active::after {
-    opacity: 1;
-    background: rgba(39, 174, 96, 0.1);
-}
-
-/* СПЕЦИАЛЬНЫЕ СТИЛИ ДЛЯ БОЛЬШИХ КНОПОК +/- */
-.param-btn:active {
-    transform: scale(0.95);
-}
-
-.param-btn::after {
-    content: '';
-    position: absolute;
-    top: -4px;
-    left: -4px;
-    right: -4px;
-    bottom: -4px;
-    border-radius: 10px;
-    z-index: -1;
-    opacity: 0;
-    transition: opacity 0.2s;
-}
-
-.param-btn:active::after {
-    opacity: 1;
-    background: rgba(52, 152, 219, 0.2);
-}
-
-/* ДОПОЛНИТЕЛЬНЫЕ КЛАССЫ ДЛЯ ДИНАМИЧЕСКОЙ ОПТИМИЗАЦИИ */
-.compact-mode .param-group {
-    min-height: 65px !important;
-}
-
-.compact-mode .current-stats .stat-item {
-    min-height: 42px !important;
-}
-
-.compact-mode .photo-section-new {
-    height: 85px !important;
-}
-
-.ultra-compact .param-group {
-    min-height: 55px !important;
-}
-
-.ultra-compact .current-stats .stat-item {
-    min-height: 35px !important;
-}
-
-.ultra-compact .photo-section-new {
-    height: 75px !important;
-}
-
-/* ВИЗУАЛЬНАЯ ИНДИКАЦИЯ ПЕРЕПОЛНЕНИЯ */
-.params-section.overflowing,
-.packaging-section.overflowing {
-    border-color: #ff9800;
-}
-
-/* СКРЫТИЕ НЕОБЯЗАТЕЛЬНЫХ ЭЛЕМЕНТОВ ПРИ СЖАТИИ */
-@media (max-height: 650px) {
-    .cargo-type-icon {
-        width: 28px !important;
-        height: 28px !important;
-    }
-    
-    .cargo-type-icon .emoji-icon {
-        font-size: 16px !important;
-    }
-    
-    .packaging-type-icon {
-        font-size: 12px !important;
-    }
-    
-    .packaging-type-name {
-        font-size: 7px !important;
-    }
-}
-
-/* ОГРОМНЫЕ ТАЧ-ТАРГЕТЫ ДЛЯ РАБОТЫ В ПЕРЧАТКАХ */
-@media (min-width: 768px) {
-    button, 
-    .cargo-type-item,
-    .packaging-type-item,
-    .photo-container-new,
-    .total-info-value.clickable,
-    .total-info-refresh,
-    .param-btn {
-        min-height: 44px !important;
-        min-width: 44px !important;
-        cursor: pointer;
-    }
-}
-
-/* ПРЕДОТВРАЩЕНИЕ ВЫДЕЛЕНИЯ ТЕКСТА */
-.no-select {
-    -webkit-tap-highlight-color: transparent;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-}
-
-/* УЛУЧШЕНИЕ ДОСТУПНОСТИ */
-*:focus {
-    outline: 2px solid #3498db;
-    outline-offset: 2px;
-}
-
-/* УБИРАЕМ СТАНДАРТНОЕ ПОВЕДЕНИЕ PULL-TO-REFRESH */
-body {
-    overscroll-behavior-y: contain;
 }
