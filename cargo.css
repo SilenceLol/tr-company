@@ -1,4 +1,4 @@
-/* cargo.css - НОВАЯ ВЕРСИЯ С ПРАВИЛЬНОЙ СТРУКТУРОЙ - УЛУЧШЕННЫЙ ДИЗАЙН ПАРАМЕТРОВ */
+/* cargo.css - ОПТИМИЗИРОВАННАЯ ВЕРСИЯ С ГРУППИРОВКОЙ ГРУЗОВ */
 
 .cargo-container {
     height: 100vh;
@@ -19,42 +19,62 @@
     background: white;
 }
 
-h1 {
-    font-size: 1em !important;
-    margin: 0 0 6px 0 !important;
-    text-align: center;
-    padding: 0;
+/* НОВЫЙ ЛАЙАУТ: ДВЕ КОЛОНКИ */
+.cargo-content-two-column {
+    flex: 1;
+    display: flex;
+    gap: 6px;
+    min-height: 0;
+    overflow: hidden;
+}
+
+.left-column {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.right-column {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+/* СЕКЦИЯ ДОПОЛНИТЕЛЬНОЙ УПАКОВКИ - БОЛЕЕ КОМПАКТНАЯ */
+.packaging-section {
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 6px;
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
     flex-shrink: 0;
-    color: #2c3e50;
+    max-width: 100%;
+    margin: 0 auto;
+    height: 100%;
 }
 
-h2 {
-    font-size: 0.85em !important;
-    margin: 0 0 6px 0 !important;
-    text-align: center;
-    color: #2c3e50;
-    padding: 0;
+.packaging-group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
 }
 
-/* ВЕРХНЯЯ СТРОЧКА ТИПОВ ГРУЗОВ */
-.cargo-types-row {
+/* ВЫБОР ТИПА УПАКОВКИ - БОЛЕЕ КОМПАКТНЫЙ */
+.packaging-type-selector {
     display: flex;
     gap: 4px;
-    margin-bottom: 6px;
-    padding: 4px;
-    background: #f8f9fa;
-    border-radius: 4px;
-    flex-shrink: 0;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
+    justify-content: space-between;
 }
 
-.cargo-type-item {
-    flex: 0 0 auto;
-    width: 23%;
-    border: 1px solid #e0e0e0;
-    border-radius: 4px;
-    padding: 3px 1px;
+.packaging-type-item {
+    flex: 1;
+    border: 2px solid #e0e0e0;
+    border-radius: 6px;
+    padding: 6px 2px;
     cursor: pointer;
     display: flex;
     flex-direction: column;
@@ -63,24 +83,108 @@ h2 {
     text-align: center;
     background: white;
     transition: all 0.2s;
-    min-height: 45px;
+    min-height: 50px;
+}
+
+.packaging-type-item.selected {
+    border-color: #27ae60;
+    background: #e8f6f3;
+    box-shadow: 0 2px 4px rgba(39, 174, 96, 0.3);
+    transform: translateY(-1px);
+}
+
+.packaging-type-item:active {
+    transform: scale(0.98);
+    opacity: 0.9;
+}
+
+.packaging-type-icon {
+    font-size: 16px;
+    margin-bottom: 3px;
+}
+
+.packaging-type-name {
+    font-size: 9px;
+    font-weight: 600;
+    color: #2c3e50;
+    line-height: 1.1;
+}
+
+.packaging-info {
+    margin-top: 6px;
+}
+
+/* ОПТИМИЗАЦИЯ ЗАГОЛОВКОВ */
+h1 {
+    font-size: 1em !important;
+    margin: 0 0 6px 0 !important;
+    text-align: center;
+    padding: 0;
+    flex-shrink: 0;
+    color: #2c3e50;
+    font-weight: 600;
+}
+
+h2 {
+    font-size: 0.9em !important;
+    margin: 0 0 6px 0 !important;
+    text-align: center;
+    color: #2c3e50;
+    padding: 0;
+    font-weight: 600;
+}
+
+/* ВЕРХНЯЯ СТРОЧКА ТИПОВ ГРУЗОВ - БОЛЕЕ КОМПАКТНАЯ */
+.cargo-types-row {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 6px;
+    padding: 6px;
+    background: #f8f9fa;
+    border-radius: 6px;
+    flex-shrink: 0;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.cargo-type-item {
+    flex: 1;
+    border: 2px solid #e0e0e0;
+    border-radius: 6px;
+    padding: 8px 2px;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    background: white;
+    transition: all 0.2s;
+    min-height: 55px;
+    min-width: 60px;
 }
 
 .cargo-type-item.selected {
     border-color: #3498db;
     background: #e3f2fd;
-    box-shadow: 0 1px 3px rgba(52, 152, 219, 0.3);
+    box-shadow: 0 2px 4px rgba(52, 152, 219, 0.3);
+    transform: translateY(-1px);
+}
+
+.cargo-type-item:active {
+    transform: scale(0.98);
+    opacity: 0.9;
 }
 
 .cargo-type-icon {
-    width: 22px;
-    height: 22px;
-    margin-bottom: 2px;
+    width: 28px;
+    height: 28px;
+    margin-bottom: 4px;
     display: flex;
     align-items: center;
     justify-content: center;
     overflow: hidden;
-    border-radius: 3px;
+    border-radius: 5px;
     background: white;
     border: 1px solid #ddd;
 }
@@ -93,27 +197,17 @@ h2 {
 }
 
 .cargo-type-icon .emoji-icon {
-    font-size: 13px;
+    font-size: 16px;
 }
 
 .cargo-type-name {
-    font-size: 7px;
+    font-size: 9px;
     font-weight: 600;
     color: #2c3e50;
     line-height: 1.1;
 }
 
-/* ОСНОВНОЙ КОНТЕНТ: ОДНА КОЛОНКА */
-.cargo-content-single {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    min-height: 0;
-    overflow: hidden;
-}
-
-/* СЕКЦИЯ РЕДАКТИРОВАНИЯ ПАРАМЕТРОВ - УЛУЧШЕННЫЙ ДИЗАЙН */
+/* СЕКЦИЯ ПАРАМЕТРОВ - БОЛЕЕ КОМПАКТНАЯ */
 .params-section {
     background: #f8f9fa;
     border: 1px solid #e9ecef;
@@ -125,6 +219,7 @@ h2 {
     flex-shrink: 0;
     max-width: 100%;
     margin: 0 auto;
+    height: 100%;
 }
 
 .param-group {
@@ -134,42 +229,45 @@ h2 {
 }
 
 .param-label {
-    font-size: 9px;
+    font-size: 10px;
     font-weight: 600;
     color: #495057;
     text-align: left;
-    margin-left: 2px;
+    margin-left: 1px;
 }
 
 .param-control {
     display: flex;
     align-items: center;
-    gap: 5px;
+    gap: 6px;
     width: 100%;
 }
 
-/* УВЕЛИЧЕННЫЕ КНОПКИ ДЛЯ УДОБСТВА */
+/* БОЛЕЕ КОМПАКТНЫЕ КНОПКИ +/- */
 .param-btn {
     background: #3498db;
     color: white;
     border: none;
-    border-radius: 4px;
-    width: 36px; /* Увеличен размер */
-    height: 36px; /* Увеличен размер */
+    border-radius: 6px;
+    width: 36px;
+    height: 36px;
     display: flex;
     align-items: center;
     justify-content: center;
     font-weight: bold;
     cursor: pointer;
-    font-size: 16px; /* Увеличен шрифт */
+    font-size: 18px;
     transition: all 0.2s;
     flex-shrink: 0;
     min-width: 36px;
     min-height: 36px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.15);
 }
 
 .param-btn:hover {
     background: #2980b9;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
 }
 
 .param-btn.minus {
@@ -182,25 +280,26 @@ h2 {
 
 .param-input {
     flex: 1;
-    height: 36px; /* Увеличен размер */
+    height: 36px;
     padding: 0 8px;
     border: 2px solid #3498db;
-    border-radius: 4px;
-    font-size: 14px; /* Увеличен шрифт */
+    border-radius: 6px;
+    font-size: 14px;
     text-align: center;
     font-weight: bold;
     background: white;
     min-width: 0;
     width: 100%;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
 
 .param-input:focus {
     outline: none;
     border-color: #2980b9;
-    box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
 }
 
-/* СТАТИСТИКА ТЕКУЩЕГО ГРУЗА */
+/* СТАТИСТИКА ТЕКУЩЕГО ГРУЗА - КОМПАКТНАЯ */
 .current-stats {
     display: flex;
     gap: 8px;
@@ -213,12 +312,12 @@ h2 {
     flex: 1;
     text-align: center;
     background: #e3f2fd;
-    border-radius: 4px;
+    border-radius: 5px;
     padding: 6px;
 }
 
 .current-stats .stat-label {
-    font-size: 8px;
+    font-size: 9px;
     color: #666;
     display: block;
     margin-bottom: 2px;
@@ -255,7 +354,7 @@ h2 {
     min-width: 0;
 }
 
-/* ФОТО ГРУЗА (КОМПАКТНАЯ ВЕРСИЯ) */
+/* ФОТО ГРУЗА - СУПЕР КОМПАКТНАЯ ВЕРСИЯ */
 .photo-section-new {
     display: flex;
     flex-direction: column;
@@ -263,16 +362,16 @@ h2 {
     background: #f8f9fa;
     border: 1px solid #e9ecef;
     border-radius: 6px;
-    padding: 8px;
+    padding: 6px;
     align-items: center;
     justify-content: center;
     flex: none;
-    height: 110px;
+    height: 90px;
 }
 
 .photo-container-new {
-    width: 55px;
-    height: 55px;
+    width: 45px;
+    height: 45px;
     border: 2px dashed #3498db;
     border-radius: 6px;
     display: flex;
@@ -299,7 +398,7 @@ h2 {
 }
 
 .camera-icon-new {
-    font-size: 18px;
+    font-size: 16px;
     color: #3498db;
     margin-bottom: 4px;
 }
@@ -308,7 +407,7 @@ h2 {
     font-size: 8px;
     color: #666;
     text-align: center;
-    max-width: 45px;
+    max-width: 35px;
     line-height: 1.1;
 }
 
@@ -319,11 +418,11 @@ h2 {
     border-radius: 4px;
 }
 
-/* КНОПКИ ВЕРТИКАЛЬНО */
+/* КНОПКИ ВЕРТИКАЛЬНО - КОМПАКТНЫЕ */
 .action-buttons-column {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 6px;
     width: 100%;
     margin-top: 6px;
     flex: 1;
@@ -336,7 +435,7 @@ h2 {
     color: white;
     border: none;
     border-radius: 6px;
-    padding: 10px 6px;
+    padding: 8px 6px;
     font-size: 12px;
     font-weight: 600;
     cursor: pointer;
@@ -345,11 +444,14 @@ h2 {
     justify-content: center;
     gap: 6px;
     transition: all 0.2s;
-    min-height: 45px;
+    min-height: 40px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 .btn-save-new:hover {
     background: linear-gradient(135deg, #219653, #1e8449);
+    transform: translateY(-1px);
+    box-shadow: 0 3px 6px rgba(0,0,0,0.15);
 }
 
 .btn-send-new {
@@ -358,7 +460,7 @@ h2 {
     color: white;
     border: none;
     border-radius: 6px;
-    padding: 10px 6px;
+    padding: 8px 6px;
     font-size: 12px;
     font-weight: 600;
     cursor: pointer;
@@ -367,37 +469,40 @@ h2 {
     justify-content: center;
     gap: 6px;
     transition: all 0.2s;
-    min-height: 45px;
+    min-height: 40px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 .btn-send-new:hover {
     background: linear-gradient(135deg, #c0392b, #a93226);
+    transform: translateY(-1px);
+    box-shadow: 0 3px 6px rgba(0,0,0,0.15);
 }
 
 .btn-icon {
     font-size: 14px;
 }
 
-/* НОВОЕ ОКНО ОБЩЕЙ ИНФОРМАЦИИ */
+/* НОВОЕ ОКНО ОБЩЕЙ ИНФОРМАЦИИ - КОМПАКТНОЕ */
 .total-info-window {
     background: linear-gradient(135deg, #2c3e50, #34495e);
     color: white;
     border-radius: 8px;
-    padding: 12px;
+    padding: 10px;
     display: flex;
     flex-direction: column;
     flex: 1;
     min-height: 0;
     height: 100%;
     border: 1px solid #3a5068;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.25);
 }
 
 .total-info-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 12px;
+    margin-bottom: 10px;
     padding-bottom: 6px;
     border-bottom: 1px solid rgba(255,255,255,0.1);
 }
@@ -432,7 +537,7 @@ h2 {
 .total-info-content {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 8px;
     flex: 1;
 }
 
@@ -445,6 +550,7 @@ h2 {
     border-radius: 6px;
     border: 1px solid rgba(255,255,255,0.05);
     transition: all 0.2s;
+    min-height: 40px;
 }
 
 .total-info-item:hover {
@@ -454,7 +560,7 @@ h2 {
 .total-info-label {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
     font-size: 11px;
     color: rgba(255,255,255,0.9);
 }
@@ -480,7 +586,7 @@ h2 {
 .total-info-value.clickable {
     cursor: pointer;
     padding: 4px 8px;
-    border-radius: 4px;
+    border-radius: 5px;
     background: rgba(52, 152, 219, 0.2);
     transition: all 0.2s;
 }
@@ -495,73 +601,38 @@ h2 {
     margin-left: 2px;
 }
 
-/* ОКОШКО СТАТИСТИКИ ГРУЗОВ - ДОПОЛНИТЕЛЬНЫЕ СТИЛИ */
-.cargo-stats-actions {
-    margin-top: 10px;
-    padding-top: 10px;
-    border-top: 1px solid #e9ecef;
-}
-
-.btn-clear-all {
-    background: linear-gradient(135deg, #e74c3c, #c0392b);
-    color: white;
-    border: none;
-    border-radius: 4px;
-    padding: 6px 10px;
-    font-size: 11px;
-    font-weight: 600;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 4px;
-    transition: all 0.2s;
+/* СТИЛИ ДЛЯ ОКОШКА СТАТИСТИКИ ГРУЗОВ */
+.cargo-stats-popup-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
     width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
 }
 
-.btn-clear-all:hover {
-    background: linear-gradient(135deg, #c0392b, #a93226);
-}
-
-/* ОКОШКО СТАТИСТИКИ ГРУЗОВ (маленькое) */
 .cargo-stats-popup {
+    display: none;
     position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background: white;
-    border-radius: 8px;
-    box-shadow: 0 6px 15px rgba(0,0,0,0.3);
-    z-index: 1001;
     width: 90%;
-    max-width: 400px;
-    max-height: 70vh;
-    display: none;
-    flex-direction: column;
-    border: 1px solid #3498db;
-}
-
-.cargo-stats-popup.active {
-    display: flex;
-    animation: popupFadeIn 0.2s ease;
-}
-
-@keyframes popupFadeIn {
-    from {
-        opacity: 0;
-        transform: translate(-50%, -50%) scale(0.9);
-    }
-    to {
-        opacity: 1;
-        transform: translate(-50%, -50%) scale(1);
-    }
+    max-width: 500px;
+    max-height: 80vh;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+    z-index: 1001;
+    overflow: hidden;
 }
 
 .cargo-stats-popup-header {
-    background: linear-gradient(135deg, #3498db, #2980b9);
+    padding: 15px;
+    background: linear-gradient(135deg, #2c3e50, #34495e);
     color: white;
-    padding: 8px 12px;
-    border-radius: 6px 6px 0 0;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -569,215 +640,271 @@ h2 {
 
 .cargo-stats-popup-header h3 {
     margin: 0;
-    font-size: 13px;
-    font-weight: 600;
+    font-size: 16px;
 }
 
 .cargo-stats-popup-close {
     background: none;
     border: none;
     color: white;
-    font-size: 18px;
+    font-size: 24px;
     cursor: pointer;
     padding: 0;
-    width: 20px;
-    height: 20px;
+    width: 30px;
+    height: 30px;
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 50%;
-    transition: all 0.2s;
-}
-
-.cargo-stats-popup-close:hover {
-    background: rgba(255,255,255,0.2);
 }
 
 .cargo-stats-popup-content {
-    padding: 12px;
+    padding: 15px;
+    max-height: 60vh;
     overflow-y: auto;
-    max-height: 50vh;
 }
 
 .cargo-stats-items {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
+    margin-bottom: 20px;
 }
 
 .cargo-stats-item {
     background: #f8f9fa;
-    border-radius: 4px;
-    padding: 6px;
     border: 1px solid #e9ecef;
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 10px;
 }
 
 .cargo-stats-item-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 3px;
+    margin-bottom: 8px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #dee2e6;
 }
 
-.cargo-stats-item-type {
+.cargo-stats-item-title {
     display: flex;
     align-items: center;
-    gap: 4px;
+    gap: 8px;
     font-weight: 600;
     color: #2c3e50;
-    font-size: 11px;
+    font-size: 14px;
 }
 
-.cargo-stats-item-quantity {
-    background: #27ae60;
+.cargo-stats-item-icon {
+    font-size: 16px;
+}
+
+.cargo-stats-item-count {
+    background: #3498db;
     color: white;
-    font-size: 9px;
-    padding: 1px 4px;
-    border-radius: 6px;
-    font-weight: bold;
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
 }
 
 .cargo-stats-item-details {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 3px;
-    font-size: 9px;
+    margin-bottom: 8px;
 }
 
-.cargo-stats-detail {
-    text-align: center;
+.cargo-stats-item-detail {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 4px;
+    font-size: 12px;
 }
 
-.cargo-stats-detail-label {
+.cargo-stats-item-detail .detail-label {
     color: #666;
-    font-size: 7px;
-    display: block;
-    margin-bottom: 1px;
 }
 
-.cargo-stats-detail-value {
-    font-weight: bold;
+.cargo-stats-item-detail .detail-value {
     color: #2c3e50;
+    font-weight: 500;
+}
+
+.cargo-stats-item-total {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-top: 1px solid #dee2e6;
+    margin-top: 8px;
+    font-size: 13px;
+}
+
+.cargo-stats-item-total .total-label {
+    color: #2c3e50;
+    font-weight: 600;
+}
+
+.cargo-stats-item-total .total-value {
+    color: #27ae60;
+    font-weight: 600;
+}
+
+.cargo-stats-item-remove {
+    width: 100%;
+    background: #e74c3c;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 8px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-top: 8px;
+}
+
+.cargo-stats-item-remove:hover {
+    background: #c0392b;
+}
+
+.cargo-stats-totals {
+    background: #e3f2fd;
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 15px;
+}
+
+.cargo-stats-total-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 6px;
+    font-size: 13px;
+}
+
+.cargo-stats-total-item:last-child {
+    margin-bottom: 0;
+}
+
+.cargo-stats-total-item .total-label {
+    color: #2c3e50;
+    font-weight: 600;
+}
+
+.cargo-stats-total-item .total-value {
+    color: #3498db;
+    font-weight: 600;
+}
+
+.cargo-stats-actions {
+    display: flex;
+    justify-content: center;
+}
+
+.btn-clear-all {
+    background: #e74c3c;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 10px 20px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-clear-all:hover {
+    background: #c0392b;
 }
 
 .cargo-stats-empty {
     text-align: center;
-    color: #999;
+    padding: 30px;
+    color: #666;
     font-style: italic;
-    padding: 15px 12px;
-    font-size: 11px;
 }
 
-.cargo-stats-popup-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.5);
-    z-index: 1000;
-    display: none;
-    backdrop-filter: blur(1px);
-}
-
-.cargo-stats-popup-overlay.active {
-    display: block;
-    animation: overlayFadeIn 0.2s ease;
-}
-
-@keyframes overlayFadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-}
-
-/* АДАПТИВНОСТЬ ДЛЯ МОБИЛЬНЫХ */
+/* АДАПТИВНОСТЬ ДЛЯ МАЛЕНЬКИХ ЭКРАНОВ */
 @media (max-height: 600px) {
     .cargo-main {
         padding: 3px;
     }
     
     h1 {
-        font-size: 0.9em !important;
+        font-size: 0.95em !important;
         margin-bottom: 4px !important;
     }
     
     h2 {
-        font-size: 0.8em !important;
+        font-size: 0.85em !important;
         margin-bottom: 4px !important;
     }
     
     .cargo-types-row {
         margin-bottom: 4px;
-        padding: 3px;
+        padding: 4px;
     }
     
     .cargo-type-item {
-        min-height: 40px;
-        padding: 2px 1px;
+        min-height: 50px;
+        padding: 6px 1px;
     }
     
     .cargo-type-icon {
-        width: 18px;
-        height: 18px;
+        width: 24px;
+        height: 24px;
     }
     
     .cargo-type-icon .emoji-icon {
-        font-size: 11px;
+        font-size: 14px;
     }
     
     .cargo-type-name {
-        font-size: 6px;
+        font-size: 8px;
     }
     
-    .params-section {
+    .params-section, .packaging-section {
         padding: 6px;
-        gap: 5px;
+        gap: 4px;
     }
     
     .param-btn {
         width: 32px;
         height: 32px;
-        font-size: 14px;
+        font-size: 16px;
     }
     
     .param-input {
         height: 32px;
-        font-size: 12px;
+        font-size: 13px;
         padding: 0 6px;
     }
     
     .photo-section-new {
-        height: 100px;
-        padding: 6px;
+        height: 80px;
+        padding: 4px;
     }
     
     .photo-container-new {
-        width: 45px;
-        height: 45px;
+        width: 40px;
+        height: 40px;
     }
     
     .camera-icon-new {
-        font-size: 16px;
+        font-size: 14px;
     }
     
     .photo-hint-new {
         font-size: 7px;
-        max-width: 35px;
+        max-width: 30px;
     }
     
     .action-buttons-column {
-        gap: 6px;
+        gap: 4px;
         margin-top: 4px;
     }
     
     .btn-save-new, .btn-send-new {
-        padding: 8px 4px;
+        padding: 6px 4px;
         font-size: 11px;
-        min-height: 40px;
+        min-height: 35px;
     }
     
     .total-info-window {
-        padding: 10px;
+        padding: 8px;
     }
     
     .total-info-header h3 {
@@ -791,16 +918,17 @@ h2 {
     }
     
     .total-info-content {
-        gap: 8px;
+        gap: 6px;
     }
     
     .total-info-item {
         padding: 6px 8px;
+        min-height: 35px;
     }
     
     .total-info-label {
         font-size: 10px;
-        gap: 6px;
+        gap: 4px;
     }
     
     .total-info-icon {
@@ -812,23 +940,35 @@ h2 {
     }
     
     .total-info-arrow {
-        font-size: 13px;
+        font-size: 12px;
+    }
+    
+    .packaging-type-item {
+        min-height: 45px;
+        padding: 4px 1px;
+    }
+    
+    .packaging-type-icon {
+        font-size: 14px;
+    }
+    
+    .packaging-type-name {
+        font-size: 7px;
     }
 }
 
-/* ОПТИМИЗАЦИЯ ДЛЯ ПЛАНШЕТОВ - УВЕЛИЧЕННЫЕ ЭЛЕМЕНТЫ */
+/* ОСНОВНЫЕ ИЗМЕНЕНИЯ ДЛЯ ПЛАНШЕТОВ (сделаем более компактными) */
 @media (min-width: 768px) and (max-width: 1024px) {
-    /* ОСНОВНОЙ КОНТЕЙНЕР */
     .cargo-container {
-        max-width: 800px;
-        margin: 8px auto;
-        border-radius: 12px;
-        height: calc(100vh - 16px);
+        max-width: 750px;
+        margin: 6px auto;
+        border-radius: 10px;
+        height: calc(100vh - 12px);
     }
     
     .cargo-main {
         padding: 10px;
-        min-height: 600px;
+        min-height: 500px;
     }
     
     h1 {
@@ -841,7 +981,11 @@ h2 {
         margin-bottom: 8px !important;
     }
     
-    /* ТИПЫ ГРУЗОВ */
+    .cargo-content-two-column {
+        gap: 10px;
+        min-height: 250px;
+    }
+    
     .cargo-types-row {
         margin-bottom: 8px;
         padding: 8px;
@@ -849,251 +993,211 @@ h2 {
     }
     
     .cargo-type-item {
-        min-height: 60px;
-        padding: 8px 3px;
-        border-radius: 8px;
+        min-height: 70px !important;
+        padding: 8px 3px !important;
+        border-radius: 8px !important;
     }
     
     .cargo-type-icon {
-        width: 35px;
-        height: 35px;
-        border-radius: 6px;
+        width: 35px !important;
+        height: 35px !important;
+        margin-bottom: 6px !important;
     }
     
     .cargo-type-icon .emoji-icon {
-        font-size: 20px;
+        font-size: 20px !important;
     }
     
     .cargo-type-name {
-        font-size: 10px;
+        font-size: 11px !important;
     }
     
-    /* ПАРАМЕТРЫ - ЕЩЕ БОЛЬШЕ УВЕЛИЧИВАЕМ ДЛЯ ПЛАНШЕТОВ */
-    .params-section {
-        padding: 15px;
-        gap: 12px;
-        border-radius: 10px;
-        max-width: 95%;
+    .params-section, .packaging-section {
+        padding: 12px;
+        gap: 8px;
+        border-radius: 8px;
+    }
+    
+    .packaging-type-item {
+        min-height: 65px !important;
+        padding: 8px 3px !important;
+        border-radius: 8px !important;
+    }
+    
+    .packaging-type-icon {
+        font-size: 20px !important;
+        margin-bottom: 6px !important;
+    }
+    
+    .packaging-type-name {
+        font-size: 11px !important;
     }
     
     .param-label {
-        font-size: 14px;
-        margin-bottom: 6px;
+        font-size: 12px;
+        margin-bottom: 4px;
     }
     
     .param-control {
-        gap: 12px;
+        gap: 10px;
     }
     
     .param-btn {
-        width: 50px; /* Еще больше для планшетов */
-        height: 50px;
-        font-size: 22px;
-        border-radius: 8px;
-        min-width: 50px;
-        min-height: 50px;
+        width: 50px !important;
+        height: 50px !important;
+        font-size: 22px !important;
+        border-radius: 8px !important;
+        min-width: 50px !important;
+        min-height: 50px !important;
     }
     
     .param-input {
-        height: 50px;
-        font-size: 18px;
+        height: 50px !important;
+        font-size: 18px !important;
         padding: 0 12px;
-        border-radius: 8px;
-        border-width: 2px;
+        border-radius: 8px !important;
     }
     
-    /* ТЕКУЩАЯ СТАТИСТИКА */
     .current-stats {
-        gap: 12px;
-        margin-top: 12px;
-        padding-top: 12px;
+        gap: 10px;
+        margin-top: 10px;
+        padding-top: 10px;
     }
     
     .current-stats .stat-item {
-        padding: 10px;
-        border-radius: 8px;
+        padding: 8px;
     }
     
     .current-stats .stat-label {
-        font-size: 12px;
+        font-size: 11px;
     }
     
     .current-stats .stat-value {
-        font-size: 15px;
+        font-size: 14px;
     }
     
-    /* НИЖНЯЯ ЧАСТЬ - ОПТИМИЗАЦИЯ ДЛЯ ПЛАНШЕТОВ */
     .bottom-section {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 15px;
-        min-height: 280px;
-        margin-top: 15px;
+        gap: 12px;
+        min-height: 250px;
+        margin-top: 12px;
     }
     
-    .bottom-left, .bottom-right {
-        display: flex;
-        flex-direction: column;
-        min-height: 280px;
-    }
-    
-    /* ФОТО СЕКЦИЯ */
     .photo-section-new {
-        height: 140px;
-        padding: 15px;
-        justify-content: center;
-        border-radius: 10px;
+        height: 120px;
+        padding: 12px;
     }
     
     .photo-container-new {
-        width: 80px;
-        height: 80px;
-        border-width: 2px;
-        border-radius: 8px;
+        width: 70px;
+        height: 70px;
     }
     
     .camera-icon-new {
-        font-size: 24px;
+        font-size: 22px;
         margin-bottom: 8px;
     }
     
     .photo-hint-new {
         font-size: 11px;
-        max-width: 70px;
+        max-width: 60px;
     }
     
-    /* КНОПКИ ВЕРТИКАЛЬНО ДЛЯ ПЛАНШЕТОВ */
     .action-buttons-column {
-        gap: 12px;
-        margin-top: 15px;
-        justify-content: center;
+        gap: 10px;
+        margin-top: 12px;
     }
     
     .btn-save-new, .btn-send-new {
-        min-height: 60px;
-        font-size: 16px;
-        padding: 15px 10px;
-        border-radius: 10px;
-        gap: 10px;
+        min-height: 55px !important;
+        font-size: 16px !important;
+        padding: 12px 8px !important;
+        border-radius: 8px !important;
     }
     
     .btn-icon {
-        font-size: 20px;
+        font-size: 20px !important;
     }
     
-    /* ОБЩАЯ ИНФОРМАЦИЯ ДЛЯ ПЛАНШЕТОВ */
     .total-info-window {
-        padding: 20px;
-        border-radius: 12px;
-        border-width: 2px;
-    }
-    
-    .total-info-header {
-        margin-bottom: 15px;
-        padding-bottom: 10px;
+        padding: 15px;
+        border-radius: 10px;
     }
     
     .total-info-header h3 {
-        font-size: 18px;
+        font-size: 16px;
     }
     
     .total-info-refresh {
-        width: 40px;
-        height: 40px;
+        width: 36px;
+        height: 36px;
         font-size: 16px;
-        min-width: 44px;
-        min-height: 44px;
     }
     
     .total-info-content {
-        gap: 15px;
-    }
-    
-    .total-info-item {
-        padding: 15px 12px;
-        border-radius: 10px;
-        min-height: 60px;
-    }
-    
-    .total-info-label {
-        font-size: 16px;
         gap: 12px;
     }
     
-    .total-info-icon {
-        font-size: 20px;
+    .total-info-item {
+        padding: 12px 10px;
+        min-height: 55px;
     }
     
-    .total-info-text {
-        font-weight: 600;
+    .total-info-label {
+        font-size: 14px;
+        gap: 10px;
+    }
+    
+    .total-info-icon {
+        font-size: 18px;
     }
     
     .total-info-value {
-        font-size: 20px;
-        font-weight: bold;
-        gap: 8px;
+        font-size: 18px;
     }
     
     .total-info-value.clickable {
         padding: 8px 12px;
         border-radius: 8px;
-        font-size: 18px;
+        font-size: 16px;
     }
     
-    .total-info-arrow {
-        font-size: 22px;
+    /* Стили для окна статистики на планшетах */
+    .cargo-stats-popup {
+        max-width: 600px;
     }
     
-    /* Гарантируем, что все кнопки помещаются */
-    .cargo-content-single {
-        min-height: 500px;
-    }
-}
-
-/* ДЛЯ ГОРИЗОНТАЛЬНЫХ ПЛАНШЕТОВ */
-@media (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) {
-    .cargo-container {
-        max-width: 900px;
-        height: 90vh;
+    .cargo-stats-item-title {
+        font-size: 16px;
     }
     
-    .params-section {
-        max-width: 90%;
-    }
-    
-    .bottom-section {
-        min-height: 240px;
-    }
-    
-    .photo-section-new {
-        height: 130px;
-    }
-    
-    .total-info-window {
-        min-height: 240px;
-    }
-    
-    /* Более компактное расположение для горизонтального режима */
-    .cargo-content-single {
-        gap: 10px;
-    }
-    
-    .params-section {
-        max-height: 320px;
-        overflow-y: auto;
-    }
-    
-    .btn-save-new, .btn-send-new {
-        min-height: 55px;
+    .cargo-stats-item-count {
         font-size: 14px;
-        padding: 12px 10px;
+        padding: 5px 10px;
+    }
+    
+    .cargo-stats-item-detail {
+        font-size: 14px;
+    }
+    
+    .cargo-stats-item-total {
+        font-size: 15px;
+    }
+    
+    .cargo-stats-total-item {
+        font-size: 15px;
     }
 }
 
-/* ДЛЯ ОЧЕНЬ МАЛЕНЬКИХ ЭКРАНОВ */
+/* ОПТИМИЗАЦИЯ ДЛЯ ОЧЕНЬ МАЛЕНЬКИХ ЭКРАНОВ (320px и меньше) */
 @media (max-width: 320px) {
-    .params-section {
+    .cargo-content-two-column {
+        flex-direction: column;
+        gap: 6px;
+    }
+    
+    .params-section, .packaging-section {
         padding: 6px;
+        gap: 4px;
     }
     
     .param-btn {
@@ -1104,8 +1208,39 @@ h2 {
     
     .param-input {
         height: 30px;
-        font-size: 12px;
-        padding: 0 4px;
+        font-size: 13px;
+        padding: 0 6px;
+    }
+    
+    .cargo-type-item {
+        min-height: 48px !important;
+        padding: 4px 1px !important;
+    }
+    
+    .cargo-type-icon {
+        width: 22px !important;
+        height: 22px !important;
+    }
+    
+    .cargo-type-icon .emoji-icon {
+        font-size: 12px !important;
+    }
+    
+    .cargo-type-name {
+        font-size: 7px !important;
+    }
+    
+    .packaging-type-item {
+        min-height: 45px !important;
+        padding: 4px 1px !important;
+    }
+    
+    .packaging-type-icon {
+        font-size: 12px !important;
+    }
+    
+    .packaging-type-name {
+        font-size: 7px !important;
     }
     
     .bottom-section {
@@ -1114,21 +1249,22 @@ h2 {
     }
     
     .photo-section-new {
-        height: 90px;
+        height: 75px;
+        padding: 4px;
     }
     
     .photo-container-new {
-        width: 40px;
-        height: 40px;
+        width: 35px;
+        height: 35px;
     }
     
     .camera-icon-new {
-        font-size: 14px;
+        font-size: 12px;
     }
     
     .photo-hint-new {
         font-size: 6px;
-        max-width: 30px;
+        max-width: 25px;
     }
     
     .action-buttons-column {
@@ -1162,11 +1298,11 @@ h2 {
     
     .total-info-item {
         padding: 6px 8px;
-        min-height: 40px;
+        min-height: 35px;
     }
     
     .total-info-label {
-        font-size: 9px;
+        font-size: 10px;
         gap: 4px;
     }
     
@@ -1178,90 +1314,566 @@ h2 {
         font-size: 11px;
     }
     
-    .total-info-arrow {
-        font-size: 12px;
+    /* Адаптивность для окна статистики */
+    @media (max-width: 480px) {
+        .cargo-stats-popup {
+            width: 95%;
+            max-height: 85vh;
+        }
+        
+        .cargo-stats-popup-header {
+            padding: 12px;
+        }
+        
+        .cargo-stats-popup-header h3 {
+            font-size: 14px;
+        }
+        
+        .cargo-stats-popup-content {
+            padding: 12px;
+        }
+        
+        .cargo-stats-item {
+            padding: 10px;
+        }
+        
+        .cargo-stats-item-title {
+            font-size: 13px;
+        }
+        
+        .cargo-stats-item-count {
+            font-size: 11px;
+            padding: 2px 6px;
+        }
+        
+        .cargo-stats-item-detail {
+            font-size: 11px;
+        }
+        
+        .cargo-stats-item-total {
+            font-size: 12px;
+        }
+        
+        .cargo-stats-item-remove {
+            font-size: 11px;
+            padding: 6px;
+        }
+        
+        .cargo-stats-total-item {
+            font-size: 12px;
+        }
+        
+        .btn-clear-all {
+            padding: 8px 16px;
+            font-size: 13px;
+        }
     }
 }
 
-/* УВЕЛИЧЕНИЕ ОБЛАСТИ КЛИКА ДЛЯ ПЛАНШЕТОВ */
-@media (min-width: 768px) {
-    button, 
-    .cargo-type-item,
-    .photo-container-new,
-    .total-info-value.clickable,
-    .total-info-refresh,
+/* ФОКУС ДЛЯ ДОСТУПНОСТИ */
+.param-input:focus,
+.param-btn:focus,
+.cargo-type-item:focus,
+.packaging-type-item:focus,
+.photo-container-new:focus,
+.btn-save-new:focus,
+.btn-send-new:focus,
+.total-info-refresh:focus,
+.total-info-value.clickable:focus {
+    outline: 3px solid rgba(52, 152, 219, 0.5);
+    outline-offset: 2px;
+}
+
+/* УЛУЧШЕНИЯ ДЛЯ КОМПАКТНОСТИ ВСЕХ ЭЛЕМЕНТОВ */
+* {
+    box-sizing: border-box;
+}
+
+/* УМЕНЬШАЕМ ВНУТРЕННИЕ ОТСТУПЫ ВО ВСЕХ КОНТЕЙНЕРАХ */
+.cargo-main,
+.params-section,
+.packaging-section,
+.cargo-types-row,
+.photo-section-new,
+.total-info-window,
+.current-stats,
+.total-info-content {
+    padding: 6px;
+}
+
+/* УМЕНЬШАЕМ ВНЕШНИЕ ОТСТУПЫ */
+h1, h2, h3 {
+    margin: 0 0 4px 0 !important;
+}
+
+/* УБИРАЕМ ЛИШНИЕ ЭФФЕКТЫ НА МОБИЛЬНЫХ */
+@media (max-width: 767px) {
+    .param-btn:hover,
+    .cargo-type-item:hover,
+    .packaging-type-item:hover,
+    .btn-save-new:hover,
+    .btn-send-new:hover {
+        transform: none;
+    }
+    
+    /* Уменьшаем размеры для лучшего отображения на маленьких экранах */
     .param-btn {
-        min-height: 44px !important;
-        min-width: 44px !important;
-        cursor: pointer;
-    }
-}
-
-/* ИСПРАВЛЕНИЕ ПРОБЛЕМ С КЛИКАМИ НА ПЛАНШЕТАХ */
-@media (hover: none) and (pointer: coarse) {
-    .cargo-type-item:active,
-    .photo-container-new:active,
-    .total-info-value.clickable:active,
-    button:active,
-    .total-info-refresh:active,
-    .param-btn:active {
-        opacity: 0.7;
-        transform: scale(0.98);
-        transition: all 0.1s ease;
-    }
-}
-
-/* ОПТИМИЗАЦИЯ ДЛЯ IOS */
-@supports (-webkit-touch-callout: none) {
-    .cargo-type-item,
-    .photo-container-new,
-    .total-info-value.clickable,
-    .total-info-refresh,
-    .param-btn {
-        cursor: pointer;
-        -webkit-tap-highlight-color: rgba(0,0,0,0);
+        width: 34px;
+        height: 34px;
+        font-size: 16px;
     }
     
     .param-input {
-        font-size: 16px;
+        height: 34px;
+        font-size: 14px;
     }
 }
 
-/* ДЛЯ ПЛАНШЕТОВ С МАЛЕНЬКОЙ ВЫСОТОЙ */
-@media (min-width: 768px) and (max-height: 900px) {
-    .bottom-left, .bottom-right {
-        min-height: 240px;
+/* ДОПОЛНИТЕЛЬНАЯ ОПТИМИЗАЦИЯ ПРОБЕЛОВ */
+.cargo-content-two-column {
+    gap: 4px;
+}
+
+.bottom-section {
+    gap: 6px;
+    margin-top: 6px;
+}
+
+/* УБИРАЕМ НЕНУЖНЫЕ АНИМАЦИИ ПРИ НАВЕДЕНИИ НА МОБИЛЬНЫХ */
+@media (hover: none) and (pointer: coarse) {
+    .param-btn:hover,
+    .cargo-type-item:hover,
+    .packaging-type-item:hover,
+    .photo-container-new:hover,
+    .btn-save-new:hover,
+    .btn-send-new:hover,
+    .total-info-refresh:hover,
+    .total-info-value.clickable:hover {
+        transform: none;
+        box-shadow: none;
     }
-    
-    .photo-section-new {
-        height: 120px;
-        padding: 10px;
-    }
-    
-    .total-info-window {
+}
+
+/* КОМПАКТНЫЙ МОДАЛЬНЫЙ КОНТЕЙНЕР (если используется) */
+.cargo-stats-popup {
+    padding: 10px;
+    max-height: 80vh;
+}
+
+/* ЗАПРЕТ НА ПЕРЕПОЛНЕНИЕ ТЕКСТА */
+.cargo-type-name,
+.packaging-type-name,
+.param-label,
+.stat-label,
+.total-info-text {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* ПОДСВЕТКА ВЫБРАННОГО ГРУЗА */
+.cargo-type-item.selected::before {
+    content: '✓';
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    width: 16px;
+    height: 16px;
+    background: #3498db;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: bold;
+}
+
+/* ПОДСВЕТКА ВЫБРАННОЙ УПАКОВКИ */
+.packaging-type-item.selected::before {
+    content: '✓';
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    width: 16px;
+    height: 16px;
+    background: #27ae60;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: bold;
+}
+
+/* УВЕЛИЧЕНИЕ ОБЛАСТИ КЛИКА */
+.cargo-type-item,
+.packaging-type-item {
+    position: relative;
+}
+
+.cargo-type-item *,
+.packaging-type-item * {
+    pointer-events: none; /* Все клики обрабатываются на родителе */
+}
+/* cargo.css - ОБНОВЛЕННАЯ ВЕРСИЯ С РЕДАКТИРУЕМЫМ ВЕСОМ */
+
+/* ... (весь предыдущий CSS остается) ... */
+
+/* СТИЛИ ДЛЯ РЕДАКТИРУЕМОГО ВЕСА */
+.current-stats .stat-item.clickable-weight {
+    cursor: pointer;
+    position: relative;
+    padding-right: 30px;
+}
+
+.current-stats .stat-item.clickable-weight:hover {
+    background: #d1ecf1;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.current-stats .stat-item.clickable-weight .edit-icon {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 12px;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+}
+
+.current-stats .stat-item.clickable-weight:hover .edit-icon {
+    opacity: 1;
+}
+
+/* МОДАЛЬНОЕ ОКНО РЕДАКТИРОВАНИЯ ВЕСА */
+.weight-edit-modal {
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+    width: 90%;
+    max-width: 300px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1002;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+}
+
+.weight-edit-modal h3 {
+    margin: 0 0 15px 0;
+    text-align: center;
+    color: #2c3e50;
+}
+
+.weight-edit-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.weight-edit-form label {
+    font-weight: 600;
+    color: #495057;
+    font-size: 14px;
+}
+
+.weight-edit-input {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #3498db;
+    border-radius: 8px;
+    font-size: 16px;
+    text-align: center;
+    font-weight: bold;
+    background: white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.weight-edit-input:focus {
+    outline: none;
+    border-color: #2980b9;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+}
+
+.weight-edit-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.weight-edit-buttons .btn-primary,
+.weight-edit-buttons .btn-secondary {
+    flex: 1;
+    padding: 10px;
+    border-radius: 6px;
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.weight-edit-buttons .btn-primary {
+    background: #3498db;
+    color: white;
+}
+
+.weight-edit-buttons .btn-primary:hover {
+    background: #2980b9;
+}
+
+.weight-edit-buttons .btn-secondary {
+    background: #95a5a6;
+    color: white;
+}
+
+.weight-edit-buttons .btn-secondary:hover {
+    background: #7f8c8d;
+}
+
+/* ОБЩИЕ СТИЛИ ДЛЯ МОДАЛЬНЫХ ОКОН */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    z-index: 1001;
+}
+
+/* АДАПТИВНОСТЬ ДЛЯ МОБИЛЬНЫХ */
+@media (max-width: 480px) {
+    .weight-edit-modal {
         padding: 15px;
+        width: 85%;
     }
     
-    .btn-save-new, .btn-send-new {
-        min-height: 50px;
-        font-size: 14px;
-        padding: 12px 8px;
-    }
-    
-    .total-info-item {
-        padding: 12px 10px;
-        min-height: 50px;
-    }
-    
-    .total-info-label {
-        font-size: 14px;
-    }
-    
-    .total-info-icon {
-        font-size: 18px;
-    }
-    
-    .total-info-value {
+    .weight-edit-modal h3 {
         font-size: 16px;
+        margin-bottom: 12px;
+    }
+    
+    .weight-edit-form {
+        gap: 12px;
+    }
+    
+    .weight-edit-input {
+        padding: 10px;
+        font-size: 14px;
+    }
+    
+    .weight-edit-buttons {
+        gap: 8px;
+    }
+    
+    .weight-edit-buttons .btn-primary,
+    .weight-edit-buttons .btn-secondary {
+        padding: 8px;
+        font-size: 14px;
+    }
+}
+
+@media (max-height: 600px) {
+    .weight-edit-modal {
+        padding: 12px;
+    }
+    
+    .weight-edit-modal h3 {
+        font-size: 15px;
+        margin-bottom: 10px;
+    }
+    
+    .weight-edit-form {
+        gap: 10px;
+    }
+    
+    .weight-edit-input {
+        padding: 8px;
+        font-size: 14px;
+    }
+}
+/* cargo.css - ОБНОВЛЕННАЯ ВЕРСИЯ С ОБЩИМ ВЕСОМ */
+
+/* ... (весь предыдущий CSS остается без изменений) ... */
+
+/* СТИЛИ ДЛЯ РЕДАКТИРУЕМОГО ОБЩЕГО ВЕСА */
+.current-stats .stat-item.clickable-weight {
+    cursor: pointer;
+    position: relative;
+    padding-right: 30px;
+}
+
+.current-stats .stat-item.clickable-weight:hover {
+    background: #d1ecf1;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.current-stats .stat-item.clickable-weight .edit-icon {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 12px;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+}
+
+.current-stats .stat-item.clickable-weight:hover .edit-icon {
+    opacity: 1;
+}
+
+/* МОДАЛЬНОЕ ОКНО РЕДАКТИРОВАНИЯ ВЕСА */
+.weight-edit-modal {
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+    width: 90%;
+    max-width: 300px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1002;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+}
+
+.weight-edit-modal h3 {
+    margin: 0 0 15px 0;
+    text-align: center;
+    color: #2c3e50;
+}
+
+.weight-edit-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.weight-edit-form label {
+    font-weight: 600;
+    color: #495057;
+    font-size: 14px;
+}
+
+.weight-edit-input {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #3498db;
+    border-radius: 8px;
+    font-size: 16px;
+    text-align: center;
+    font-weight: bold;
+    background: white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.weight-edit-input:focus {
+    outline: none;
+    border-color: #2980b9;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+}
+
+.weight-edit-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.weight-edit-buttons .btn-primary,
+.weight-edit-buttons .btn-secondary {
+    flex: 1;
+    padding: 10px;
+    border-radius: 6px;
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.weight-edit-buttons .btn-primary {
+    background: #3498db;
+    color: white;
+}
+
+.weight-edit-buttons .btn-primary:hover {
+    background: #2980b9;
+}
+
+.weight-edit-buttons .btn-secondary {
+    background: #95a5a6;
+    color: white;
+}
+
+.weight-edit-buttons .btn-secondary:hover {
+    background: #7f8c8d;
+}
+
+/* ОБЩИЕ СТИЛИ ДЛЯ МОДАЛЬНЫХ ОКОН */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    z-index: 1001;
+}
+
+/* АДАПТИВНОСТЬ ДЛЯ МОБИЛЬНЫХ */
+@media (max-width: 480px) {
+    .weight-edit-modal {
+        padding: 15px;
+        width: 85%;
+    }
+    
+    .weight-edit-modal h3 {
+        font-size: 16px;
+        margin-bottom: 12px;
+    }
+    
+    .weight-edit-form {
+        gap: 12px;
+    }
+    
+    .weight-edit-input {
+        padding: 10px;
+        font-size: 14px;
+    }
+    
+    .weight-edit-buttons {
+        gap: 8px;
+    }
+    
+    .weight-edit-buttons .btn-primary,
+    .weight-edit-buttons .btn-secondary {
+        padding: 8px;
+        font-size: 14px;
+    }
+}
+
+@media (max-height: 600px) {
+    .weight-edit-modal {
+        padding: 12px;
+    }
+    
+    .weight-edit-modal h3 {
+        font-size: 15px;
+        margin-bottom: 10px;
+    }
+    
+    .weight-edit-form {
+        gap: 10px;
+    }
+    
+    .weight-edit-input {
+        padding: 8px;
+        font-size: 14px;
     }
 }
