@@ -158,10 +158,6 @@
                         <div class="packaging-group">
                             <div class="param-label">Тип упаковки</div>
                             <div class="packaging-type-selector">
-                                <div class="packaging-type-item" data-packaging-type="none" onclick="selectPackagingType('none')">
-                                    <div class="packaging-type-icon">❌</div>
-                                    <div class="packaging-type-name">Нет</div>
-                                </div>
                                 <div class="packaging-type-item" data-packaging-type="obreshetka" onclick="selectPackagingType('obreshetka')">
                                     <div class="packaging-type-icon">⛓</div>
                                     <div class="packaging-type-name">Обрешетка</div>
@@ -173,24 +169,6 @@
                             </div>
                         </div>
                         
-                        <!-- КОЛИЧЕСТВО УПАКОВКИ -->
-                        <div class="packaging-group">
-                            <div class="param-label">Количество упаковок</div>
-                            <div class="param-control">
-                                <button class="param-btn minus" onclick="changePackagingCount(-1)">-</button>
-                                <input type="number" 
-                                       id="packagingCountInput" 
-                                       class="param-input" 
-                                       value="0" 
-                                       min="0" 
-                                       max="100" 
-                                       step="1"
-                                       inputmode="numeric"
-                                       oninput="updatePackagingCountFromInput()">
-                                <button class="param-btn plus" onclick="changePackagingCount(1)">+</button>
-                            </div>
-                        </div>
-                        
                         <!-- ИНФОРМАЦИЯ О ВЫБРАННОЙ УПАКОВКЕ -->
                         <div class="packaging-info">
                             <div class="current-stats">
@@ -198,10 +176,7 @@
                                     <span class="stat-label">Тип упаковки:</span>
                                     <span class="stat-value" id="currentPackagingType">Нет</span>
                                 </div>
-                                <div class="stat-item">
-                                    <span class="stat-label">Количество:</span>
-                                    <span class="stat-value" id="currentPackagingCount">0 шт</span>
-                                </div>
+
                             </div>
                         </div>
                     </div>
