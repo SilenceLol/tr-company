@@ -1,4 +1,4 @@
-// script.js - УПРОЩЕННАЯ ВЕРСИЯ БЕЗ КОЛИЧЕСТВА
+// script.js - ВЕРСИЯ С ДОПОЛНИТЕЛЬНОЙ УПАКОВКОЙ
 
 // API конфигурация (для будущей интеграции)
 const API_BASE_URL = 'http://localhost:3000/api';
@@ -11,6 +11,8 @@ let currentDimensions = {
     width: 80,
     height: 30
 };
+let currentPackagingType = 'none'; // 'none', 'obreshetka', 'paletnyy-bort'
+let currentPackagingCount = 0;
 let cargoList = [];
 let cargoListModal = null;
 
@@ -24,10 +26,14 @@ document.addEventListener('DOMContentLoaded', function() {
     // Инициализация фото
     initPhotoInput();
     
+    // Инициализация упаковки
+    initPackaging();
+    
     // Обновляем статистику
     updateStats();
     updateEmployeeInfo();
     updateCurrentStats();
+    updatePackagingDisplay();
     
     // Настройка полей ввода
     setupInputFields();
@@ -45,8 +51,27 @@ document.addEventListener('DOMContentLoaded', function() {
     // Выбираем тип груза по умолчанию
     selectCargoType('euro-pallet');
     
+    // Выбираем тип упаковки по умолчанию
+    selectPackagingType('none');
+    
     console.log('Инициализация завершена. Грузов в списке:', cargoList.length);
 });
+
+// ИНИЦИАЛИЗАЦИЯ УПАКОВКИ
+function initPackaging() {
+    const packagingCountInput = document.getElementById('packagingCountInput');
+    if (packagingCountInput) {
+        packagingCountInput.value = currentPackagingCount || 0;
+        packagingCountInput.addEventListener('change', function() {
+            this.value = this.value.replace(/[^0-9]/g, '');
+            const count = parseInt(this.value) || 0;
+            if (count >= 0 && count <= 100) {
+                currentPackagingCount = count;
+                updatePackagingDisplay();
+            }
+        });
+    }
+}
 
 // ИНИЦИАЛИЗАЦИЯ ФОТО
 function initPhotoInput() {
@@ -124,6 +149,94 @@ function setupInputFields() {
             });
         }
     });
+}
+
+// НОВЫЕ ФУНКЦИИ ДЛЯ УПАКОВКИ
+
+// ВЫБОР ТИПА УПАКОВКИ
+function selectPackagingType(type) {
+    // Убираем выделение у всех
+    document.querySelectorAll('.packaging-type-item').forEach(item => {
+        item.classList.remove('selected');
+    });
+    
+    // Выделяем выбранный
+    const selectedItem = document.querySelector(`[data-packaging-type="${type}"]`);
+    if (selectedItem) {
+        selectedItem.classList.add('selected');
+    }
+    
+    currentPackagingType = type;
+    
+    // Если выбран "Нет", сбрасываем количество на 0
+    if (type === 'none') {
+        currentPackagingCount = 0;
+        const packagingCountInput = document.getElementById('packagingCountInput');
+        if (packagingCountInput) {
+            packagingCountInput.value = 0;
+        }
+    }
+    
+    // Обновляем отображение
+    updatePackagingDisplay();
+}
+
+// ИЗМЕНЕНИЕ КОЛИЧЕСТВА УПАКОВКИ
+function changePackagingCount(delta) {
+    let newCount = (currentPackagingCount || 0) + delta;
+    if (newCount >= 0 && newCount <= 100) {
+        currentPackagingCount = newCount;
+        const packagingCountInput = document.getElementById('packagingCountInput');
+        if (packagingCountInput) packagingCountInput.value = currentPackagingCount;
+        updatePackagingDisplay();
+    }
+}
+
+// ОБНОВЛЕНИЕ КОЛИЧЕСТВА УПАКОВКИ ИЗ ПОЛЯ ВВОДА
+function updatePackagingCountFromInput() {
+    const packagingCountInput = document.getElementById('packagingCountInput');
+    if (packagingCountInput) {
+        let count = parseInt(packagingCountInput.value) || 0;
+        if (count < 0) count = 0;
+        if (count > 100) count = 100;
+        currentPackagingCount = count;
+        updatePackagingDisplay();
+    }
+}
+
+// ОБНОВЛЕНИЕ ОТОБРАЖЕНИЯ УПАКОВКИ
+function updatePackagingDisplay() {
+    // Обновляем тип упаковки
+    const packagingTypeElement = document.getElementById('currentPackagingType');
+    if (packagingTypeElement) {
+        packagingTypeElement.textContent = getPackagingTypeName(currentPackagingType);
+    }
+    
+    // Обновляем количество
+    const packagingCountElement = document.getElementById('currentPackagingCount');
+    if (packagingCountElement) {
+        packagingCountElement.textContent = currentPackagingCount + ' шт';
+    }
+}
+
+// ПОЛУЧЕНИЕ НАЗВАНИЯ ТИПА УПАКОВКИ
+function getPackagingTypeName(type) {
+    const names = {
+        'none': 'Нет',
+        'obreshetka': 'Обрешетка',
+        'paletnyy-bort': 'Паллетный борт'
+    };
+    return names[type] || type;
+}
+
+// ПОЛУЧЕНИЕ ЭМОДЗИ ДЛЯ ТИПА УПАКОВКИ
+function getPackagingEmoji(type) {
+    const emojis = {
+        'none': '❌',
+        'obreshetka': '📐',
+        'paletnyy-bort': '📦'
+    };
+    return emojis[type] || '❔';
 }
 
 // НОВЫЕ ФУНКЦИИ ДЛЯ ОБНОВЛЕННОГО ИНТЕРФЕЙСА
@@ -229,7 +342,7 @@ function sendToOperatorAndReset() {
 
 // СБРОС ВСЕХ ПАРАМЕТРОВ
 function resetAllParams() {
-    // Сбрасываем текущий тип
+    // Сбрасываем текущий тип груза
     currentCargoType = 'euro-pallet';
     selectCargoType('euro-pallet');
     
@@ -246,6 +359,14 @@ function resetAllParams() {
         const input = document.getElementById(dim + 'Input');
         if (input) input.value = currentDimensions[dim];
     });
+    
+    // Сбрасываем упаковку
+    currentPackagingType = 'none';
+    currentPackagingCount = 0;
+    selectPackagingType('none');
+    const packagingCountInput = document.getElementById('packagingCountInput');
+    if (packagingCountInput) packagingCountInput.value = 0;
+    updatePackagingDisplay();
     
     // Сбрасываем фото
     resetPhoto();
@@ -342,7 +463,7 @@ function setDefaultDimensionsForType(type) {
     updateCurrentStats();
 }
 
-// ОСНОВНАЯ ФУНКЦИЯ СОХРАНЕНИЯ ГРУЗА (теперь сохраняет только один экземпляр)
+// ОСНОВНАЯ ФУНКЦИЯ СОХРАНЕНИЯ ГРУЗА (теперь с упаковкой)
 function saveCargo() {
     console.log('Сохранение груза...');
     
@@ -369,7 +490,7 @@ function saveCargo() {
                    currentDimensions.width * 
                    currentDimensions.height) / 1000000;
     
-    // Создаем новый груз (всегда один экземпляр)
+    // Создаем новый груз с информацией об упаковке
     const cargo = {
         id: Date.now(),
         type: currentCargoType,
@@ -383,7 +504,12 @@ function saveCargo() {
         photo: photo,
         employeeId: getCurrentEmployeeId(),
         date: new Date().toISOString().split('T')[0],
-        time: new Date().toLocaleTimeString('ru-RU', {hour12: false})
+        time: new Date().toLocaleTimeString('ru-RU', {hour12: false}),
+        // НОВЫЕ ПОЛЯ ДЛЯ УПАКОВКИ
+        packagingType: currentPackagingType,
+        packagingTypeName: getPackagingTypeName(currentPackagingType),
+        packagingCount: currentPackagingCount,
+        packagingEmoji: getPackagingEmoji(currentPackagingType)
     };
     
     cargoList.push(cargo);
@@ -423,10 +549,18 @@ function showCargoListModal() {
     if (!cargoList || cargoList.length === 0) {
         content.innerHTML = '<div class="empty-state">Нет сохраненных грузов</div>';
     } else {
-        // Отображаем каждый груз отдельно (теперь нет группировки)
+        // Отображаем каждый груз отдельно
         cargoList.forEach((cargo, index) => {
             const cargoItem = document.createElement('div');
             cargoItem.className = 'cargo-list-item';
+            
+            // Добавляем информацию об упаковке
+            const packagingInfo = cargo.packagingCount > 0 && cargo.packagingType !== 'none' 
+                ? `<div class="detail-item">
+                    <span class="detail-label">Упаковка</span>
+                    <span class="detail-value">${cargo.packagingTypeName} (${cargo.packagingCount} шт)</span>
+                </div>` 
+                : '';
             
             cargoItem.innerHTML = `
                 <div class="cargo-list-header">
@@ -449,6 +583,7 @@ function showCargoListModal() {
                         <span class="detail-label">Объем</span>
                         <span class="detail-value">${cargo.volume.toFixed(2)} м³</span>
                     </div>
+                    ${packagingInfo}
                     <div class="detail-item">
                         <span class="detail-label">Время</span>
                         <span class="detail-value">${cargo.timestamp || ''}</span>
@@ -515,6 +650,14 @@ function showCargoStatsPopup() {
             const cargoItem = document.createElement('div');
             cargoItem.className = 'cargo-stats-item';
             
+            // Добавляем информацию об упаковке
+            const packagingInfo = cargo.packagingCount > 0 && cargo.packagingType !== 'none' 
+                ? `<div class="cargo-stats-detail">
+                    <span class="cargo-stats-detail-label">Упаковка</span>
+                    <span class="cargo-stats-detail-value">${cargo.packagingEmoji} ${cargo.packagingCount} шт</span>
+                </div>` 
+                : '';
+            
             cargoItem.innerHTML = `
                 <div class="cargo-stats-item-header">
                     <div class="cargo-stats-item-type">
@@ -532,6 +675,7 @@ function showCargoStatsPopup() {
                         <span class="cargo-stats-detail-label">Объем</span>
                         <span class="cargo-stats-detail-value">${cargo.volume.toFixed(2)} м³</span>
                     </div>
+                    ${packagingInfo}
                     <div class="cargo-stats-detail">
                         <span class="cargo-stats-detail-label">Время</span>
                         <span class="cargo-stats-detail-value">${cargo.timestamp || ''}</span>
@@ -553,11 +697,20 @@ function showCargoStatsPopup() {
             let sumWeight = cargoList.reduce((sum, cargo) => sum + cargo.weight, 0);
             let sumVolume = cargoList.reduce((sum, cargo) => sum + cargo.volume, 0);
             
+            // Подсчитываем количество грузов с упаковкой
+            let cargoWithPackaging = cargoList.filter(cargo => 
+                cargo.packagingCount > 0 && cargo.packagingType !== 'none'
+            ).length;
+            
             totalsContainer.innerHTML = `
                 <div style="margin-top: 15px; padding: 10px; background: #f8f9fa; border-radius: 6px; font-size: 12px;">
                     <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
                         <span>Всего грузов:</span>
                         <span style="font-weight: bold;">${totalItems}</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                        <span>С упаковкой:</span>
+                        <span style="font-weight: bold;">${cargoWithPackaging}</span>
                     </div>
                     <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
                         <span>Общая масса:</span>
@@ -594,11 +747,13 @@ function updateStats() {
     const totalCargoCount = document.getElementById('totalCargoCount');
     const totalWeightValue = document.getElementById('totalWeightValue');
     const totalVolumeValue = document.getElementById('totalVolumeValue');
+    const totalPackagingInfo = document.getElementById('totalPackagingInfo');
     
     if (!cargoList || cargoList.length === 0) {
         if (totalCargoCount) totalCargoCount.textContent = '0';
         if (totalWeightValue) totalWeightValue.textContent = '0 кг';
         if (totalVolumeValue) totalVolumeValue.textContent = '0 м³';
+        if (totalPackagingInfo) totalPackagingInfo.textContent = 'Нет';
         return;
     }
     
@@ -607,10 +762,36 @@ function updateStats() {
     let sumWeight = cargoList.reduce((sum, cargo) => sum + cargo.weight, 0);
     let sumVolume = cargoList.reduce((sum, cargo) => sum + cargo.volume, 0);
     
+    // Подсчитываем информацию об упаковке
+    let cargoWithPackaging = cargoList.filter(cargo => 
+        cargo.packagingCount > 0 && cargo.packagingType !== 'none'
+    );
+    
+    let packagingInfoText = 'Нет';
+    if (cargoWithPackaging.length > 0) {
+        // Группируем по типам упаковки
+        let packagingSummary = {};
+        cargoWithPackaging.forEach(cargo => {
+            if (!packagingSummary[cargo.packagingTypeName]) {
+                packagingSummary[cargo.packagingTypeName] = 0;
+            }
+            packagingSummary[cargo.packagingTypeName] += cargo.packagingCount;
+        });
+        
+        // Формируем текст
+        let packagingTexts = [];
+        for (let type in packagingSummary) {
+            packagingTexts.push(`${type}: ${packagingSummary[type]} шт`);
+        }
+        
+        packagingInfoText = packagingTexts.join(', ');
+    }
+    
     // Обновляем элементы
     if (totalCargoCount) totalCargoCount.textContent = totalItems;
     if (totalWeightValue) totalWeightValue.textContent = sumWeight + ' кг';
     if (totalVolumeValue) totalVolumeValue.textContent = sumVolume.toFixed(2) + ' м³';
+    if (totalPackagingInfo) totalPackagingInfo.textContent = packagingInfoText;
 }
 
 // ОБНОВЛЕНИЕ ИТОГОВ В МОДАЛЬНОМ ОКНЕ
@@ -650,7 +831,17 @@ function sendToOperator() {
         summary: {
             totalItems: cargoList.length,
             totalWeight: cargoList.reduce((sum, cargo) => sum + cargo.weight, 0),
-            totalVolume: cargoList.reduce((sum, cargo) => sum + cargo.volume, 0)
+            totalVolume: cargoList.reduce((sum, cargo) => sum + cargo.volume, 0),
+            // Добавляем информацию об упаковке
+            packagingSummary: cargoList.reduce((summary, cargo) => {
+                if (cargo.packagingType !== 'none' && cargo.packagingCount > 0) {
+                    if (!summary[cargo.packagingType]) {
+                        summary[cargo.packagingType] = 0;
+                    }
+                    summary[cargo.packagingType] += cargo.packagingCount;
+                }
+                return summary;
+            }, {})
         }
     };
     
@@ -790,7 +981,7 @@ function initTabletOptimization() {
         
         // Увеличиваем тач-таргеты для всех кликабельных элементов
         const clickableElements = document.querySelectorAll(
-            'button, .cargo-type-item, .photo-container, .stats-header, ' +
+            'button, .cargo-type-item, .packaging-type-item, .photo-container, .stats-header, ' +
             '.dimension-btn, .quantity-btn, .btn-save, .btn-send, ' +
             '.btn-quantity-change, .btn-remove-group'
         );
@@ -820,14 +1011,14 @@ function handleTabletClicks() {
     // Улучшаем feedback для тапов
     document.addEventListener('touchstart', function(e) {
         const target = e.target;
-        if (target.matches('button, .cargo-type-item, .photo-container, .stats-header')) {
+        if (target.matches('button, .cargo-type-item, .packaging-type-item, .photo-container, .stats-header')) {
             target.classList.add('active-touch');
         }
     });
     
     document.addEventListener('touchend', function(e) {
         const target = e.target;
-        if (target.matches('button, .cargo-type-item, .photo-container, .stats-header')) {
+        if (target.matches('button, .cargo-type-item, .packaging-type-item, .photo-container, .stats-header')) {
             target.classList.remove('active-touch');
         }
     });
@@ -935,6 +1126,9 @@ document.addEventListener('DOMContentLoaded', function() {
 window.changeDimension = changeDimension;
 window.takePhoto = takePhoto;
 window.selectCargoType = selectCargoType;
+window.selectPackagingType = selectPackagingType;
+window.changePackagingCount = changePackagingCount;
+window.updatePackagingCountFromInput = updatePackagingCountFromInput;
 window.saveCargo = saveCargo;
 window.sendToOperator = sendToOperator;
 window.showCargoListModal = showCargoListModal;
