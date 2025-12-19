@@ -64,21 +64,21 @@
                     <div class="params-section">
                         <h2>Параметры груза</h2>
                         
-                        <!-- ВЕС -->
+                        <!-- КОЛИЧЕСТВО МЕСТ -->
                         <div class="param-group">
-                            <div class="param-label">Вес груза (кг)</div>
+                            <div class="param-label">Кол-во мест</div>
                             <div class="param-control">
-                                <button class="param-btn minus" onclick="changeParam('weight', -1)">-</button>
+                                <button class="param-btn minus" onclick="changeParam('quantity', -1)">-</button>
                                 <input type="number" 
-                                       id="weightInput" 
+                                       id="quantityInput" 
                                        class="param-input" 
                                        value="1" 
                                        min="1" 
-                                       max="10000" 
+                                       max="100" 
                                        step="1"
                                        inputmode="numeric"
-                                       oninput="updateWeightFromInput()">
-                                <button class="param-btn plus" onclick="changeParam('weight', 1)">+</button>
+                                       oninput="updateQuantityFromInput()">
+                                <button class="param-btn plus" onclick="changeParam('quantity', 1)">+</button>
                             </div>
                         </div>
                         
@@ -134,15 +134,16 @@
                             </div>
                         </div>
                         
-                        <!-- СТАТИСТИКА ТЕКУЩЕГО ГРУЗА (режим реального времени) -->
+                        <!-- СТАТИСТИКА ТЕКУЩЕГО ГРУЗА -->
                         <div class="current-stats">
                             <div class="stat-item">
                                 <span class="stat-label">Текущий объем:</span>
                                 <span class="stat-value" id="currentVolume">0.288 м³</span>
                             </div>
-                            <div class="stat-item">
+                            <div class="stat-item clickable-weight" onclick="editWeight()">
                                 <span class="stat-label">Общий вес:</span>
-                                <span class="stat-value" id="currentTotalWeight">1 кг</span>
+                                <span class="stat-value" id="currentTotalWeight">10 кг</span>
+                                <div class="edit-icon">✏️</div>
                             </div>
                         </div>
                     </div>
@@ -162,7 +163,7 @@
                                     <div class="packaging-type-name">Нет</div>
                                 </div>
                                 <div class="packaging-type-item" data-packaging-type="obreshetka" onclick="selectPackagingType('obreshetka')">
-                                    <div class="packaging-type-icon">📐</div>
+                                    <div class="packaging-type-icon">⛓</div>
                                     <div class="packaging-type-name">Обрешетка</div>
                                 </div>
                                 <div class="packaging-type-item" data-packaging-type="paletnyy-bort" onclick="selectPackagingType('paletnyy-bort')">
@@ -355,6 +356,27 @@
 
     <!-- СКРЫТЫЙ INPUT ДЛЯ ФОТО -->
     <input type="file" id="photoInput" accept="image/*" capture="environment" style="display: none;">
+
+    <!-- МОДАЛЬНОЕ ОКНО ДЛЯ РЕДАКТИРОВАНИЯ ВЕСА -->
+    <div id="weightEditModal" class="modal" style="display: none;">
+        <div class="modal-content weight-edit-modal">
+            <h3>Редактирование веса</h3>
+            <div class="weight-edit-form">
+                <label for="weightEditInput">Общий вес груза (кг):</label>
+                <input type="number" 
+                       id="weightEditInput" 
+                       class="weight-edit-input"
+                       min="1" 
+                       max="10000" 
+                       step="1"
+                       value="10">
+                <div class="weight-edit-buttons">
+                    <button class="btn-secondary" onclick="closeWeightEditModal()">Отмена</button>
+                    <button class="btn-primary" onclick="saveWeight()">Сохранить</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script src="script.js"></script>
     <script src="cargo.js"></script>
