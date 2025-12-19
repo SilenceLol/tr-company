@@ -1,4 +1,4 @@
-/* cargo.css - ОПТИМИЗИРОВАННАЯ ВЕРСИЯ ДЛЯ ЛУЧШЕЙ ВИДИМОСТИ */
+/* cargo.css - ОПТИМИЗИРОВАННАЯ ВЕРСИЯ С ГРУППИРОВКОЙ ГРУЗОВ */
 
 .cargo-container {
     height: 100vh;
@@ -601,6 +601,222 @@ h2 {
     margin-left: 2px;
 }
 
+/* СТИЛИ ДЛЯ ОКОШКА СТАТИСТИКИ ГРУЗОВ */
+.cargo-stats-popup-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+}
+
+.cargo-stats-popup {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    max-width: 500px;
+    max-height: 80vh;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+    z-index: 1001;
+    overflow: hidden;
+}
+
+.cargo-stats-popup-header {
+    padding: 15px;
+    background: linear-gradient(135deg, #2c3e50, #34495e);
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.cargo-stats-popup-header h3 {
+    margin: 0;
+    font-size: 16px;
+}
+
+.cargo-stats-popup-close {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 0;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.cargo-stats-popup-content {
+    padding: 15px;
+    max-height: 60vh;
+    overflow-y: auto;
+}
+
+.cargo-stats-items {
+    margin-bottom: 20px;
+}
+
+.cargo-stats-item {
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 10px;
+}
+
+.cargo-stats-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.cargo-stats-item-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    color: #2c3e50;
+    font-size: 14px;
+}
+
+.cargo-stats-item-icon {
+    font-size: 16px;
+}
+
+.cargo-stats-item-count {
+    background: #3498db;
+    color: white;
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.cargo-stats-item-details {
+    margin-bottom: 8px;
+}
+
+.cargo-stats-item-detail {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 4px;
+    font-size: 12px;
+}
+
+.cargo-stats-item-detail .detail-label {
+    color: #666;
+}
+
+.cargo-stats-item-detail .detail-value {
+    color: #2c3e50;
+    font-weight: 500;
+}
+
+.cargo-stats-item-total {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-top: 1px solid #dee2e6;
+    margin-top: 8px;
+    font-size: 13px;
+}
+
+.cargo-stats-item-total .total-label {
+    color: #2c3e50;
+    font-weight: 600;
+}
+
+.cargo-stats-item-total .total-value {
+    color: #27ae60;
+    font-weight: 600;
+}
+
+.cargo-stats-item-remove {
+    width: 100%;
+    background: #e74c3c;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 8px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-top: 8px;
+}
+
+.cargo-stats-item-remove:hover {
+    background: #c0392b;
+}
+
+.cargo-stats-totals {
+    background: #e3f2fd;
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 15px;
+}
+
+.cargo-stats-total-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 6px;
+    font-size: 13px;
+}
+
+.cargo-stats-total-item:last-child {
+    margin-bottom: 0;
+}
+
+.cargo-stats-total-item .total-label {
+    color: #2c3e50;
+    font-weight: 600;
+}
+
+.cargo-stats-total-item .total-value {
+    color: #3498db;
+    font-weight: 600;
+}
+
+.cargo-stats-actions {
+    display: flex;
+    justify-content: center;
+}
+
+.btn-clear-all {
+    background: #e74c3c;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 10px 20px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-clear-all:hover {
+    background: #c0392b;
+}
+
+.cargo-stats-empty {
+    text-align: center;
+    padding: 30px;
+    color: #666;
+    font-style: italic;
+}
+
 /* АДАПТИВНОСТЬ ДЛЯ МАЛЕНЬКИХ ЭКРАНОВ */
 @media (max-height: 600px) {
     .cargo-main {
@@ -944,6 +1160,32 @@ h2 {
         border-radius: 8px;
         font-size: 16px;
     }
+    
+    /* Стили для окна статистики на планшетах */
+    .cargo-stats-popup {
+        max-width: 600px;
+    }
+    
+    .cargo-stats-item-title {
+        font-size: 16px;
+    }
+    
+    .cargo-stats-item-count {
+        font-size: 14px;
+        padding: 5px 10px;
+    }
+    
+    .cargo-stats-item-detail {
+        font-size: 14px;
+    }
+    
+    .cargo-stats-item-total {
+        font-size: 15px;
+    }
+    
+    .cargo-stats-total-item {
+        font-size: 15px;
+    }
 }
 
 /* ОПТИМИЗАЦИЯ ДЛЯ ОЧЕНЬ МАЛЕНЬКИХ ЭКРАНОВ (320px и меньше) */
@@ -1071,6 +1313,61 @@ h2 {
     .total-info-value {
         font-size: 11px;
     }
+    
+    /* Адаптивность для окна статистики */
+    @media (max-width: 480px) {
+        .cargo-stats-popup {
+            width: 95%;
+            max-height: 85vh;
+        }
+        
+        .cargo-stats-popup-header {
+            padding: 12px;
+        }
+        
+        .cargo-stats-popup-header h3 {
+            font-size: 14px;
+        }
+        
+        .cargo-stats-popup-content {
+            padding: 12px;
+        }
+        
+        .cargo-stats-item {
+            padding: 10px;
+        }
+        
+        .cargo-stats-item-title {
+            font-size: 13px;
+        }
+        
+        .cargo-stats-item-count {
+            font-size: 11px;
+            padding: 2px 6px;
+        }
+        
+        .cargo-stats-item-detail {
+            font-size: 11px;
+        }
+        
+        .cargo-stats-item-total {
+            font-size: 12px;
+        }
+        
+        .cargo-stats-item-remove {
+            font-size: 11px;
+            padding: 6px;
+        }
+        
+        .cargo-stats-total-item {
+            font-size: 12px;
+        }
+        
+        .btn-clear-all {
+            padding: 8px 16px;
+            font-size: 13px;
+        }
+    }
 }
 
 /* ФОКУС ДЛЯ ДОСТУПНОСТИ */
@@ -1172,4 +1469,411 @@ h1, h2, h3 {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+}
+
+/* ПОДСВЕТКА ВЫБРАННОГО ГРУЗА */
+.cargo-type-item.selected::before {
+    content: '✓';
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    width: 16px;
+    height: 16px;
+    background: #3498db;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: bold;
+}
+
+/* ПОДСВЕТКА ВЫБРАННОЙ УПАКОВКИ */
+.packaging-type-item.selected::before {
+    content: '✓';
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    width: 16px;
+    height: 16px;
+    background: #27ae60;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: bold;
+}
+
+/* УВЕЛИЧЕНИЕ ОБЛАСТИ КЛИКА */
+.cargo-type-item,
+.packaging-type-item {
+    position: relative;
+}
+
+.cargo-type-item *,
+.packaging-type-item * {
+    pointer-events: none; /* Все клики обрабатываются на родителе */
+}
+/* cargo.css - ОБНОВЛЕННАЯ ВЕРСИЯ С РЕДАКТИРУЕМЫМ ВЕСОМ */
+
+/* ... (весь предыдущий CSS остается) ... */
+
+/* СТИЛИ ДЛЯ РЕДАКТИРУЕМОГО ВЕСА */
+.current-stats .stat-item.clickable-weight {
+    cursor: pointer;
+    position: relative;
+    padding-right: 30px;
+}
+
+.current-stats .stat-item.clickable-weight:hover {
+    background: #d1ecf1;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.current-stats .stat-item.clickable-weight .edit-icon {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 12px;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+}
+
+.current-stats .stat-item.clickable-weight:hover .edit-icon {
+    opacity: 1;
+}
+
+/* МОДАЛЬНОЕ ОКНО РЕДАКТИРОВАНИЯ ВЕСА */
+.weight-edit-modal {
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+    width: 90%;
+    max-width: 300px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1002;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+}
+
+.weight-edit-modal h3 {
+    margin: 0 0 15px 0;
+    text-align: center;
+    color: #2c3e50;
+}
+
+.weight-edit-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.weight-edit-form label {
+    font-weight: 600;
+    color: #495057;
+    font-size: 14px;
+}
+
+.weight-edit-input {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #3498db;
+    border-radius: 8px;
+    font-size: 16px;
+    text-align: center;
+    font-weight: bold;
+    background: white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.weight-edit-input:focus {
+    outline: none;
+    border-color: #2980b9;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+}
+
+.weight-edit-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.weight-edit-buttons .btn-primary,
+.weight-edit-buttons .btn-secondary {
+    flex: 1;
+    padding: 10px;
+    border-radius: 6px;
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.weight-edit-buttons .btn-primary {
+    background: #3498db;
+    color: white;
+}
+
+.weight-edit-buttons .btn-primary:hover {
+    background: #2980b9;
+}
+
+.weight-edit-buttons .btn-secondary {
+    background: #95a5a6;
+    color: white;
+}
+
+.weight-edit-buttons .btn-secondary:hover {
+    background: #7f8c8d;
+}
+
+/* ОБЩИЕ СТИЛИ ДЛЯ МОДАЛЬНЫХ ОКОН */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    z-index: 1001;
+}
+
+/* АДАПТИВНОСТЬ ДЛЯ МОБИЛЬНЫХ */
+@media (max-width: 480px) {
+    .weight-edit-modal {
+        padding: 15px;
+        width: 85%;
+    }
+    
+    .weight-edit-modal h3 {
+        font-size: 16px;
+        margin-bottom: 12px;
+    }
+    
+    .weight-edit-form {
+        gap: 12px;
+    }
+    
+    .weight-edit-input {
+        padding: 10px;
+        font-size: 14px;
+    }
+    
+    .weight-edit-buttons {
+        gap: 8px;
+    }
+    
+    .weight-edit-buttons .btn-primary,
+    .weight-edit-buttons .btn-secondary {
+        padding: 8px;
+        font-size: 14px;
+    }
+}
+
+@media (max-height: 600px) {
+    .weight-edit-modal {
+        padding: 12px;
+    }
+    
+    .weight-edit-modal h3 {
+        font-size: 15px;
+        margin-bottom: 10px;
+    }
+    
+    .weight-edit-form {
+        gap: 10px;
+    }
+    
+    .weight-edit-input {
+        padding: 8px;
+        font-size: 14px;
+    }
+}
+/* cargo.css - ОБНОВЛЕННАЯ ВЕРСИЯ С ОБЩИМ ВЕСОМ */
+
+/* ... (весь предыдущий CSS остается без изменений) ... */
+
+/* СТИЛИ ДЛЯ РЕДАКТИРУЕМОГО ОБЩЕГО ВЕСА */
+.current-stats .stat-item.clickable-weight {
+    cursor: pointer;
+    position: relative;
+    padding-right: 30px;
+}
+
+.current-stats .stat-item.clickable-weight:hover {
+    background: #d1ecf1;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.current-stats .stat-item.clickable-weight .edit-icon {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 12px;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+}
+
+.current-stats .stat-item.clickable-weight:hover .edit-icon {
+    opacity: 1;
+}
+
+/* МОДАЛЬНОЕ ОКНО РЕДАКТИРОВАНИЯ ВЕСА */
+.weight-edit-modal {
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+    width: 90%;
+    max-width: 300px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1002;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+}
+
+.weight-edit-modal h3 {
+    margin: 0 0 15px 0;
+    text-align: center;
+    color: #2c3e50;
+}
+
+.weight-edit-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.weight-edit-form label {
+    font-weight: 600;
+    color: #495057;
+    font-size: 14px;
+}
+
+.weight-edit-input {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #3498db;
+    border-radius: 8px;
+    font-size: 16px;
+    text-align: center;
+    font-weight: bold;
+    background: white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.weight-edit-input:focus {
+    outline: none;
+    border-color: #2980b9;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+}
+
+.weight-edit-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.weight-edit-buttons .btn-primary,
+.weight-edit-buttons .btn-secondary {
+    flex: 1;
+    padding: 10px;
+    border-radius: 6px;
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.weight-edit-buttons .btn-primary {
+    background: #3498db;
+    color: white;
+}
+
+.weight-edit-buttons .btn-primary:hover {
+    background: #2980b9;
+}
+
+.weight-edit-buttons .btn-secondary {
+    background: #95a5a6;
+    color: white;
+}
+
+.weight-edit-buttons .btn-secondary:hover {
+    background: #7f8c8d;
+}
+
+/* ОБЩИЕ СТИЛИ ДЛЯ МОДАЛЬНЫХ ОКОН */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    z-index: 1001;
+}
+
+/* АДАПТИВНОСТЬ ДЛЯ МОБИЛЬНЫХ */
+@media (max-width: 480px) {
+    .weight-edit-modal {
+        padding: 15px;
+        width: 85%;
+    }
+    
+    .weight-edit-modal h3 {
+        font-size: 16px;
+        margin-bottom: 12px;
+    }
+    
+    .weight-edit-form {
+        gap: 12px;
+    }
+    
+    .weight-edit-input {
+        padding: 10px;
+        font-size: 14px;
+    }
+    
+    .weight-edit-buttons {
+        gap: 8px;
+    }
+    
+    .weight-edit-buttons .btn-primary,
+    .weight-edit-buttons .btn-secondary {
+        padding: 8px;
+        font-size: 14px;
+    }
+}
+
+@media (max-height: 600px) {
+    .weight-edit-modal {
+        padding: 12px;
+    }
+    
+    .weight-edit-modal h3 {
+        font-size: 15px;
+        margin-bottom: 10px;
+    }
+    
+    .weight-edit-form {
+        gap: 10px;
+    }
+    
+    .weight-edit-input {
+        padding: 8px;
+        font-size: 14px;
+    }
 }
