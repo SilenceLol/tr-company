@@ -77,7 +77,8 @@
                                        max="100" 
                                        step="1"
                                        inputmode="numeric"
-                                       oninput="updateQuantityFromInput()">
+                                       oninput="updateQuantityFromInput()"
+                                       onchange="updateQuantityFromInput()">
                                 <button class="param-btn plus" onclick="changeParam('quantity', 1)">+</button>
                             </div>
                         </div>
@@ -95,7 +96,8 @@
                                        max="1000" 
                                        step="1"
                                        inputmode="numeric"
-                                       oninput="updateDimensionFromInput('length')">
+                                       oninput="updateDimensionFromInput('length')"
+                                       onchange="updateDimensionFromInput('length')">
                                 <button class="param-btn plus" onclick="changeParam('length', 10)">+</button>
                             </div>
                         </div>
@@ -112,7 +114,8 @@
                                        max="1000" 
                                        step="1"
                                        inputmode="numeric"
-                                       oninput="updateDimensionFromInput('width')">
+                                       oninput="updateDimensionFromInput('width')"
+                                       onchange="updateDimensionFromInput('width')">
                                 <button class="param-btn plus" onclick="changeParam('width', 10)">+</button>
                             </div>
                         </div>
@@ -129,7 +132,8 @@
                                        max="1000" 
                                        step="1"
                                        inputmode="numeric"
-                                       oninput="updateDimensionFromInput('height')">
+                                       oninput="updateDimensionFromInput('height')"
+                                       onchange="updateDimensionFromInput('height')">
                                 <button class="param-btn plus" onclick="changeParam('height', 10)">+</button>
                             </div>
                         </div>
@@ -158,6 +162,10 @@
                         <div class="packaging-group">
                             <div class="param-label">Тип упаковки</div>
                             <div class="packaging-type-selector">
+                                <div class="packaging-type-item" data-packaging-type="none" onclick="selectPackagingType('none')">
+                                    <div class="packaging-type-icon">❌</div>
+                                    <div class="packaging-type-name">Нет</div>
+                                </div>
                                 <div class="packaging-type-item" data-packaging-type="obreshetka" onclick="selectPackagingType('obreshetka')">
                                     <div class="packaging-type-icon">⛓</div>
                                     <div class="packaging-type-name">Обрешетка</div>
@@ -176,7 +184,10 @@
                                     <span class="stat-label">Тип упаковки:</span>
                                     <span class="stat-value" id="currentPackagingType">Нет</span>
                                 </div>
-
+                                <div class="stat-item">
+                                    <span class="stat-label">Количество:</span>
+                                    <span class="stat-value" id="currentPackagingCount">0 шт</span>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -189,13 +200,15 @@
                 <div class="bottom-left">
                     <!-- ФОТО ГРУЗА -->
                     <div class="photo-section-new">
-                        <div class="photo-container-new" onclick="takePhoto()">
+                        <div class="photo-container-new" onclick="openCamera()">
                             <div class="photo-placeholder-new" id="photoPlaceholder">
                                 <div class="camera-icon-new">📷</div>
                                 <div class="photo-hint-new">Нажмите для фото</div>
                             </div>
-                            <img id="cargoPhoto" class="cargo-photo-new" style="display: none;">
+                            <!-- Контейнер для нескольких фото -->
+                            <div class="photos-container" id="photosContainer"></div>
                         </div>
+                        <div class="photos-count" id="photosCount"></div>
                     </div>
                     
                     <!-- КНОПКИ ВЕРТИКАЛЬНО -->
@@ -330,7 +343,7 @@
     </div>
 
     <!-- СКРЫТЫЙ INPUT ДЛЯ ФОТО -->
-    <input type="file" id="photoInput" accept="image/*" capture="environment" style="display: none;">
+    <input type="file" id="photoInput" accept="image/*" capture="environment" multiple style="display: none;">
 
     <!-- МОДАЛЬНОЕ ОКНО ДЛЯ РЕДАКТИРОВАНИЯ ВЕСА -->
     <div id="weightEditModal" class="modal" style="display: none;">
