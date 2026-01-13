@@ -1,4 +1,4 @@
-/* cargo.css - ОПТИМИЗИРОВАННАЯ ВЕРСИЯ С ГРУППИРОВКОЙ ГРУЗОВ */
+/* cargo.css - ОПТИМИЗИРОВАННАЯ ВЕРСИЯ С ИСПРАВЛЕНИЯМИ */
 
 .cargo-container {
     height: 100vh;
@@ -314,6 +314,7 @@ h2 {
     background: #e3f2fd;
     border-radius: 5px;
     padding: 6px;
+    position: relative;
 }
 
 .current-stats .stat-label {
@@ -327,6 +328,32 @@ h2 {
     font-weight: bold;
     font-size: 11px;
     color: #2c3e50;
+}
+
+/* СТИЛИ ДЛЯ РЕДАКТИРУЕМОГО ВЕСА */
+.current-stats .stat-item.clickable-weight {
+    cursor: pointer;
+    padding-right: 25px;
+}
+
+.current-stats .stat-item.clickable-weight:hover {
+    background: #d1ecf1;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.current-stats .stat-item.clickable-weight .edit-icon {
+    position: absolute;
+    right: 6px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 10px;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+}
+
+.current-stats .stat-item.clickable-weight:hover .edit-icon {
+    opacity: 1;
 }
 
 /* НИЖНЯЯ ЧАСТЬ: КНОПКИ И ОБЩАЯ СТАТИСТИКА */
@@ -366,12 +393,12 @@ h2 {
     align-items: center;
     justify-content: center;
     flex: none;
-    height: 90px;
+    height: 100px;
 }
 
 .photo-container-new {
-    width: 45px;
-    height: 45px;
+    width: 70px;
+    height: 70px;
     border: 2px dashed #3498db;
     border-radius: 6px;
     display: flex;
@@ -381,6 +408,7 @@ h2 {
     background: white;
     overflow: hidden;
     transition: all 0.2s;
+    position: relative;
 }
 
 .photo-container-new:hover {
@@ -398,7 +426,7 @@ h2 {
 }
 
 .camera-icon-new {
-    font-size: 16px;
+    font-size: 20px;
     color: #3498db;
     margin-bottom: 4px;
 }
@@ -407,15 +435,68 @@ h2 {
     font-size: 8px;
     color: #666;
     text-align: center;
-    max-width: 35px;
+    max-width: 60px;
     line-height: 1.1;
 }
 
-.cargo-photo-new {
+/* СТИЛИ ДЛЯ МИНИАТЮР ФОТО */
+.photos-container {
+    display: flex;
+    gap: 3px;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding: 2px;
+    max-height: 70px;
+    overflow-y: auto;
+}
+
+.photo-thumbnail {
+    width: 30px;
+    height: 30px;
+    border-radius: 4px;
+    overflow: hidden;
+    position: relative;
+    border: 2px solid #3498db;
+    cursor: pointer;
+    transition: transform 0.2s;
+    flex-shrink: 0;
+}
+
+.photo-thumbnail:hover {
+    transform: scale(1.1);
+    border-color: #2980b9;
+}
+
+.photo-thumbnail img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    border-radius: 4px;
+}
+
+.photo-delete-btn {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: #e74c3c;
+    color: white;
+    border: none;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    font-size: 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    font-weight: bold;
+    line-height: 1;
+}
+
+.photo-delete-btn:hover {
+    background: #c0392b;
 }
 
 /* КНОПКИ ВЕРТИКАЛЬНО - КОМПАКТНЫЕ */
@@ -817,6 +898,104 @@ h2 {
     font-style: italic;
 }
 
+/* МОДАЛЬНОЕ ОКНО РЕДАКТИРОВАНИЯ ВЕСА */
+.weight-edit-modal {
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+    width: 90%;
+    max-width: 300px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1002;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+}
+
+.weight-edit-modal h3 {
+    margin: 0 0 15px 0;
+    text-align: center;
+    color: #2c3e50;
+}
+
+.weight-edit-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.weight-edit-form label {
+    font-weight: 600;
+    color: #495057;
+    font-size: 14px;
+}
+
+.weight-edit-input {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #3498db;
+    border-radius: 8px;
+    font-size: 16px;
+    text-align: center;
+    font-weight: bold;
+    background: white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.weight-edit-input:focus {
+    outline: none;
+    border-color: #2980b9;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+}
+
+.weight-edit-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.weight-edit-buttons .btn-primary,
+.weight-edit-buttons .btn-secondary {
+    flex: 1;
+    padding: 10px;
+    border-radius: 6px;
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.weight-edit-buttons .btn-primary {
+    background: #3498db;
+    color: white;
+}
+
+.weight-edit-buttons .btn-primary:hover {
+    background: #2980b9;
+}
+
+.weight-edit-buttons .btn-secondary {
+    background: #95a5a6;
+    color: white;
+}
+
+.weight-edit-buttons .btn-secondary:hover {
+    background: #7f8c8d;
+}
+
+/* ОБЩИЕ СТИЛИ ДЛЯ МОДАЛЬНЫХ ОКОН */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    z-index: 1001;
+}
+
 /* АДАПТИВНОСТЬ ДЛЯ МАЛЕНЬКИХ ЭКРАНОВ */
 @media (max-height: 600px) {
     .cargo-main {
@@ -874,22 +1053,27 @@ h2 {
     }
     
     .photo-section-new {
-        height: 80px;
+        height: 90px;
         padding: 4px;
     }
     
     .photo-container-new {
-        width: 40px;
-        height: 40px;
+        width: 60px;
+        height: 60px;
     }
     
     .camera-icon-new {
-        font-size: 14px;
+        font-size: 16px;
     }
     
     .photo-hint-new {
         font-size: 7px;
-        max-width: 30px;
+        max-width: 50px;
+    }
+    
+    .photo-thumbnail {
+        width: 25px;
+        height: 25px;
     }
     
     .action-buttons-column {
@@ -957,7 +1141,7 @@ h2 {
     }
 }
 
-/* ОСНОВНЫЕ ИЗМЕНЕНИЯ ДЛЯ ПЛАНШЕТОВ (сделаем более компактными) */
+/* ОСНОВНЫЕ ИЗМЕНЕНИЯ ДЛЯ ПЛАНШЕТОВ */
 @media (min-width: 768px) and (max-width: 1024px) {
     .cargo-container {
         max-width: 750px;
@@ -1083,23 +1267,34 @@ h2 {
     }
     
     .photo-section-new {
-        height: 120px;
+        height: 140px;
         padding: 12px;
     }
     
     .photo-container-new {
-        width: 70px;
-        height: 70px;
+        width: 100px;
+        height: 100px;
     }
     
     .camera-icon-new {
-        font-size: 22px;
+        font-size: 26px;
         margin-bottom: 8px;
     }
     
     .photo-hint-new {
         font-size: 11px;
-        max-width: 60px;
+        max-width: 80px;
+    }
+    
+    .photo-thumbnail {
+        width: 45px;
+        height: 45px;
+    }
+    
+    .photo-delete-btn {
+        width: 20px;
+        height: 20px;
+        font-size: 12px;
     }
     
     .action-buttons-column {
@@ -1249,22 +1444,33 @@ h2 {
     }
     
     .photo-section-new {
-        height: 75px;
+        height: 85px;
         padding: 4px;
     }
     
     .photo-container-new {
-        width: 35px;
-        height: 35px;
+        width: 50px;
+        height: 50px;
     }
     
     .camera-icon-new {
-        font-size: 12px;
+        font-size: 14px;
     }
     
     .photo-hint-new {
         font-size: 6px;
-        max-width: 25px;
+        max-width: 40px;
+    }
+    
+    .photo-thumbnail {
+        width: 20px;
+        height: 20px;
+    }
+    
+    .photo-delete-btn {
+        width: 12px;
+        height: 12px;
+        font-size: 8px;
     }
     
     .action-buttons-column {
@@ -1517,313 +1723,10 @@ h1, h2, h3 {
 .packaging-type-item * {
     pointer-events: none; /* Все клики обрабатываются на родителе */
 }
-/* cargo.css - ОБНОВЛЕННАЯ ВЕРСИЯ С РЕДАКТИРУЕМЫМ ВЕСОМ */
 
-/* ... (весь предыдущий CSS остается) ... */
-
-/* СТИЛИ ДЛЯ РЕДАКТИРУЕМОГО ВЕСА */
-.current-stats .stat-item.clickable-weight {
-    cursor: pointer;
-    position: relative;
-    padding-right: 30px;
-}
-
-.current-stats .stat-item.clickable-weight:hover {
-    background: #d1ecf1;
-    transform: translateY(-1px);
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.current-stats .stat-item.clickable-weight .edit-icon {
-    position: absolute;
-    right: 8px;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 12px;
-    opacity: 0.7;
-    transition: opacity 0.2s;
-}
-
-.current-stats .stat-item.clickable-weight:hover .edit-icon {
-    opacity: 1;
-}
-
-/* МОДАЛЬНОЕ ОКНО РЕДАКТИРОВАНИЯ ВЕСА */
-.weight-edit-modal {
-    background: white;
-    border-radius: 10px;
-    padding: 20px;
-    width: 90%;
-    max-width: 300px;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 1002;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.2);
-}
-
-.weight-edit-modal h3 {
-    margin: 0 0 15px 0;
-    text-align: center;
-    color: #2c3e50;
-}
-
-.weight-edit-form {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-
-.weight-edit-form label {
-    font-weight: 600;
-    color: #495057;
-    font-size: 14px;
-}
-
-.weight-edit-input {
-    width: 100%;
-    padding: 12px;
-    border: 2px solid #3498db;
-    border-radius: 8px;
-    font-size: 16px;
-    text-align: center;
-    font-weight: bold;
-    background: white;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.weight-edit-input:focus {
-    outline: none;
-    border-color: #2980b9;
-    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
-}
-
-.weight-edit-buttons {
-    display: flex;
-    gap: 10px;
-    margin-top: 10px;
-}
-
-.weight-edit-buttons .btn-primary,
-.weight-edit-buttons .btn-secondary {
-    flex: 1;
-    padding: 10px;
-    border-radius: 6px;
-    border: none;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s;
-}
-
-.weight-edit-buttons .btn-primary {
-    background: #3498db;
-    color: white;
-}
-
-.weight-edit-buttons .btn-primary:hover {
-    background: #2980b9;
-}
-
-.weight-edit-buttons .btn-secondary {
-    background: #95a5a6;
-    color: white;
-}
-
-.weight-edit-buttons .btn-secondary:hover {
-    background: #7f8c8d;
-}
-
-/* ОБЩИЕ СТИЛИ ДЛЯ МОДАЛЬНЫХ ОКОН */
-.modal {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.5);
-    z-index: 1001;
-}
-
-/* АДАПТИВНОСТЬ ДЛЯ МОБИЛЬНЫХ */
-@media (max-width: 480px) {
-    .weight-edit-modal {
-        padding: 15px;
-        width: 85%;
-    }
-    
-    .weight-edit-modal h3 {
-        font-size: 16px;
-        margin-bottom: 12px;
-    }
-    
-    .weight-edit-form {
-        gap: 12px;
-    }
-    
-    .weight-edit-input {
-        padding: 10px;
-        font-size: 14px;
-    }
-    
-    .weight-edit-buttons {
-        gap: 8px;
-    }
-    
-    .weight-edit-buttons .btn-primary,
-    .weight-edit-buttons .btn-secondary {
-        padding: 8px;
-        font-size: 14px;
-    }
-}
-
-@media (max-height: 600px) {
-    .weight-edit-modal {
-        padding: 12px;
-    }
-    
-    .weight-edit-modal h3 {
-        font-size: 15px;
-        margin-bottom: 10px;
-    }
-    
-    .weight-edit-form {
-        gap: 10px;
-    }
-    
-    .weight-edit-input {
-        padding: 8px;
-        font-size: 14px;
-    }
-}
-/* cargo.css - ОБНОВЛЕННАЯ ВЕРСИЯ С ОБЩИМ ВЕСОМ */
-
-/* ... (весь предыдущий CSS остается без изменений) ... */
-
-/* СТИЛИ ДЛЯ РЕДАКТИРУЕМОГО ОБЩЕГО ВЕСА */
-.current-stats .stat-item.clickable-weight {
-    cursor: pointer;
-    position: relative;
-    padding-right: 30px;
-}
-
-.current-stats .stat-item.clickable-weight:hover {
-    background: #d1ecf1;
-    transform: translateY(-1px);
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.current-stats .stat-item.clickable-weight .edit-icon {
-    position: absolute;
-    right: 8px;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 12px;
-    opacity: 0.7;
-    transition: opacity 0.2s;
-}
-
-.current-stats .stat-item.clickable-weight:hover .edit-icon {
-    opacity: 1;
-}
-
-/* МОДАЛЬНОЕ ОКНО РЕДАКТИРОВАНИЯ ВЕСА */
-.weight-edit-modal {
-    background: white;
-    border-radius: 10px;
-    padding: 20px;
-    width: 90%;
-    max-width: 300px;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 1002;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.2);
-}
-
-.weight-edit-modal h3 {
-    margin: 0 0 15px 0;
-    text-align: center;
-    color: #2c3e50;
-}
-
-.weight-edit-form {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-
-.weight-edit-form label {
-    font-weight: 600;
-    color: #495057;
-    font-size: 14px;
-}
-
-.weight-edit-input {
-    width: 100%;
-    padding: 12px;
-    border: 2px solid #3498db;
-    border-radius: 8px;
-    font-size: 16px;
-    text-align: center;
-    font-weight: bold;
-    background: white;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.weight-edit-input:focus {
-    outline: none;
-    border-color: #2980b9;
-    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
-}
-
-.weight-edit-buttons {
-    display: flex;
-    gap: 10px;
-    margin-top: 10px;
-}
-
-.weight-edit-buttons .btn-primary,
-.weight-edit-buttons .btn-secondary {
-    flex: 1;
-    padding: 10px;
-    border-radius: 6px;
-    border: none;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s;
-}
-
-.weight-edit-buttons .btn-primary {
-    background: #3498db;
-    color: white;
-}
-
-.weight-edit-buttons .btn-primary:hover {
-    background: #2980b9;
-}
-
-.weight-edit-buttons .btn-secondary {
-    background: #95a5a6;
-    color: white;
-}
-
-.weight-edit-buttons .btn-secondary:hover {
-    background: #7f8c8d;
-}
-
-/* ОБЩИЕ СТИЛИ ДЛЯ МОДАЛЬНЫХ ОКОН */
-.modal {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.5);
-    z-index: 1001;
+/* УВЕЛИЧЕНИЕ ОБЛАСТИ КЛИКА ДЛЯ ФОТО */
+.photo-thumbnail * {
+    pointer-events: auto; /* Разрешаем клики на элементах фото */
 }
 
 /* АДАПТИВНОСТЬ ДЛЯ МОБИЛЬНЫХ */
