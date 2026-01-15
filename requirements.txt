@@ -1,4 +1,2 @@
-aiogram==3.0.0b8
-python-dotenv==1.0.0
-asyncio==3.4.3
-aiohttp==3.9.1
+aiogram~=3.0.0
+python-dotenv~=1.0.0
