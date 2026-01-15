@@ -1,11 +1,10 @@
-
+#!/usr/bin/env python3
 """
 Telegram бот для регистрации сотрудников
-Работает на Render с aiogram 3.0.0b2
+Работает на Render с aiogram 2.25.1
 """
 
 import os
-import asyncio
 import logging
 import json
 import random
@@ -14,11 +13,10 @@ from pathlib import Path
 from datetime import datetime
 
 from aiogram import Bot, Dispatcher, types
-from aiogram.filters import Command
-from aiogram.enums import ParseMode
-from aiogram.fsm.context import FSMContext
-from aiogram.fsm.state import State, StatesGroup
-from aiogram.fsm.storage.memory import MemoryStorage
+from aiogram.contrib.fsm_storage.memory import MemoryStorage
+from aiogram.dispatcher import FSMContext
+from aiogram.dispatcher.filters.state import State, StatesGroup
+from aiogram.utils import executor
 
 # ========================================
 # НАСТРОЙКИ
@@ -39,9 +37,9 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 # Инициализация бота
-bot = Bot(token=BOT_TOKEN, parse_mode=ParseMode.HTML)
+bot = Bot(token=BOT_TOKEN, parse_mode=types.ParseMode.HTML)
 storage = MemoryStorage()
-dp = Dispatcher(storage=storage)
+dp = Dispatcher(bot, storage=storage)
 
 # Пути к файлам
 DATA_DIR = Path("data")
@@ -120,16 +118,17 @@ class Registration(StatesGroup):
 # ОБРАБОТЧИКИ КОМАНД
 # ========================================
 
-@dp.message(Command("start"))
+@dp.message_handler(commands=['start'])
 async def cmd_start(message: types.Message):
     """Команда /start"""
     keyboard = types.ReplyKeyboardMarkup(
-        keyboard=[
-            [types.KeyboardButton(text="📱 Отправить контакт", request_contact=True)],
-            [types.KeyboardButton(text="📝 Ввести номер вручную")],
-            [types.KeyboardButton(text="🔑 Получить мой код")]
-        ],
-        resize_keyboard=True
+        resize_keyboard=True,
+        row_width=1
+    )
+    keyboard.add(
+        types.KeyboardButton("📱 Отправить контакт", request_contact=True),
+        types.KeyboardButton("📝 Ввести номер вручную"),
+        types.KeyboardButton("🔑 Получить мой код")
     )
     
     await message.answer(
@@ -143,35 +142,42 @@ async def cmd_start(message: types.Message):
         reply_markup=keyboard
     )
 
-@dp.message(lambda message: message.text == "📱 Отправить контакт")
+@dp.message_handler(lambda message: message.text == "📱 Отправить контакт")
 async def request_contact(message: types.Message):
     """Обработка кнопки отправки контакта"""
+    keyboard = types.ReplyKeyboardMarkup(
+        resize_keyboard=True,
+        row_width=1
+    )
+    keyboard.add(
+        types.KeyboardButton("📱 Поделиться номером", request_contact=True),
+        types.KeyboardButton("↩️ Назад")
+    )
+    
     await message.answer(
         "Нажмите кнопку ниже, чтобы отправить контакт:",
-        reply_markup=types.ReplyKeyboardMarkup(
-            keyboard=[
-                [types.KeyboardButton(text="📱 Поделиться номером", request_contact=True)],
-                [types.KeyboardButton(text="↩️ Назад")]
-            ],
-            resize_keyboard=True
-        )
+        reply_markup=keyboard
     )
 
-@dp.message(lambda message: message.text == "📝 Ввести номер вручную")
-async def request_phone_manual(message: types.Message, state: FSMContext):
+@dp.message_handler(lambda message: message.text == "📝 Ввести номер вручную")
+async def request_phone_manual(message: types.Message):
     """Обработка кнопки ручного ввода"""
+    await Registration.waiting_for_phone.set()
+    
+    keyboard = types.ReplyKeyboardMarkup(
+        resize_keyboard=True,
+        row_width=1
+    )
+    keyboard.add(types.KeyboardButton("❌ Отменить"))
+    
     await message.answer(
         "📱 <b>Введите ваш номер телефона:</b>\n\n"
         "Формат: <code>79991234567</code> или <code>+79991234567</code>\n\n"
         "Номер будет использоваться для входа в систему.",
-        reply_markup=types.ReplyKeyboardMarkup(
-            keyboard=[[types.KeyboardButton(text="❌ Отменить")]],
-            resize_keyboard=True
-        )
+        reply_markup=keyboard
     )
-    await state.set_state(Registration.waiting_for_phone)
 
-@dp.message(lambda message: message.text == "🔑 Получить мой код")
+@dp.message_handler(lambda message: message.text == "🔑 Получить мой код")
 async def request_my_code(message: types.Message):
     """Обработка кнопки получения кода"""
     codes = load_codes()
@@ -184,16 +190,21 @@ async def request_my_code(message: types.Message):
         )
         return
     
+    await Registration.waiting_for_phone.set()
+    
+    keyboard = types.ReplyKeyboardMarkup(
+        resize_keyboard=True,
+        row_width=1
+    )
+    keyboard.add(types.KeyboardButton("❌ Отменить"))
+    
     await message.answer(
         "Чтобы получить ваш код, отправьте номер телефона:",
-        reply_markup=types.ReplyKeyboardMarkup(
-            keyboard=[[types.KeyboardButton(text="❌ Отменить")]],
-            resize_keyboard=True
-        )
+        reply_markup=keyboard
     )
 
 # Обработка контакта
-@dp.message(lambda message: message.contact is not None)
+@dp.message_handler(content_types=types.ContentType.CONTACT)
 async def handle_contact(message: types.Message, state: FSMContext):
     """Обработка отправленного контакта"""
     phone = normalize_phone(message.contact.phone_number)
@@ -204,17 +215,18 @@ async def handle_contact(message: types.Message, state: FSMContext):
             "Попробуйте ввести номер вручную.",
             reply_markup=types.ReplyKeyboardRemove()
         )
+        await state.finish()
         return
     
     await process_phone_number(message, phone, state)
 
 # Обработка введенного номера
-@dp.message(Registration.waiting_for_phone)
+@dp.message_handler(state=Registration.waiting_for_phone)
 async def handle_phone_input(message: types.Message, state: FSMContext):
     """Обработка введенного номера"""
     if message.text == "❌ Отменить":
         await message.answer("Действие отменено.", reply_markup=types.ReplyKeyboardRemove())
-        await state.clear()
+        await state.finish()
         return
     
     phone = normalize_phone(message.text)
@@ -248,28 +260,33 @@ async def process_phone_number(message: types.Message, phone: str, state: FSMCon
             f"⚠️ <b>Код постоянный и не меняется!</b>",
             reply_markup=types.ReplyKeyboardRemove()
         )
-        await state.clear()
+        await state.finish()
     else:
         # Сотрудника нет - начинаем регистрацию
-        await state.update_data(phone=phone)
+        async with state.proxy() as data:
+            data['phone'] = phone
+        
+        keyboard = types.ReplyKeyboardMarkup(
+            resize_keyboard=True,
+            row_width=1
+        )
+        keyboard.add(types.KeyboardButton("❌ Отменить"))
+        
         await message.answer(
             "✅ <b>Номер принят!</b>\n\n"
             "📝 <b>Теперь введите ваше имя и фамилию:</b>\n\n"
             "Например: <i>Иванов Иван</i>",
-            reply_markup=types.ReplyKeyboardMarkup(
-                keyboard=[[types.KeyboardButton(text="❌ Отменить")]],
-                resize_keyboard=True
-            )
+            reply_markup=keyboard
         )
-        await state.set_state(Registration.waiting_for_name)
+        await Registration.waiting_for_name.set()
 
 # Обработка ввода имени
-@dp.message(Registration.waiting_for_name)
+@dp.message_handler(state=Registration.waiting_for_name)
 async def handle_name_input(message: types.Message, state: FSMContext):
     """Обработка ввода имени"""
     if message.text == "❌ Отменить":
         await message.answer("Регистрация отменена.", reply_markup=types.ReplyKeyboardRemove())
-        await state.clear()
+        await state.finish()
         return
     
     name = message.text.strip()
@@ -285,17 +302,17 @@ async def handle_name_input(message: types.Message, state: FSMContext):
         return
     
     # Получаем телефон из состояния
-    data = await state.get_data()
-    phone = data.get('phone')
+    async with state.proxy() as data:
+        phone = data.get('phone')
     
     if not phone:
         await message.answer("Ошибка. Начните заново.", reply_markup=types.ReplyKeyboardRemove())
-        await state.clear()
+        await state.finish()
         return
     
     # Регистрируем сотрудника
     await register_employee(message, phone, name)
-    await state.clear()
+    await state.finish()
 
 async def register_employee(message: types.Message, phone: str, name: str):
     """Регистрация нового сотрудника"""
@@ -332,11 +349,11 @@ async def register_employee(message: types.Message, phone: str, name: str):
             f"• Для входа на веб-сервис используйте этот код\n"
             f"• Для повторного получения нажмите «🔑 Получить мой код»",
             reply_markup=types.ReplyKeyboardMarkup(
-                keyboard=[
-                    [types.KeyboardButton(text="🔑 Получить мой код")],
-                    [types.KeyboardButton(text="📝 Новый сотрудник")]
-                ],
-                resize_keyboard=True
+                resize_keyboard=True,
+                row_width=2
+            ).add(
+                types.KeyboardButton("🔑 Получить мой код"),
+                types.KeyboardButton("📝 Новый сотрудник")
             )
         )
         
@@ -348,17 +365,17 @@ async def register_employee(message: types.Message, phone: str, name: str):
             reply_markup=types.ReplyKeyboardRemove()
         )
 
-@dp.message(lambda message: message.text == "↩️ Назад")
+@dp.message_handler(lambda message: message.text == "↩️ Назад")
 async def go_back(message: types.Message):
     """Возврат в главное меню"""
     await cmd_start(message)
 
-@dp.message(lambda message: message.text == "📝 Новый сотрудник")
+@dp.message_handler(lambda message: message.text == "📝 Новый сотрудник")
 async def new_employee(message: types.Message):
     """Регистрация нового сотрудника"""
-    await request_phone_manual(message, None)
+    await request_phone_manual(message)
 
-@dp.message(Command("codes"))
+@dp.message_handler(commands=['codes'])
 async def cmd_codes(message: types.Message):
     """Команда /codes - показать все коды (для админа)"""
     codes = load_codes()
@@ -382,7 +399,7 @@ async def cmd_codes(message: types.Message):
     else:
         await message.answer(text)
 
-@dp.message(Command("help"))
+@dp.message_handler(commands=['help'])
 async def cmd_help(message: types.Message):
     """Команда /help"""
     help_text = (
@@ -414,7 +431,7 @@ async def cmd_help(message: types.Message):
     await message.answer(help_text)
 
 # Обработка любых других сообщений
-@dp.message()
+@dp.message_handler()
 async def handle_other_messages(message: types.Message):
     """Обработка других сообщений"""
     await message.answer(
@@ -426,8 +443,7 @@ async def handle_other_messages(message: types.Message):
 # ЗАПУСК БОТА
 # ========================================
 
-async def main():
-    """Основная функция запуска бота"""
+if __name__ == '__main__':
     logger.info("🚀 Запуск Telegram бота на Render...")
     logger.info(f"📁 Директория данных: {DATA_DIR.absolute()}")
     logger.info(f"🔐 Токен: {BOT_TOKEN[:10]}...")
@@ -436,13 +452,5 @@ async def main():
     codes = load_codes()
     logger.info(f"📊 Загружено сотрудников: {len(codes)}")
     
-    try:
-        await dp.start_polling(bot)
-    except Exception as e:
-        logger.error(f"💥 Критическая ошибка: {e}")
-        raise
-    finally:
-        await bot.session.close()
-
-if __name__ == '__main__':
-    asyncio.run(main())
+    # Запускаем бота
+    executor.start_polling(dp, skip_updates=True)
