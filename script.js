@@ -1,0 +1,1523 @@
+// script.js - ВЕРСИЯ С ДИНАМИЧЕСКИМ ОБНОВЛЕНИЕМ ОБЪЕМА
+
+// API конфигурация (для будущей интеграции)
+const API_BASE_URL = 'http://localhost:3000/api';
+
+// Глобальные переменные
+let currentCargoType = 'euro-pallet';
+let currentWeight = 1; // Общий вес (не умножается на количество мест)
+let currentDimensions = {
+    length: 120,
+    width: 80,
+    height: 30
+};
+let currentPackagingType = 'none'; // 'none', 'obreshetka', 'paletnyy-bort'
+let currentPackagingCount = 0;
+let currentQuantity = 1; // Количество мест/штук (только для объема)
+let cargoList = [];
+let cargoListModal = null;
+
+// ИНИЦИАЛИЗАЦИЯ ПРИ ЗАГРУЗКЕ СТРАНИЦЫ
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('NORD WHEEL - Замер грузов загружен');
+    
+    // Инициализация переменных из localStorage
+    cargoList = JSON.parse(localStorage.getItem('cargoList')) || [];
+    
+    // Инициализация фото
+    initPhotoInput();
+    
+    // Инициализация упаковки
+    initPackaging();
+    
+    // Инициализация количества мест
+    initQuantity();
+    
+    // Обновляем статистику
+    updateStats();
+    updateEmployeeInfo();
+    updateCurrentStats();
+    updatePackagingDisplay();
+    
+    // Настройка полей ввода
+    setupInputFields();
+    
+    // Обновляем отображения
+    updateDimensionDisplays();
+    
+    // Получаем ссылку на модальное окно
+    cargoListModal = document.getElementById('cargoListModal');
+    
+    // Инициализация планшетной оптимизации
+    initTabletOptimization();
+    handleTabletClicks();
+    
+    // Выбираем тип груза по умолчанию
+    selectCargoType('euro-pallet');
+    
+    // Выбираем тип упаковки по умолчанию
+    selectPackagingType('none');
+    
+    console.log('Инициализация завершена. Грузов в списке:', cargoList.length);
+});
+
+// ИНИЦИАЛИЗАЦИЯ КОЛИЧЕСТВА МЕСТ
+function initQuantity() {
+    const quantityInput = document.getElementById('quantityInput');
+    if (quantityInput) {
+        quantityInput.value = currentQuantity || 1;
+        quantityInput.addEventListener('change', function() {
+            this.value = this.value.replace(/[^0-9]/g, '');
+            const quantity = parseInt(this.value) || 1;
+            if (quantity >= 1 && quantity <= 1000) {
+                currentQuantity = quantity;
+                updateCurrentStats();
+            }
+        });
+        quantityInput.addEventListener('input', function() {
+            this.value = this.value.replace(/[^0-9]/g, '');
+            const quantity = parseInt(this.value) || 1;
+            if (quantity >= 1 && quantity <= 1000) {
+                currentQuantity = quantity;
+                updateCurrentStats();
+            }
+        });
+    }
+}
+
+// ИНИЦИАЛИЗАЦИЯ УПАКОВКИ
+function initPackaging() {
+    const packagingCountInput = document.getElementById('packagingCountInput');
+    if (packagingCountInput) {
+        packagingCountInput.value = currentPackagingCount || 0;
+        packagingCountInput.addEventListener('change', function() {
+            this.value = this.value.replace(/[^0-9]/g, '');
+            const count = parseInt(this.value) || 0;
+            if (count >= 0 && count <= 100) {
+                currentPackagingCount = count;
+                updatePackagingDisplay();
+            }
+        });
+        packagingCountInput.addEventListener('input', function() {
+            this.value = this.value.replace(/[^0-9]/g, '');
+            const count = parseInt(this.value) || 0;
+            if (count >= 0 && count <= 100) {
+                currentPackagingCount = count;
+                updatePackagingDisplay();
+            }
+        });
+    }
+}
+
+// ИНИЦИАЛИЗАЦИЯ ФОТО
+function initPhotoInput() {
+    const photoInput = document.getElementById('photoInput');
+    if (photoInput) {
+        photoInput.addEventListener('change', function(e) {
+            if (e.target.files && e.target.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const photo = document.getElementById('cargoPhoto');
+                    const placeholder = document.getElementById('photoPlaceholder');
+                    
+                    if (photo && placeholder) {
+                        photo.src = event.target.result;
+                        photo.style.display = 'block';
+                        placeholder.style.display = 'none';
+                    }
+                };
+                reader.readAsDataURL(e.target.files[0]);
+            }
+        });
+    }
+}
+
+// ФОТО ФУНКЦИИ
+function takePhoto() {
+    document.getElementById('photoInput').click();
+}
+
+function resetPhoto() {
+    const photo = document.getElementById('cargoPhoto');
+    const placeholder = document.getElementById('photoPlaceholder');
+    
+    if (photo && placeholder) {
+        photo.style.display = 'none';
+        photo.src = '';
+        placeholder.style.display = 'flex';
+        
+        // Сбрасываем input файла
+        const photoInput = document.getElementById('photoInput');
+        if (photoInput) {
+            photoInput.value = '';
+        }
+    }
+}
+
+// НАСТРОЙКА ПОЛЕЙ ВВОДА
+function setupInputFields() {
+    // Вес - делаем поле кликабельным для открытия клавиатуры
+    const weightInput = document.getElementById('weightInput');
+    if (weightInput) {
+        weightInput.value = currentWeight || 1;
+        weightInput.addEventListener('click', function() {
+            this.focus();
+            this.select();
+        });
+        weightInput.addEventListener('change', function() {
+            this.value = this.value.replace(/[^0-9]/g, '');
+            const weight = parseInt(this.value) || 1;
+            if (weight >= 1 && weight <= 10000) {
+                currentWeight = weight;
+                updateCurrentStats();
+            }
+        });
+        weightInput.addEventListener('input', function() {
+            this.value = this.value.replace(/[^0-9]/g, '');
+            const weight = parseInt(this.value) || 1;
+            if (weight >= 1 && weight <= 10000) {
+                currentWeight = weight;
+                updateCurrentStats();
+            }
+        });
+        weightInput.addEventListener('focus', function() {
+            this.select();
+        });
+    }
+    
+    // Количество мест
+    const quantityInput = document.getElementById('quantityInput');
+    if (quantityInput) {
+        quantityInput.value = currentQuantity || 1;
+        quantityInput.addEventListener('click', function() {
+            this.focus();
+            this.select();
+        });
+        quantityInput.addEventListener('change', function() {
+            this.value = this.value.replace(/[^0-9]/g, '');
+            const quantity = parseInt(this.value) || 1;
+            if (quantity >= 1 && quantity <= 1000) {
+                currentQuantity = quantity;
+                updateCurrentStats();
+            }
+        });
+        quantityInput.addEventListener('input', function() {
+            this.value = this.value.replace(/[^0-9]/g, '');
+            const quantity = parseInt(this.value) || 1;
+            if (quantity >= 1 && quantity <= 1000) {
+                currentQuantity = quantity;
+                updateCurrentStats();
+            }
+        });
+        quantityInput.addEventListener('focus', function() {
+            this.select();
+        });
+    }
+    
+    // Размеры - добавляем обработчики input для динамического обновления
+    ['length', 'width', 'height'].forEach(dim => {
+        const input = document.getElementById(dim + 'Input');
+        if (input && currentDimensions) {
+            input.value = currentDimensions[dim] || 10;
+            input.addEventListener('click', function() {
+                this.focus();
+                this.select();
+            });
+            input.addEventListener('change', function() {
+                this.value = this.value.replace(/[^0-9]/g, '');
+                const value = parseInt(this.value) || 10;
+                if (value >= 10 && value <= 1000) {
+                    currentDimensions[dim] = value;
+                    updateCurrentStats();
+                }
+            });
+            input.addEventListener('input', function() {
+                this.value = this.value.replace(/[^0-9]/g, '');
+                const value = parseInt(this.value) || 10;
+                if (value >= 10 && value <= 1000) {
+                    currentDimensions[dim] = value;
+                    updateCurrentStats();
+                }
+            });
+            input.addEventListener('focus', function() {
+                this.select();
+            });
+        }
+    });
+}
+
+// ФУНКЦИИ ДЛЯ КОЛИЧЕСТВА МЕСТ
+
+// ИЗМЕНЕНИЕ КОЛИЧЕСТВА МЕСТ
+function changeQuantity(delta) {
+    let newQuantity = (currentQuantity || 1) + delta;
+    if (newQuantity >= 1 && newQuantity <= 1000) {
+        currentQuantity = newQuantity;
+        const quantityInput = document.getElementById('quantityInput');
+        if (quantityInput) {
+            quantityInput.value = currentQuantity;
+            quantityInput.focus();
+            quantityInput.select();
+        }
+        updateCurrentStats();
+        showNotification(`Количество мест: ${currentQuantity}`);
+    }
+}
+
+// ОБНОВЛЕНИЕ КОЛИЧЕСТВА МЕСТ ИЗ ПОЛЯ ВВОДА
+function updateQuantityFromInput() {
+    const quantityInput = document.getElementById('quantityInput');
+    if (quantityInput) {
+        let quantity = parseInt(quantityInput.value) || 1;
+        if (quantity < 1) quantity = 1;
+        if (quantity > 1000) quantity = 1000;
+        currentQuantity = quantity;
+        updateCurrentStats();
+        showNotification(`Количество мест: ${currentQuantity}`);
+    }
+}
+
+// НОВЫЕ ФУНКЦИИ ДЛЯ УПАКОВКИ
+
+// ВЫБОР ТИПА УПАКОВКИ
+function selectPackagingType(type) {
+    // Убираем выделение у всех
+    document.querySelectorAll('.packaging-type-item').forEach(item => {
+        item.classList.remove('selected');
+    });
+    
+    // Выделяем выбранный
+    const selectedItem = document.querySelector(`[data-packaging-type="${type}"]`);
+    if (selectedItem) {
+        selectedItem.classList.add('selected');
+    }
+    
+    currentPackagingType = type;
+    
+    // Если выбран "Нет", сбрасываем количество на 0
+    if (type === 'none') {
+        currentPackagingCount = 0;
+        const packagingCountInput = document.getElementById('packagingCountInput');
+        if (packagingCountInput) {
+            packagingCountInput.value = 0;
+        }
+    }
+    
+    // Обновляем отображение
+    updatePackagingDisplay();
+}
+
+// ИЗМЕНЕНИЕ КОЛИЧЕСТВА УПАКОВКИ
+function changePackagingCount(delta) {
+    let newCount = (currentPackagingCount || 0) + delta;
+    if (newCount >= 0 && newCount <= 100) {
+        currentPackagingCount = newCount;
+        const packagingCountInput = document.getElementById('packagingCountInput');
+        if (packagingCountInput) {
+            packagingCountInput.value = currentPackagingCount;
+            packagingCountInput.focus();
+            packagingCountInput.select();
+        }
+        updatePackagingDisplay();
+        showNotification(`Количество упаковки: ${currentPackagingCount} шт`);
+    }
+}
+
+// ОБНОВЛЕНИЕ КОЛИЧЕСТВА УПАКОВКИ ИЗ ПОЛЯ ВВОДА
+function updatePackagingCountFromInput() {
+    const packagingCountInput = document.getElementById('packagingCountInput');
+    if (packagingCountInput) {
+        let count = parseInt(packagingCountInput.value) || 0;
+        if (count < 0) count = 0;
+        if (count > 100) count = 100;
+        currentPackagingCount = count;
+        updatePackagingDisplay();
+        showNotification(`Количество упаковки: ${currentPackagingCount} шт`);
+    }
+}
+
+// ОБНОВЛЕНИЕ ОТОБРАЖЕНИЯ УПАКОВКИ
+function updatePackagingDisplay() {
+    // Обновляем тип упаковки
+    const packagingTypeElement = document.getElementById('currentPackagingType');
+    if (packagingTypeElement) {
+        packagingTypeElement.textContent = getPackagingTypeName(currentPackagingType);
+    }
+    
+    // Обновляем количество
+    const packagingCountElement = document.getElementById('currentPackagingCount');
+    if (packagingCountElement) {
+        packagingCountElement.textContent = currentPackagingCount + ' шт';
+    }
+}
+
+// ПОЛУЧЕНИЕ НАЗВАНИЯ ТИПА УПАКОВКИ
+function getPackagingTypeName(type) {
+    const names = {
+        'none': 'Нет',
+        'obreshetka': 'Обрешетка',
+        'paletnyy-bort': 'Паллетный борт'
+    };
+    return names[type] || type;
+}
+
+// ПОЛУЧЕНИЕ ЭМОДЗИ ДЛЯ ТИПА УПАКОВКИ
+function getPackagingEmoji(type) {
+    const emojis = {
+        'none': '❌',
+        'obreshetka': '📐',
+        'paletnyy-bort': '📦'
+    };
+    return emojis[type] || '❔';
+}
+
+// НОВЫЕ ФУНКЦИИ ДЛЯ ОБНОВЛЕННОГО ИНТЕРФЕЙСА
+
+// ОБНОВЛЕНИЕ ПАРАМЕТРОВ ИЗ ПОЛЯ ВВОДА
+function updateWeightFromInput() {
+    const weightInput = document.getElementById('weightInput');
+    if (weightInput) {
+        let weight = parseInt(weightInput.value) || 1;
+        if (weight < 1) weight = 1;
+        if (weight > 10000) weight = 10000;
+        currentWeight = weight;
+        updateCurrentStats();
+        showNotification(`Общий вес установлен: ${weight} кг`);
+    }
+}
+
+function updateDimensionFromInput(dimension) {
+    const input = document.getElementById(dimension + 'Input');
+    if (input && currentDimensions) {
+        let value = parseInt(input.value) || 10;
+        if (value < 10) value = 10;
+        if (value > 1000) value = 1000;
+        currentDimensions[dimension] = value;
+        updateCurrentStats();
+    }
+}
+
+// ИЗМЕНЕНИЕ ПАРАМЕТРА С ПОМОЩЬЮ КНОПОК
+function changeParam(param, delta) {
+    switch(param) {
+        case 'weight':
+            let newWeight = (currentWeight || 1) + delta;
+            if (newWeight >= 1 && newWeight <= 10000) {
+                currentWeight = newWeight;
+                const weightInput = document.getElementById('weightInput');
+                if (weightInput) {
+                    weightInput.value = currentWeight;
+                    weightInput.focus();
+                    weightInput.select();
+                }
+                updateCurrentStats();
+            }
+            break;
+            
+        case 'quantity':
+            changeQuantity(delta);
+            break;
+            
+        case 'packagingCount':
+            changePackagingCount(delta);
+            break;
+            
+        case 'length':
+        case 'width':
+        case 'height':
+            if (currentDimensions && currentDimensions[param] !== undefined) {
+                let newValue = currentDimensions[param] + delta;
+                if (newValue >= 10 && newValue <= 1000) {
+                    currentDimensions[param] = newValue;
+                    const input = document.getElementById(param + 'Input');
+                    if (input) {
+                        input.value = newValue;
+                        input.focus();
+                        input.select();
+                    }
+                    updateCurrentStats();
+                }
+            }
+            break;
+    }
+}
+
+// ОБНОВЛЕНИЕ СТАТИСТИКИ ТЕКУЩЕГО ГРУЗА В РЕЖИМЕ РЕАЛЬНОГО ВРЕМЕНИ
+function updateCurrentStats() {
+    // Рассчитываем объем одной единицы
+    let singleVolume = 0;
+    let totalVolume = 0;
+    
+    if (currentDimensions) {
+        singleVolume = (currentDimensions.length * 
+                       currentDimensions.width * 
+                       currentDimensions.height) / 1000000;
+        
+        // Рассчитываем общий объем (с учетом количества мест)
+        totalVolume = singleVolume * currentQuantity;
+        
+        // Обновляем отображение объема одной единицы
+        const currentVolumeElement = document.getElementById('currentVolume');
+        if (currentVolumeElement) {
+            currentVolumeElement.textContent = singleVolume.toFixed(3) + ' м³ (ед.)';
+        }
+        
+        // Обновляем отображение общего объема
+        const currentTotalVolumeElement = document.getElementById('currentTotalVolume');
+        if (currentTotalVolumeElement) {
+            currentTotalVolumeElement.textContent = totalVolume.toFixed(3) + ' м³ (общ.)';
+        }
+    }
+    
+    // Общий вес (НЕ умножается на количество мест)
+    const currentTotalWeightElement = document.getElementById('currentTotalWeight');
+    if (currentTotalWeightElement) {
+        currentTotalWeightElement.textContent = currentWeight + ' кг';
+    }
+    
+    // Отображаем текущее количество мест
+    const currentQuantityElement = document.getElementById('currentQuantity');
+    if (currentQuantityElement) {
+        currentQuantityElement.textContent = currentQuantity + ' шт';
+    }
+    
+    // Обновляем текущий вес в поле ввода
+    const weightInput = document.getElementById('weightInput');
+    if (weightInput && weightInput.value !== currentWeight.toString()) {
+        weightInput.value = currentWeight;
+    }
+    
+    // Обновляем текущее количество в поле ввода
+    const quantityInput = document.getElementById('quantityInput');
+    if (quantityInput && quantityInput.value !== currentQuantity.toString()) {
+        quantityInput.value = currentQuantity;
+    }
+    
+    // Обновляем текущие размеры в полях ввода
+    ['length', 'width', 'height'].forEach(dim => {
+        const input = document.getElementById(dim + 'Input');
+        if (input && currentDimensions && currentDimensions[dim] && 
+            input.value !== currentDimensions[dim].toString()) {
+            input.value = currentDimensions[dim];
+        }
+    });
+}
+
+// ОБНОВЛЕНИЕ ОБЩЕЙ СТАТИСТИКИ
+function updateTotalStats() {
+    updateStats();
+    showNotification('Статистика обновлена');
+}
+
+// ОТПРАВКА И СБРОС
+function sendToOperatorAndReset() {
+    if (!cargoList || cargoList.length === 0) {
+        showNotification('Нет грузов для отправки', true);
+        return;
+    }
+    
+    // Вызываем стандартную функцию отправки
+    sendToOperator();
+    
+    // Сбрасываем все параметры к начальным значениям
+    resetAllParams();
+    
+    // Закрываем окно статистики если оно открыто
+    closeCargoStatsPopup();
+    
+    // Показываем уведомление
+    showNotification('Данные отправлены и параметры сброшены');
+}
+
+// СБРОС ВСЕХ ПАРАМЕТРОВ
+function resetAllParams() {
+    // Сбрасываем текущий тип груза
+    currentCargoType = 'euro-pallet';
+    selectCargoType('euro-pallet');
+    
+    // Сбрасываем вес
+    currentWeight = 1;
+    const weightInput = document.getElementById('weightInput');
+    if (weightInput) weightInput.value = currentWeight;
+    
+    // Сбрасываем количество мест
+    currentQuantity = 1;
+    const quantityInput = document.getElementById('quantityInput');
+    if (quantityInput) quantityInput.value = currentQuantity;
+    
+    // Сбрасываем размеры по умолчанию для европаллета
+    currentDimensions = { length: 120, width: 80, height: 30 };
+    
+    // Обновляем поля ввода размеров
+    ['length', 'width', 'height'].forEach(dim => {
+        const input = document.getElementById(dim + 'Input');
+        if (input) input.value = currentDimensions[dim];
+    });
+    
+    // Сбрасываем упаковку
+    currentPackagingType = 'none';
+    currentPackagingCount = 0;
+    selectPackagingType('none');
+    const packagingCountInput = document.getElementById('packagingCountInput');
+    if (packagingCountInput) packagingCountInput.value = 0;
+    updatePackagingDisplay();
+    
+    // Сбрасываем фото
+    resetPhoto();
+    
+    // Обновляем статистику текущего груза
+    updateCurrentStats();
+}
+
+// ОЧИСТКА ВСЕХ ГРУЗОВ
+function clearAllCargo() {
+    if (confirm('Вы уверены, что хотите удалить все грузы?')) {
+        cargoList = [];
+        localStorage.removeItem('cargoList');
+        updateStats();
+        showNotification('Все грузы удалены');
+        closeCargoStatsPopup();
+    }
+}
+
+// ФУНКЦИИ ДЛЯ РАЗМЕРОВ
+function changeDimension(dimension, delta) {
+    if (currentDimensions && currentDimensions[dimension] !== undefined) {
+        let newValue = currentDimensions[dimension] + delta;
+        if (newValue >= 10) {
+            currentDimensions[dimension] = newValue;
+            // Обновляем поле ввода
+            const input = document.getElementById(dimension + 'Input');
+            if (input) {
+                input.value = newValue;
+                input.focus();
+                input.select();
+            }
+            // Обновляем отображение
+            updateDimensionDisplay(dimension);
+            // Обновляем статистику
+            updateCurrentStats();
+        }
+    }
+}
+
+function updateDimensionDisplay(dimension) {
+    const element = document.getElementById(dimension + 'Value');
+    if (element && currentDimensions) {
+        element.textContent = currentDimensions[dimension];
+    }
+}
+
+function updateDimensionDisplays() {
+    updateDimensionDisplay('length');
+    updateDimensionDisplay('width');
+    updateDimensionDisplay('height');
+}
+
+// ФУНКЦИИ ДЛЯ ТИПОВ ГРУЗОВ
+function selectCargoType(type) {
+    // Убираем выделение у всех
+    document.querySelectorAll('.cargo-type-item').forEach(item => {
+        item.classList.remove('selected');
+    });
+    
+    // Выделяем выбранный
+    const selectedItem = document.querySelector(`[data-type="${type}"]`);
+    if (selectedItem) {
+        selectedItem.classList.add('selected');
+    }
+    
+    currentCargoType = type;
+    
+    // Устанавливаем размеры по умолчанию для типа
+    setDefaultDimensionsForType(type);
+}
+
+function setDefaultDimensionsForType(type) {
+    switch(type) {
+        case 'euro-pallet':
+            currentDimensions = { length: 120, width: 80, height: 30 };
+            break;
+        case 'american-pallet':
+            currentDimensions = { length: 120, width: 100, height: 30 };
+            break;
+        case 'box':
+            currentDimensions = { length: 60, width: 40, height: 40 };
+            break;
+        case 'non-standard':
+            currentDimensions = { length: 100, width: 100, height: 100 };
+            break;
+    }
+    // Обновляем поля ввода
+    ['length', 'width', 'height'].forEach(dim => {
+        const input = document.getElementById(dim + 'Input');
+        if (input && currentDimensions[dim]) {
+            input.value = currentDimensions[dim];
+            input.focus();
+            input.select();
+        }
+    });
+    // Обновляем отображения
+    updateDimensionDisplays();
+    // Обновляем статистику
+    updateCurrentStats();
+}
+
+// ОСНОВНАЯ ФУНКЦИЯ СОХРАНЕНИЯ ГРУЗА (количество мест ТОЛЬКО для объема)
+function saveCargo() {
+    console.log('Сохранение груза...');
+    
+    const weightInput = document.getElementById('weightInput');
+    let weight = currentWeight || 1;
+    
+    if (weightInput) {
+        weight = parseInt(weightInput.value) || 1;
+        if (weight < 1) weight = 1;
+        if (weight > 10000) weight = 10000;
+        currentWeight = weight;
+    }
+    
+    // Проверяем, что все данные есть
+    if (!currentCargoType || !currentDimensions) {
+        showNotification('Ошибка: не выбран тип груза', true);
+        return;
+    }
+    
+    const photo = document.getElementById('cargoPhoto')?.src || null;
+    
+    // Рассчитываем объем ОДНОЙ единицы
+    const singleVolume = (currentDimensions.length * 
+                         currentDimensions.width * 
+                         currentDimensions.height) / 1000000;
+    
+    // Рассчитываем ОБЩИЙ объем (с учетом количества мест)
+    const totalVolume = singleVolume * currentQuantity;
+    
+    // Вес остается общим, НЕ умножается на количество мест
+    const totalWeight = weight; // Вес общий, не умножаем
+    
+    // Создаем новый груз
+    const cargo = {
+        id: Date.now(),
+        type: currentCargoType,
+        typeName: getCargoTypeName(currentCargoType),
+        weight: totalWeight, // Общий вес (не умножается на количество)
+        quantity: currentQuantity, // Количество мест (только для объема)
+        length: currentDimensions.length,
+        width: currentDimensions.width,
+        height: currentDimensions.height,
+        volume: singleVolume, // Объем одной единицы
+        totalVolume: totalVolume, // Общий объем (с учетом количества)
+        timestamp: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
+        photo: photo,
+        employeeId: getCurrentEmployeeId(),
+        date: new Date().toISOString().split('T')[0],
+        time: new Date().toLocaleTimeString('ru-RU', {hour12: false}),
+        // НОВЫЕ ПОЛЯ ДЛЯ УПАКОВКИ
+        packagingType: currentPackagingType,
+        packagingTypeName: getPackagingTypeName(currentPackagingType),
+        packagingCount: currentPackagingCount,
+        packagingEmoji: getPackagingEmoji(currentPackagingType)
+    };
+    
+    cargoList.push(cargo);
+    
+    // Сохраняем в localStorage
+    localStorage.setItem('cargoList', JSON.stringify(cargoList));
+    
+    // Обновляем статистику
+    updateStats();
+    
+    // Сбрасываем фото
+    resetPhoto();
+    
+    // Обновляем статистику текущего груза
+    updateCurrentStats();
+    
+    // Показываем уведомление
+    showNotification(`Груз сохранен! ${currentQuantity} мест. Всего грузов: ${cargoList.length}`);
+    
+    console.log('Груз сохранен. Всего грузов:', cargoList.length);
+}
+
+// ФУНКЦИЯ ОТОБРАЖЕНИЯ СПИСКА ГРУЗОВ
+function showCargoListModal() {
+    console.log('Показываем модальное окно списка грузов...');
+    
+    const content = document.getElementById('cargoListContent');
+    
+    if (!cargoListModal || !content) {
+        console.error('Не найдены элементы модального окна');
+        return;
+    }
+    
+    // Очищаем содержимое
+    content.innerHTML = '';
+    
+    if (!cargoList || cargoList.length === 0) {
+        content.innerHTML = '<div class="empty-state">Нет сохраненных грузов</div>';
+    } else {
+        // Отображаем каждый груз отдельно
+        cargoList.forEach((cargo, index) => {
+            const cargoItem = document.createElement('div');
+            cargoItem.className = 'cargo-list-item';
+            
+            // Добавляем информацию об упаковке и количестве
+            const packagingInfo = cargo.packagingCount > 0 && cargo.packagingType !== 'none' 
+                ? `<div class="detail-item">
+                    <span class="detail-label">Упаковка</span>
+                    <span class="detail-value">${cargo.packagingTypeName} (${cargo.packagingCount} шт)</span>
+                </div>` 
+                : '';
+            
+            cargoItem.innerHTML = `
+                <div class="cargo-list-header">
+                    <div class="cargo-type-badge">
+                        <span class="cargo-emoji-small">${getCargoEmoji(cargo.type)}</span>
+                        <span>${cargo.typeName} × ${cargo.quantity}</span>
+                    </div>
+                    <span class="cargo-weight">${cargo.weight} кг</span>
+                </div>
+                <div class="cargo-details">
+                    <div class="detail-item">
+                        <span class="detail-label">Мест</span>
+                        <span class="detail-value">${cargo.quantity} шт</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Вес общий</span>
+                        <span class="detail-value">${cargo.weight} кг</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Размеры ед.</span>
+                        <span class="detail-value">${cargo.length}×${cargo.width}×${cargo.height}</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Объем ед.</span>
+                        <span class="detail-value">${cargo.volume.toFixed(2)} м³</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Объем общ.</span>
+                        <span class="detail-value">${cargo.totalVolume.toFixed(2)} м³</span>
+                    </div>
+                    ${packagingInfo}
+                    <div class="detail-item">
+                        <span class="detail-label">Время</span>
+                        <span class="detail-value">${cargo.timestamp || ''}</span>
+                    </div>
+                </div>
+                ${cargo.photo ? `<img src="${cargo.photo}" class="cargo-photo-preview" alt="Фото груза">` : ''}
+                <div class="cargo-group-controls">
+                    <button class="btn-remove-group" onclick="removeCargoItem(${cargo.id})">Удалить</button>
+                </div>
+            `;
+            
+            content.appendChild(cargoItem);
+        });
+    }
+    
+    // Обновляем итоги в модальном окне
+    updateModalTotals();
+    
+    // Показываем модальное окно
+    cargoListModal.style.display = 'block';
+    
+    console.log('Модальное окно показано');
+}
+
+// УДАЛЕНИЕ ОДНОГО ГРУЗА
+function removeCargoItem(cargoId) {
+    cargoList = cargoList.filter(item => item.id !== cargoId);
+    localStorage.setItem('cargoList', JSON.stringify(cargoList));
+    updateStats();
+    showCargoListModal();
+    showNotification('Груз удален');
+}
+
+// ФУНКЦИЯ ЗАКРЫТИЯ МОДАЛЬНОГО ОКНА
+function closeCargoListModal() {
+    if (cargoListModal) {
+        cargoListModal.style.display = 'none';
+    }
+}
+
+// ПОКАЗ МАЛЕНЬКОГО ОКОШКА СТАТИСТИКИ
+function showCargoStatsPopup() {
+    console.log('Показываем маленькое окно статистики...');
+    
+    const popup = document.getElementById('cargoStatsPopup');
+    const overlay = document.getElementById('cargoStatsOverlay');
+    const itemsContainer = document.getElementById('cargoStatsItems');
+    const totalsContainer = document.getElementById('cargoStatsTotals');
+    
+    if (!popup || !overlay || !itemsContainer) {
+        console.error('Не найдены элементы окна статистики');
+        showCargoListModal();
+        return;
+    }
+    
+    // Очищаем содержимое
+    itemsContainer.innerHTML = '';
+    
+    if (!cargoList || cargoList.length === 0) {
+        itemsContainer.innerHTML = '<div class="cargo-stats-empty">Нет сохраненных грузов</div>';
+    } else {
+        // Отображаем каждый груз отдельно
+        cargoList.forEach((cargo, index) => {
+            const cargoItem = document.createElement('div');
+            cargoItem.className = 'cargo-stats-item';
+            
+            // Добавляем информацию об упаковке
+            const packagingInfo = cargo.packagingCount > 0 && cargo.packagingType !== 'none' 
+                ? `<div class="cargo-stats-detail">
+                    <span class="cargo-stats-detail-label">Упаковка</span>
+                    <span class="cargo-stats-detail-value">${cargo.packagingEmoji} ${cargo.packagingCount} шт</span>
+                </div>` 
+                : '';
+            
+            cargoItem.innerHTML = `
+                <div class="cargo-stats-item-header">
+                    <div class="cargo-stats-item-type">
+                        <span>${getCargoEmoji(cargo.type)}</span>
+                        <span>${cargo.typeName} × ${cargo.quantity}</span>
+                    </div>
+                    <span style="font-size: 12px; color: #666;">${cargo.weight} кг</span>
+                </div>
+                <div class="cargo-stats-item-details">
+                    <div class="cargo-stats-detail">
+                        <span class="cargo-stats-detail-label">Мест</span>
+                        <span class="cargo-stats-detail-value">${cargo.quantity} шт</span>
+                    </div>
+                    <div class="cargo-stats-detail">
+                        <span class="cargo-stats-detail-label">Размеры</span>
+                        <span class="cargo-stats-detail-value">${cargo.length}×${cargo.width}×${cargo.height}</span>
+                    </div>
+                    <div class="cargo-stats-detail">
+                        <span class="cargo-stats-detail-label">Объем</span>
+                        <span class="cargo-stats-detail-value">${cargo.totalVolume.toFixed(2)} м³</span>
+                    </div>
+                    ${packagingInfo}
+                    <div class="cargo-stats-detail">
+                        <span class="cargo-stats-detail-label">Время</span>
+                        <span class="cargo-stats-detail-value">${cargo.timestamp || ''}</span>
+                    </div>
+                </div>
+            `;
+            
+            itemsContainer.appendChild(cargoItem);
+        });
+    }
+    
+    // Обновляем итоги
+    if (totalsContainer) {
+        if (!cargoList || cargoList.length === 0) {
+            totalsContainer.innerHTML = '';
+        } else {
+            // Вычисляем общие показатели
+            let totalItems = cargoList.reduce((sum, cargo) => sum + cargo.quantity, 0); // Общее количество мест
+            let totalCargoGroups = cargoList.length; // Количество групп грузов
+            let sumWeight = cargoList.reduce((sum, cargo) => sum + cargo.weight, 0); // Общий вес (не умножается на количество)
+            let sumVolume = cargoList.reduce((sum, cargo) => sum + cargo.totalVolume, 0); // Общий объем (умножается)
+            
+            // Подсчитываем количество грузов с упаковкой
+            let cargoWithPackaging = cargoList.filter(cargo => 
+                cargo.packagingCount > 0 && cargo.packagingType !== 'none'
+            ).length;
+            
+            totalsContainer.innerHTML = `
+                <div style="margin-top: 15px; padding: 10px; background: #f8f9fa; border-radius: 6px; font-size: 12px;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                        <span>Групп грузов:</span>
+                        <span style="font-weight: bold;">${totalCargoGroups}</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                        <span>Всего мест:</span>
+                        <span style="font-weight: bold;">${totalItems}</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                        <span>С упаковкой:</span>
+                        <span style="font-weight: bold;">${cargoWithPackaging}</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                        <span>Общая масса:</span>
+                        <span style="font-weight: bold;">${sumWeight} кг</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between;">
+                        <span>Общий объем:</span>
+                        <span style="font-weight: bold;">${sumVolume.toFixed(2)} м³</span>
+                    </div>
+                </div>
+            `;
+        }
+    }
+    
+    // Показываем окошко
+    popup.classList.add('active');
+    overlay.classList.add('active');
+    
+    console.log('Маленькое окно статистики показано');
+}
+
+// ЗАКРЫТИЕ МАЛЕНЬКОГО ОКОШКА СТАТИСТИКИ
+function closeCargoStatsPopup() {
+    const popup = document.getElementById('cargoStatsPopup');
+    const overlay = document.getElementById('cargoStatsOverlay');
+    
+    if (popup) popup.classList.remove('active');
+    if (overlay) overlay.classList.remove('active');
+}
+
+// ОБНОВЛЕНИЕ СТАТИСТИКИ
+function updateStats() {
+    // Обновляем новые элементы
+    const totalCargoCount = document.getElementById('totalCargoCount');
+    const totalWeightValue = document.getElementById('totalWeightValue');
+    const totalVolumeValue = document.getElementById('totalVolumeValue');
+    const totalPackagingInfo = document.getElementById('totalPackagingInfo');
+    const totalQuantityValue = document.getElementById('totalQuantityValue'); // Общее количество мест
+    
+    if (!cargoList || cargoList.length === 0) {
+        if (totalCargoCount) totalCargoCount.textContent = '0';
+        if (totalWeightValue) totalWeightValue.textContent = '0 кг';
+        if (totalVolumeValue) totalVolumeValue.textContent = '0 м³';
+        if (totalPackagingInfo) totalPackagingInfo.textContent = 'Нет';
+        if (totalQuantityValue) totalQuantityValue.textContent = '0';
+        return;
+    }
+    
+    // Вычисляем общие показатели
+    let totalGroups = cargoList.length; // Количество групп грузов
+    let totalItems = cargoList.reduce((sum, cargo) => sum + cargo.quantity, 0); // Общее количество мест
+    let sumWeight = cargoList.reduce((sum, cargo) => sum + cargo.weight, 0); // Общий вес (не умножается)
+    let sumVolume = cargoList.reduce((sum, cargo) => sum + cargo.totalVolume, 0); // Общий объем (умножается)
+    
+    // Подсчитываем информацию об упаковке
+    let cargoWithPackaging = cargoList.filter(cargo => 
+        cargo.packagingCount > 0 && cargo.packagingType !== 'none'
+    );
+    
+    let packagingInfoText = 'Нет';
+    if (cargoWithPackaging.length > 0) {
+        // Группируем по типам упаковки
+        let packagingSummary = {};
+        cargoWithPackaging.forEach(cargo => {
+            if (!packagingSummary[cargo.packagingTypeName]) {
+                packagingSummary[cargo.packagingTypeName] = 0;
+            }
+            packagingSummary[cargo.packagingTypeName] += cargo.packagingCount;
+        });
+        
+        // Формируем текст
+        let packagingTexts = [];
+        for (let type in packagingSummary) {
+            packagingTexts.push(`${type}: ${packagingSummary[type]} шт`);
+        }
+        
+        packagingInfoText = packagingTexts.join(', ');
+    }
+    
+    // Обновляем элементы
+    if (totalCargoCount) totalCargoCount.textContent = totalGroups;
+    if (totalQuantityValue) totalQuantityValue.textContent = totalItems;
+    if (totalWeightValue) totalWeightValue.textContent = sumWeight + ' кг';
+    if (totalVolumeValue) totalVolumeValue.textContent = sumVolume.toFixed(2) + ' м³';
+    if (totalPackagingInfo) totalPackagingInfo.textContent = packagingInfoText;
+}
+
+// ОБНОВЛЕНИЕ ИТОГОВ В МОДАЛЬНОМ ОКНЕ
+function updateModalTotals() {
+    const modalTotalWeight = document.getElementById('modalTotalWeight');
+    const modalTotalVolume = document.getElementById('modalTotalVolume');
+    const modalCargoCount = document.getElementById('modalCargoCount');
+    const modalTotalQuantity = document.getElementById('modalTotalQuantity');
+    
+    if (!cargoList || cargoList.length === 0) {
+        if (modalTotalWeight) modalTotalWeight.textContent = '0 кг';
+        if (modalTotalVolume) modalTotalVolume.textContent = '0 м³';
+        if (modalCargoCount) modalCargoCount.textContent = '0';
+        if (modalTotalQuantity) modalTotalQuantity.textContent = '0';
+        return;
+    }
+    
+    let totalGroups = cargoList.length;
+    let totalItems = cargoList.reduce((sum, cargo) => sum + cargo.quantity, 0);
+    let sumWeight = cargoList.reduce((sum, cargo) => sum + cargo.weight, 0);
+    let sumVolume = cargoList.reduce((sum, cargo) => sum + cargo.totalVolume, 0);
+    
+    if (modalTotalWeight) modalTotalWeight.textContent = sumWeight + ' кг';
+    if (modalTotalVolume) modalTotalVolume.textContent = sumVolume.toFixed(2) + ' м³';
+    if (modalCargoCount) modalCargoCount.textContent = totalGroups;
+    if (modalTotalQuantity) modalTotalQuantity.textContent = totalItems;
+}
+
+// ФУНКЦИЯ ОТПРАВКИ ОПЕРАТОРУ
+function sendToOperator() {
+    if (!cargoList || cargoList.length === 0) {
+        showNotification('Нет грузов для отправки', true);
+        return;
+    }
+    
+    // Создаем данные для отправки
+    const dataToSend = {
+        employee: JSON.parse(localStorage.getItem('employeeAuth')) || {name: 'Неизвестный сотрудник'},
+        cargoList: cargoList,
+        timestamp: new Date().toLocaleString('ru-RU'),
+        summary: {
+            totalGroups: cargoList.length,
+            totalItems: cargoList.reduce((sum, cargo) => sum + cargo.quantity, 0),
+            totalWeight: cargoList.reduce((sum, cargo) => sum + cargo.weight, 0),
+            totalVolume: cargoList.reduce((sum, cargo) => sum + cargo.totalVolume, 0),
+            // Добавляем информацию об упаковке
+            packagingSummary: cargoList.reduce((summary, cargo) => {
+                if (cargo.packagingType !== 'none' && cargo.packagingCount > 0) {
+                    if (!summary[cargo.packagingType]) {
+                        summary[cargo.packagingType] = 0;
+                    }
+                    summary[cargo.packagingType] += cargo.packagingCount;
+                }
+                return summary;
+            }, {})
+        }
+    };
+    
+    console.log('Отправка данных оператору:', dataToSend);
+    
+    // Здесь будет реальная отправка данных
+    // Пока просто показываем уведомление
+    showNotification('Данные отправлены оператору!');
+    
+    // Сохраняем в localStorage для истории
+    const shipments = JSON.parse(localStorage.getItem('shipments')) || [];
+    shipments.push(dataToSend);
+    localStorage.setItem('shipments', JSON.stringify(shipments));
+    
+    // Очищаем список после отправки
+    cargoList = [];
+    localStorage.removeItem('cargoList');
+    updateStats();
+    
+    // Закрываем окно статистики если оно открыто
+    closeCargoStatsPopup();
+}
+
+// ПОЛУЧЕНИЕ ID ТЕКУЩЕГО СОТРУДНИКА
+function getCurrentEmployeeId() {
+    const authData = localStorage.getItem('employeeAuth');
+    if (authData) {
+        try {
+            const employee = JSON.parse(authData);
+            return employee.id || 'unknown';
+        } catch (e) {
+            return 'unknown';
+        }
+    }
+    return 'unknown';
+}
+
+// ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ
+function getCargoTypeName(type) {
+    const names = {
+        'euro-pallet': 'Европаллет',
+        'american-pallet': 'Американский паллет',
+        'box': 'Коробка',
+        'non-standard': 'Нестандарт'
+    };
+    return names[type] || type;
+}
+
+function getCargoEmoji(type) {
+    const emojis = {
+        'euro-pallet': '🇪🇺',
+        'american-pallet': '🇺🇸',
+        'box': '📦',
+        'non-standard': '📏'
+    };
+    return emojis[type] || '📦';
+}
+
+// ФУНКЦИЯ ДЛЯ ПОКАЗА УВЕДОМЛЕНИЙ
+function showNotification(message, isError = false) {
+    // Проверяем, есть ли уже уведомление
+    const existingNotification = document.querySelector('.notification');
+    if (existingNotification) {
+        existingNotification.remove();
+    }
+    
+    // Создаем элемент уведомления
+    const notification = document.createElement('div');
+    notification.className = 'notification';
+    if (isError) {
+        notification.classList.add('error');
+    }
+    notification.textContent = message;
+    notification.style.cssText = `
+        position: fixed;
+        top: 80px;
+        right: 10px;
+        background: ${isError ? '#e74c3c' : '#4CAF50'};
+        color: white;
+        padding: 12px 16px;
+        border-radius: 8px;
+        z-index: 10000;
+        animation: slideIn 0.3s ease;
+        max-width: 300px;
+        font-size: 14px;
+        font-weight: 600;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    `;
+    
+    document.body.appendChild(notification);
+    
+    // Удаляем уведомление через 3 секунды
+    setTimeout(() => {
+        notification.style.animation = 'slideOut 0.3s ease';
+        setTimeout(() => {
+            if (notification.parentNode) {
+                notification.parentNode.removeChild(notification);
+            }
+        }, 300);
+    }, 3000);
+}
+
+// ФУНКЦИИ ДЛЯ РАБОТЫ С АВТОРИЗАЦИЕЙ
+function updateEmployeeInfo() {
+    const nameElement = document.getElementById('employeeName');
+    if (nameElement) {
+        const authData = localStorage.getItem('employeeAuth');
+        if (authData) {
+            try {
+                const employee = JSON.parse(authData);
+                nameElement.textContent = employee.name || 'Сотрудник';
+            } catch (e) {
+                nameElement.textContent = 'Сотрудник';
+            }
+        } else {
+            nameElement.textContent = 'Не авторизован';
+            // Автоматический редирект на страницу авторизации через 1 секунду
+            setTimeout(() => {
+                window.location.href = 'index.html';
+            }, 1000);
+        }
+    }
+}
+
+function logout() {
+    localStorage.removeItem('employeeAuth');
+    localStorage.removeItem('cargoList'); // Очищаем данные грузов при выходе
+    window.location.href = 'index.html'; // Перенаправление на страницу входа
+}
+
+// ОПТИМИЗАЦИЯ ДЛЯ ПЛАНШЕТОВ
+function initTabletOptimization() {
+    // Увеличиваем область клика для планшетов
+    if (window.innerWidth >= 768) {
+        // Добавляем класс для планшетов
+        document.body.classList.add('tablet-device');
+        
+        // Увеличиваем тач-таргеты для всех кликабельных элементов
+        const clickableElements = document.querySelectorAll(
+            'button, .cargo-type-item, .packaging-type-item, .photo-container, .stats-header, ' +
+            '.dimension-btn, .quantity-btn, .btn-save, .btn-send, ' +
+            '.btn-quantity-change, .btn-remove-group, .quantity-control-btn, .packaging-control-btn, ' +
+            'input.form-control, textarea.form-control'
+        );
+        
+        clickableElements.forEach(el => {
+            el.style.minHeight = '44px';
+            el.style.minWidth = '44px';
+            el.style.display = 'flex';
+            el.style.alignItems = 'center';
+            el.style.justifyContent = 'center';
+            if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+                el.style.fontSize = '16px'; // Предотвращает зум на iOS
+                el.style.cursor = 'text';
+                el.addEventListener('touchstart', function(e) {
+                    // Разрешаем тап по полям ввода
+                }, { passive: true });
+            }
+        });
+        
+        console.log('Планшетная оптимизация применена');
+    }
+}
+
+// ФИКС ДЛЯ КЛИКОВ НА ПЛАНШЕТАХ
+function handleTabletClicks() {
+    // Некоторые планшеты требуют особой обработки touch событий
+    document.addEventListener('touchstart', function(e) {
+        // Предотвращаем зум на быстрые тапы
+        if (e.touches.length > 1) {
+            e.preventDefault();
+        }
+    }, { passive: false });
+    
+    // Улучшаем feedback для тапов
+    document.addEventListener('touchstart', function(e) {
+        const target = e.target;
+        if (target.matches('button, .cargo-type-item, .packaging-type-item, .photo-container, .stats-header, .quantity-control-btn, .packaging-control-btn, input.form-control')) {
+            target.classList.add('active-touch');
+        }
+    });
+    
+    document.addEventListener('touchend', function(e) {
+        const target = e.target;
+        if (target.matches('button, .cargo-type-item, .packaging-type-item, .photo-container, .stats-header, .quantity-control-btn, .packaging-control-btn, input.form-control')) {
+            target.classList.remove('active-touch');
+        }
+    });
+}
+
+// ОПТИМИЗАЦИЯ МОДАЛЬНОГО ОКНА ДЛЯ ПЛАНШЕТОВ
+function optimizeModalForTablet() {
+    const modal = document.getElementById('cargoListModal');
+    if (modal && window.innerWidth >= 768) {
+        const modalContent = modal.querySelector('.modal-content');
+        if (modalContent) {
+            modalContent.style.maxWidth = '600px';
+            modalContent.style.padding = '25px';
+            
+            // Увеличиваем кнопки в модальном окне
+            const modalButtons = modalContent.querySelectorAll('button');
+            modalButtons.forEach(btn => {
+                btn.style.minHeight = '50px';
+                btn.style.fontSize = '16px';
+                btn.style.padding = '12px 20px';
+            });
+        }
+    }
+}
+
+// ЗАКРЫТИЕ ПРИ КЛИКЕ ВНЕ ОКОШКА
+window.onclick = function(event) {
+    if (event.target === cargoListModal) {
+        closeCargoListModal();
+    }
+    
+    const popup = document.getElementById('cargoStatsPopup');
+    const overlay = document.getElementById('cargoStatsOverlay');
+    
+    if (popup && overlay && 
+        event.target === overlay && 
+        popup.classList.contains('active')) {
+        closeCargoStatsPopup();
+    }
+};
+
+// ЗАКРЫТИЕ ПРИ НАЖАТИИ ESC
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape') {
+        closeCargoStatsPopup();
+        closeCargoListModal();
+    }
+});
+
+// ДОБАВЛЯЕМ СТИЛИ ДЛЯ АНИМАЦИЙ
+function addAdditionalStyles() {
+    const additionalStyles = document.createElement('style');
+    additionalStyles.textContent = `
+        /* Анимации для уведомлений */
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        @keyframes slideOut {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+        }
+        
+        .notification.error {
+            background: #e74c3c !important;
+        }
+        
+        .active-touch {
+            opacity: 0.8 !important;
+            transform: scale(0.98) !important;
+            transition: all 0.1s ease !important;
+        }
+        
+        /* Стили для кнопок количества */
+        .quantity-control-btn {
+            width: 40px;
+            height: 40px;
+            border: none;
+            background: #4a5568;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+        }
+        
+        .quantity-control-btn:hover {
+            background: #2d3748;
+        }
+        
+        .quantity-control-btn:active {
+            transform: scale(0.95);
+        }
+        
+        /* Стили для полей ввода на планшетах */
+        .tablet-device input.form-control {
+            font-size: 16px !important;
+            min-height: 44px !important;
+            padding: 10px 14px !important;
+        }
+        
+        /* Стили для кнопок редактирования массы */
+        .weight-control {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .weight-control input {
+            flex: 1;
+            text-align: center;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: text;
+        }
+        
+        /* Улучшаем видимость фокуса на полях ввода */
+        input.form-control:focus {
+            border-color: #4CAF50 !important;
+            box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2) !important;
+            outline: none !important;
+        }
+        
+        /* Динамическое обновление значений */
+        .dynamic-value {
+            transition: all 0.3s ease;
+        }
+        
+        .dynamic-value.changed {
+            color: #4CAF50;
+            font-weight: bold;
+        }
+    `;
+    
+    document.head.appendChild(additionalStyles);
+}
+
+// Вызываем добавление стилей при загрузке
+addAdditionalStyles();
+
+// ИНИЦИАЛИЗАЦИЯ ПЛАНШЕТНОЙ ОПТИМИЗАЦИИ
+document.addEventListener('DOMContentLoaded', function() {
+    // Оптимизируем модальное окно при показе
+    const originalShowModal = window.showCargoListModal;
+    window.showCargoListModal = function() {
+        originalShowModal();
+        optimizeModalForTablet();
+    };
+    // В script.js добавляем функцию для мобильной оптимизации
+
+// ОПТИМИЗАЦИЯ ДЛЯ МОБИЛЬНЫХ УСТРОЙСТВ
+function optimizeForMobile() {
+    if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+        console.log('Мобильное устройство обнаружено, применяем оптимизацию...');
+        
+        // Добавляем класс для мобильных устройств
+        document.body.classList.add('mobile-device');
+        
+        // Увеличиваем тач-таргеты
+        const touchElements = document.querySelectorAll(
+            '.param-btn, .cargo-type-item, .packaging-type-item, ' +
+            '.btn-save-new, .btn-send-new, .photo-container-new, ' +
+            '.total-info-value.clickable, .cargo-stats-item-remove'
+        );
+        
+        touchElements.forEach(el => {
+            el.style.minHeight = '44px';
+            el.style.minWidth = '44px';
+            el.style.cursor = 'pointer';
+        });
+        
+        // Улучшаем поля ввода для мобильных
+        const inputs = document.querySelectorAll('input[type="number"], input[type="text"]');
+        inputs.forEach(input => {
+            input.style.fontSize = '16px'; // Предотвращает зум в iOS
+            input.style.minHeight = '44px';
+        });
+        
+        // Предотвращаем стандартное поведение касания
+        document.addEventListener('touchstart', function(e) {
+            if (e.touches.length > 1) {
+                e.preventDefault();
+            }
+        }, { passive: false });
+        
+        // Улучшаем feedback для касаний
+        document.addEventListener('touchstart', function(e) {
+            const target = e.target;
+            if (target.matches('.param-btn, .cargo-type-item, .packaging-type-item, .btn-save-new, .btn-send-new')) {
+                target.classList.add('touch-active');
+            }
+        });
+        
+        document.addEventListener('touchend', function(e) {
+            const target = e.target;
+            if (target.matches('.param-btn, .cargo-type-item, .packaging-type-item, .btn-save-new, .btn-send-new')) {
+                target.classList.remove('touch-active');
+            }
+        });
+        
+        console.log('Мобильная оптимизация применена');
+    }
+}
+
+// Вызываем в DOMContentLoaded
+document.addEventListener('DOMContentLoaded', function() {
+    // ... существующий код ...
+    
+    // Добавляем мобильную оптимизацию
+    optimizeForMobile();
+    
+    // ... остальной код ...
+});
+});
+
+// ЭКСПОРТ ФУНКЦИЙ ДЛЯ HTML
+window.changeDimension = changeDimension;
+window.takePhoto = takePhoto;
+window.selectCargoType = selectCargoType;
+window.selectPackagingType = selectPackagingType;
+window.changePackagingCount = changePackagingCount;
+window.updatePackagingCountFromInput = updatePackagingCountFromInput;
+window.saveCargo = saveCargo;
+window.sendToOperator = sendToOperator;
+window.showCargoListModal = showCargoListModal;
+window.closeCargoListModal = closeCargoListModal;
+window.removeCargoItem = removeCargoItem;
+window.updateEmployeeInfo = updateEmployeeInfo;
+window.logout = logout;
+window.showNotification = showNotification;
+window.showCargoStatsPopup = showCargoStatsPopup;
+window.closeCargoStatsPopup = closeCargoStatsPopup;
+
+// Экспорт новых функций
+window.changeParam = changeParam;
+window.updateWeightFromInput = updateWeightFromInput;
+window.updateDimensionFromInput = updateDimensionFromInput;
+window.updateCurrentStats = updateCurrentStats;
+window.updateTotalStats = updateTotalStats;
+window.sendToOperatorAndReset = sendToOperatorAndReset;
+window.clearAllCargo = clearAllCargo;
+window.changeQuantity = changeQuantity;
+window.updateQuantityFromInput = updateQuantityFromInput;
+
+console.log('Все функции script.js загружены и готовы к использованию');
