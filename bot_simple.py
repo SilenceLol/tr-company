@@ -1,23 +1,35 @@
-# bot_registration.py - Бот с регистрацией сотрудников
+
+"""
+Telegram бот для регистрации сотрудников
+Работает на Render с aiogram 3.0.0b2
+"""
+
+import os
 import asyncio
 import logging
+import json
+import random
+import string
+from pathlib import Path
+from datetime import datetime
+
 from aiogram import Bot, Dispatcher, types
 from aiogram.filters import Command
+from aiogram.enums import ParseMode
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.fsm.storage.memory import MemoryStorage
-from aiogram.types import (
-    ReplyKeyboardMarkup, 
-    KeyboardButton, 
-    ReplyKeyboardRemove
-)
-import secrets
-import string
-import re
-import os
-import json
-from pathlib import Path
-from datetime import datetime
+
+# ========================================
+# НАСТРОЙКИ
+# ========================================
+
+# Получаем токен из переменных окружения Render
+BOT_TOKEN = os.getenv('BOT_TOKEN')
+if not BOT_TOKEN:
+    print("❌ ОШИБКА: BOT_TOKEN не найден!")
+    print("На Render: Settings → Environment → Add BOT_TOKEN")
+    exit(1)
 
 # Настройка логирования
 logging.basicConfig(
@@ -27,261 +39,119 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 # Инициализация бота
-BOT_TOKEN = os.getenv('BOT_TOKEN', 'ВАШ_ТОКЕН_ЗДЕСЬ')
-bot = Bot(token='8535867471:AAFY7X12sWghRM6afK44r2bLpW9IYBSSkf0')
+bot = Bot(token=BOT_TOKEN, parse_mode=ParseMode.HTML)
 storage = MemoryStorage()
 dp = Dispatcher(storage=storage)
 
-# ========================================
-# НАСТРОЙКИ ФАЙЛОВ
-# ========================================
-
+# Пути к файлам
 DATA_DIR = Path("data")
-CODES_FILE = DATA_DIR / "employee_codes.txt"
-CODES_JSON = DATA_DIR / "employee_codes.json"
-
-# Создаем директорию если ее нет
 DATA_DIR.mkdir(exist_ok=True)
-
-# ========================================
-# РАБОТА С ФАЙЛАМИ
-# ========================================
-
-def load_codes():
-    """Загружает коды из JSON файла"""
-    if CODES_JSON.exists():
-        try:
-            with open(CODES_JSON, 'r', encoding='utf-8') as f:
-                return json.load(f)
-        except Exception as e:
-            logger.error(f"Ошибка загрузки JSON: {e}")
-    
-    return {}
-
-def save_codes(codes_dict):
-    """Сохраняет коды в JSON и текстовый файл"""
-    try:
-        # Сохраняем в JSON
-        with open(CODES_JSON, 'w', encoding='utf-8') as f:
-            json.dump(codes_dict, f, ensure_ascii=False, indent=2)
-        
-        # Сохраняем в текстовый файл в нужном формате
-        with open(CODES_FILE, 'w', encoding='utf-8') as f:
-            f.write("=" * 60 + "\n")
-            f.write("СПИСОК КОДОВ ДОСТУПА СОТРУДНИКОВ\n")
-            f.write(f"Обновлено: {datetime.now().strftime('%d.%m.%Y %H:%M:%S')}\n")
-            f.write("=" * 60 + "\n\n")
-            
-            # Сортируем по фамилии
-            sorted_items = sorted(codes_dict.items(), key=lambda x: x[1]['name'])
-            
-            for phone, data in sorted_items:
-                # Записываем в формате "Имя Фамилия" и "Код"
-                f.write(f"{data['name']}\n")
-                f.write(f"{data['code']}\n")
-                f.write("-" * 30 + "\n")
-        
-        logger.info(f"Коды сохранены. Сотрудников: {len(codes_dict)}")
-        return True
-        
-    except Exception as e:
-        logger.error(f"Ошибка сохранения кодов: {e}")
-        return False
-
-def get_employee_by_phone(phone):
-    """Получает данные сотрудника по номеру телефона"""
-    codes = load_codes()
-    return codes.get(phone)
-
-def save_employee(phone, name, code):
-    """Сохраняет нового сотрудника"""
-    codes = load_codes()
-    
-    codes[phone] = {
-        'name': name,
-        'code': code,
-        'created': datetime.now().strftime('%d.%m.%Y %H:%M:%S'),
-        'last_access': datetime.now().strftime('%d.%m.%Y %H:%M:%S')
-    }
-    
-    return save_codes(codes)
-
-def update_last_access(phone):
-    """Обновляет время последнего доступа"""
-    codes = load_codes()
-    if phone in codes:
-        codes[phone]['last_access'] = datetime.now().strftime('%d.%m.%Y %H:%M:%S')
-        save_codes(codes)
+CODES_FILE = DATA_DIR / "employee_codes.json"
+TXT_FILE = DATA_DIR / "employee_codes.txt"
 
 # ========================================
 # ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ
 # ========================================
 
-def generate_static_code(length=8):
-    """Генерация постоянного кода"""
-    alphabet = string.ascii_uppercase + string.digits
-    # Исключаем похожие символы
-    for char in ['0', 'O', '1', 'I', 'L', '2', 'Z', '5', 'S', '8', 'B']:
-        alphabet = alphabet.replace(char, '')
-    
-    return ''.join(secrets.choice(alphabet) for _ in range(length))
+def load_codes():
+    """Загружает коды из JSON файла"""
+    if CODES_FILE.exists():
+        try:
+            with open(CODES_FILE, 'r', encoding='utf-8') as f:
+                return json.load(f)
+        except:
+            return {}
+    return {}
 
-def validate_phone(phone: str) -> str:
-    """Очищает и валидирует номер телефона"""
-    cleaned = re.sub(r'\D', '', phone)
+def save_codes(codes):
+    """Сохраняет коды в JSON и текстовый файл"""
+    try:
+        # Сохраняем в JSON
+        with open(CODES_FILE, 'w', encoding='utf-8') as f:
+            json.dump(codes, f, ensure_ascii=False, indent=2)
+        
+        # Сохраняем в текстовый файл
+        with open(TXT_FILE, 'w', encoding='utf-8') as f:
+            f.write("=" * 50 + "\n")
+            f.write("СПИСОК КОДОВ ДОСТУПА СОТРУДНИКОВ\n")
+            f.write(f"Обновлено: {datetime.now().strftime('%d.%m.%Y %H:%M:%S')}\n")
+            f.write("=" * 50 + "\n\n")
+            
+            for phone, data in sorted(codes.items(), key=lambda x: x[1]['name']):
+                f.write(f"{data['name']}\n")
+                f.write(f"{data['code']}\n")
+                f.write("-" * 30 + "\n")
+        
+        logger.info(f"✅ Сохранено сотрудников: {len(codes)}")
+        return True
+    except Exception as e:
+        logger.error(f"❌ Ошибка сохранения: {e}")
+        return False
+
+def generate_code(length=8):
+    """Генерация кода без похожих символов"""
+    chars = string.ascii_uppercase.replace('O', '').replace('I', '') + '23456789'
+    return ''.join(random.choice(chars) for _ in range(length))
+
+def normalize_phone(phone: str) -> str:
+    """Нормализует номер телефона"""
+    # Убираем все нецифровые символы
+    digits = ''.join(filter(str.isdigit, phone))
     
-    if cleaned.startswith('8'):
-        cleaned = '7' + cleaned[1:]
+    # Если номер начинается с 8, заменяем на 7
+    if digits.startswith('8') and len(digits) == 11:
+        digits = '7' + digits[1:]
     
-    if cleaned.startswith('7') and len(cleaned) == 11:
-        return cleaned
+    # Если номер начинается с 7 и имеет 11 цифр
+    if digits.startswith('7') and len(digits) == 11:
+        return digits
     
     return None
-
-def validate_name(name: str) -> bool:
-    """Проверяет корректность имени (должно быть минимум 2 слова)"""
-    words = name.strip().split()
-    return len(words) >= 2 and all(len(word) >= 2 for word in words)
-
-def format_name(name: str) -> str:
-    """Форматирует имя (делает первую букву заглавной)"""
-    return ' '.join(word.capitalize() for word in name.split())
 
 # ========================================
 # СОСТОЯНИЯ FSM
 # ========================================
 
-class RegistrationStates(StatesGroup):
-    waiting_phone_input = State()
-    waiting_name_input = State()
-    phone_verified = State()
-
-# ========================================
-# КЛАВИАТУРЫ
-# ========================================
-
-def get_main_keyboard():
-    """Основная клавиатура"""
-    return ReplyKeyboardMarkup(
-        keyboard=[
-            [KeyboardButton(text="📱 Отправить контакт", request_contact=True)],
-            [KeyboardButton(text="📝 Ввести номер вручную")],
-            [KeyboardButton(text="🔑 Мой код доступа")]
-        ],
-        resize_keyboard=True
-    )
-
-def get_cancel_keyboard():
-    """Клавиатура с отменой"""
-    return ReplyKeyboardMarkup(
-        keyboard=[
-            [KeyboardButton(text="❌ Отменить")]
-        ],
-        resize_keyboard=True
-    )
-
-def get_registration_complete_keyboard():
-    """Клавиатура после регистрации"""
-    return ReplyKeyboardMarkup(
-        keyboard=[
-            [KeyboardButton(text="🔑 Мой код доступа")],
-            [KeyboardButton(text="📱 Изменить номер"), KeyboardButton(text="ℹ️ Помощь")]
-        ],
-        resize_keyboard=True
-    )
+class Registration(StatesGroup):
+    waiting_for_phone = State()
+    waiting_for_name = State()
 
 # ========================================
 # ОБРАБОТЧИКИ КОМАНД
 # ========================================
 
 @dp.message(Command("start"))
-async def cmd_start(message: types.Message, state: FSMContext):
-    """Команда /start - начало работы"""
-    await state.clear()
+async def cmd_start(message: types.Message):
+    """Команда /start"""
+    keyboard = types.ReplyKeyboardMarkup(
+        keyboard=[
+            [types.KeyboardButton(text="📱 Отправить контакт", request_contact=True)],
+            [types.KeyboardButton(text="📝 Ввести номер вручную")],
+            [types.KeyboardButton(text="🔑 Получить мой код")]
+        ],
+        resize_keyboard=True
+    )
     
     await message.answer(
-        "👋 *Добро пожаловать в систему кодов доступа!*\n\n"
-        "Я помогу вам:\n"
-        "• 📝 Зарегистрироваться и получить постоянный код\n"
-        "• 🔑 Напомнить ваш код доступа в любое время\n"
-        "• 📱 Сохранить код для доступа к веб-сервису\n\n"
-        "Выберите действие:",
-        parse_mode="Markdown",
-        reply_markup=get_main_keyboard()
+        "👋 <b>Добро пожаловать!</b>\n\n"
+        "Я бот для регистрации сотрудников и выдачи постоянных кодов доступа.\n\n"
+        "<b>Как использовать:</b>\n"
+        "1. Зарегистрируйтесь (кнопка ниже)\n"
+        "2. Получите постоянный код\n"
+        "3. Сохраните код\n\n"
+        "Код выдается <b>один раз</b> и <b>никогда не меняется</b>!",
+        reply_markup=keyboard
     )
-
-@dp.message(Command("help"))
-async def cmd_help(message: types.Message):
-    """Команда /help - справка"""
-    help_text = (
-        "📋 *Справка по системе кодов доступа*\n\n"
-        
-        "*Как зарегистрироваться:*\n"
-        "1. Нажмите /start\n"
-        "2. Выберите способ ввода номера:\n"
-        "   • 📱 Отправить контакт\n"
-        "   • 📝 Ввести номер вручную\n"
-        "3. Введите имя и фамилию\n"
-        "4. Получите постоянный код\n\n"
-        
-        "*Как получить свой код:*\n"
-        "1. Нажмите кнопку «🔑 Мой код доступа»\n"
-        "2. Введите номер телефона\n"
-        "3. Получите ваш постоянный код\n\n"
-        
-        "*Важная информация:*\n"
-        "• Код выдается **один раз** и **никогда не меняется**\n"
-        "• Все данные сохраняются в текстовый файл\n"
-        "• Для доступа к веб-сервису используйте этот код\n\n"
-        
-        "*Формат номера телефона:*\n"
-        "• `79991234567`\n"
-        "• `+79991234567`\n"
-        "• `89991234567`\n\n"
-        
-        "*Другие команды:*\n"
-        "/admin - Административные функции\n"
-        "/help - Эта справка"
-    )
-    await message.answer(help_text, parse_mode="Markdown")
-
-@dp.message(Command("admin"))
-async def cmd_admin(message: types.Message):
-    """Команда /admin - административные функции"""
-    codes = load_codes()
-    
-    text = (
-        f"👨‍💼 *Административная панель*\n\n"
-        f"📊 Статистика:\n"
-        f"• Зарегистрировано сотрудников: {len(codes)}\n"
-        f"• Последнее обновление: {datetime.now().strftime('%d.%m.%Y %H:%M:%S')}\n\n"
-    )
-    
-    if codes:
-        # Последние 5 регистраций
-        text += "📝 Последние регистрации:\n"
-        sorted_codes = sorted(codes.items(), key=lambda x: x[1]['created'], reverse=True)[:5]
-        
-        for phone, data in sorted_codes:
-            text += f"• {data['name']} ({phone})\n"
-            text += f"  Код: `{data['code']}`\n"
-            text += f"  Дата: {data['created']}\n\n"
-    
-    await message.answer(text, parse_mode="Markdown")
-
-# ========================================
-# ОСНОВНЫЕ ОБРАБОТЧИКИ
-# ========================================
 
 @dp.message(lambda message: message.text == "📱 Отправить контакт")
-async def request_contact(message: types.Message, state: FSMContext):
+async def request_contact(message: types.Message):
     """Обработка кнопки отправки контакта"""
     await message.answer(
         "Нажмите кнопку ниже, чтобы отправить контакт:",
-        reply_markup=ReplyKeyboardMarkup(
+        reply_markup=types.ReplyKeyboardMarkup(
             keyboard=[
-                [KeyboardButton(text="📱 Поделиться номером", request_contact=True)],
-                [KeyboardButton(text="❌ Отменить")]
+                [types.KeyboardButton(text="📱 Поделиться номером", request_contact=True)],
+                [types.KeyboardButton(text="↩️ Назад")]
             ],
             resize_keyboard=True
         )
@@ -289,132 +159,128 @@ async def request_contact(message: types.Message, state: FSMContext):
 
 @dp.message(lambda message: message.text == "📝 Ввести номер вручную")
 async def request_phone_manual(message: types.Message, state: FSMContext):
-    """Обработка кнопки ручного ввода номера"""
+    """Обработка кнопки ручного ввода"""
     await message.answer(
-        "📱 *Введите ваш номер телефона для регистрации:*\n\n"
-        "*Формат:*\n"
-        "• `79991234567`\n"
-        "• `+79991234567`\n"
-        "• `89991234567`\n\n"
+        "📱 <b>Введите ваш номер телефона:</b>\n\n"
+        "Формат: <code>79991234567</code> или <code>+79991234567</code>\n\n"
         "Номер будет использоваться для входа в систему.",
-        parse_mode="Markdown",
-        reply_markup=get_cancel_keyboard()
+        reply_markup=types.ReplyKeyboardMarkup(
+            keyboard=[[types.KeyboardButton(text="❌ Отменить")]],
+            resize_keyboard=True
+        )
     )
-    await state.set_state(RegistrationStates.waiting_phone_input)
+    await state.set_state(Registration.waiting_for_phone)
 
-@dp.message(lambda message: message.text == "🔑 Мой код доступа")
-async def request_my_code(message: types.Message, state: FSMContext):
-    """Обработка кнопки получения своего кода"""
+@dp.message(lambda message: message.text == "🔑 Получить мой код")
+async def request_my_code(message: types.Message):
+    """Обработка кнопки получения кода"""
+    codes = load_codes()
+    
+    if not codes:
+        await message.answer(
+            "❌ <b>Нет зарегистрированных сотрудников.</b>\n\n"
+            "Сначала зарегистрируйтесь.",
+            reply_markup=types.ReplyKeyboardRemove()
+        )
+        return
+    
     await message.answer(
-        "📱 *Введите ваш номер телефона:*\n\n"
-        "Я найду ваш код доступа в системе.",
-        parse_mode="Markdown",
-        reply_markup=get_cancel_keyboard()
-    )
-    await state.set_state(RegistrationStates.phone_verified)
-
-@dp.message(lambda message: message.text == "❌ Отменить")
-async def cancel_action(message: types.Message, state: FSMContext):
-    """Отмена действий"""
-    await state.clear()
-    await message.answer(
-        "Действие отменено.",
-        reply_markup=get_main_keyboard()
+        "Чтобы получить ваш код, отправьте номер телефона:",
+        reply_markup=types.ReplyKeyboardMarkup(
+            keyboard=[[types.KeyboardButton(text="❌ Отменить")]],
+            resize_keyboard=True
+        )
     )
 
-# Обработка отправленного контакта
+# Обработка контакта
 @dp.message(lambda message: message.contact is not None)
 async def handle_contact(message: types.Message, state: FSMContext):
     """Обработка отправленного контакта"""
-    phone = message.contact.phone_number
-    normalized_phone = validate_phone(phone)
+    phone = normalize_phone(message.contact.phone_number)
     
-    if not normalized_phone:
+    if not phone:
         await message.answer(
-            "❌ Не удалось распознать номер телефона.\n"
+            "❌ <b>Не удалось распознать номер.</b>\n\n"
             "Попробуйте ввести номер вручную.",
-            reply_markup=get_main_keyboard()
+            reply_markup=types.ReplyKeyboardRemove()
         )
+        return
+    
+    await process_phone_number(message, phone, state)
+
+# Обработка введенного номера
+@dp.message(Registration.waiting_for_phone)
+async def handle_phone_input(message: types.Message, state: FSMContext):
+    """Обработка введенного номера"""
+    if message.text == "❌ Отменить":
+        await message.answer("Действие отменено.", reply_markup=types.ReplyKeyboardRemove())
         await state.clear()
         return
     
-    await check_employee_and_proceed(message, normalized_phone, state)
-
-# Обработка введенного вручную номера (для регистрации)
-@dp.message(RegistrationStates.waiting_phone_input)
-async def handle_manual_phone_for_registration(message: types.Message, state: FSMContext):
-    """Обработка номера для регистрации"""
-    normalized_phone = validate_phone(message.text)
+    phone = normalize_phone(message.text)
     
-    if not normalized_phone:
+    if not phone:
         await message.answer(
-            "❌ *Неверный формат номера*\n\n"
+            "❌ <b>Неверный формат номера.</b>\n\n"
             "Пожалуйста, введите номер в формате:\n"
-            "• `79991234567`\n"
-            "• `+79991234567`\n\n"
-            "Попробуйте еще раз:",
-            parse_mode="Markdown",
-            reply_markup=get_cancel_keyboard()
+            "<code>79991234567</code> или <code>+79991234567</code>\n\n"
+            "Попробуйте еще раз:"
         )
         return
     
-    await check_employee_and_proceed(message, normalized_phone, state)
+    await process_phone_number(message, phone, state)
 
-# Обработка номера для получения кода
-@dp.message(RegistrationStates.phone_verified)
-async def handle_phone_for_code(message: types.Message, state: FSMContext):
-    """Обработка номера для получения кода"""
-    normalized_phone = validate_phone(message.text)
+async def process_phone_number(message: types.Message, phone: str, state: FSMContext):
+    """Обработка номера телефона"""
+    codes = load_codes()
     
-    if not normalized_phone:
+    # Проверяем, есть ли уже сотрудник с таким номером
+    if phone in codes:
+        # Сотрудник уже зарегистрирован
+        data = codes[phone]
         await message.answer(
-            "❌ *Неверный формат номера*\n\n"
-            "Попробуйте еще раз:",
-            parse_mode="Markdown",
-            reply_markup=get_cancel_keyboard()
+            f"✅ <b>Найден ваш код!</b>\n\n"
+            f"👤 <b>ФИО:</b> {data['name']}\n"
+            f"📱 <b>Телефон:</b> <code>{phone}</code>\n\n"
+            f"🔐 <b>Ваш код доступа:</b>\n"
+            f"<code>{data['code']}</code>\n\n"
+            f"📅 <b>Зарегистрирован:</b> {data['date']}\n\n"
+            f"⚠️ <b>Код постоянный и не меняется!</b>",
+            reply_markup=types.ReplyKeyboardRemove()
         )
-        return
-    
-    await check_employee_and_proceed(message, normalized_phone, state)
-
-async def check_employee_and_proceed(message: types.Message, phone: str, state: FSMContext):
-    """Проверяет сотрудника и продолжает процесс"""
-    # Проверяем, есть ли сотрудник в системе
-    employee = get_employee_by_phone(phone)
-    
-    if employee:
-        # Сотрудник уже зарегистрирован - показываем код
-        await show_employee_code(message, phone, employee)
         await state.clear()
     else:
         # Сотрудника нет - начинаем регистрацию
         await state.update_data(phone=phone)
         await message.answer(
-            "✅ *Номер принят!*\n\n"
-            "📝 Теперь введите ваше *имя и фамилию*:\n\n"
-            "*Формат:* Иванов Иван\n"
-            "Минимум 2 слова, каждое от 2 букв",
-            parse_mode="Markdown",
-            reply_markup=get_cancel_keyboard()
+            "✅ <b>Номер принят!</b>\n\n"
+            "📝 <b>Теперь введите ваше имя и фамилию:</b>\n\n"
+            "Например: <i>Иванов Иван</i>",
+            reply_markup=types.ReplyKeyboardMarkup(
+                keyboard=[[types.KeyboardButton(text="❌ Отменить")]],
+                resize_keyboard=True
+            )
         )
-        await state.set_state(RegistrationStates.waiting_name_input)
+        await state.set_state(Registration.waiting_for_name)
 
-# Обработка ввода имени при регистрации
-@dp.message(RegistrationStates.waiting_name_input)
+# Обработка ввода имени
+@dp.message(Registration.waiting_for_name)
 async def handle_name_input(message: types.Message, state: FSMContext):
-    """Обработка ввода имени при регистрации"""
+    """Обработка ввода имени"""
+    if message.text == "❌ Отменить":
+        await message.answer("Регистрация отменена.", reply_markup=types.ReplyKeyboardRemove())
+        await state.clear()
+        return
+    
     name = message.text.strip()
     
-    if not validate_name(name):
+    # Простая валидация имени
+    if len(name.split()) < 2 or len(name) < 3:
         await message.answer(
-            "❌ *Неверный формат имени*\n\n"
-            "Пожалуйста, введите *имя и фамилию*:\n"
-            "• Минимум 2 слова\n"
-            "• Каждое слово от 2 букв\n"
-            "• Например: *Иванов Иван*\n\n"
-            "Попробуйте еще раз:",
-            parse_mode="Markdown",
-            reply_markup=get_cancel_keyboard()
+            "❌ <b>Неверный формат имени.</b>\n\n"
+            "Пожалуйста, введите имя и фамилию:\n"
+            "Например: <i>Иванов Иван</i>\n\n"
+            "Попробуйте еще раз:"
         )
         return
     
@@ -423,100 +289,138 @@ async def handle_name_input(message: types.Message, state: FSMContext):
     phone = data.get('phone')
     
     if not phone:
-        await message.answer(
-            "❌ Ошибка: номер телефона не найден.\n"
-            "Начните регистрацию заново.",
-            reply_markup=get_main_keyboard()
-        )
+        await message.answer("Ошибка. Начните заново.", reply_markup=types.ReplyKeyboardRemove())
         await state.clear()
         return
     
-    # Форматируем имя
-    formatted_name = format_name(name)
-    
     # Регистрируем сотрудника
-    await register_employee(message, phone, formatted_name)
+    await register_employee(message, phone, name)
     await state.clear()
 
 async def register_employee(message: types.Message, phone: str, name: str):
-    """Регистрирует нового сотрудника"""
+    """Регистрация нового сотрудника"""
     # Генерируем код
-    code = generate_static_code()
+    code = generate_code()
     
-    # Сохраняем сотрудника
-    if save_employee(phone, name, code):
+    # Загружаем существующие коды
+    codes = load_codes()
+    
+    # Добавляем нового сотрудника
+    codes[phone] = {
+        'name': name,
+        'code': code,
+        'date': datetime.now().strftime('%d.%m.%Y %H:%M:%S')
+    }
+    
+    # Сохраняем
+    if save_codes(codes):
         await message.answer(
-            "🎉 *Регистрация успешно завершена!*\n"
+            "🎉 <b>Регистрация успешно завершена!</b>\n"
             "━━━━━━━━━━━━━━━━━━━━━",
-            parse_mode="Markdown",
-            reply_markup=ReplyKeyboardRemove()
+            reply_markup=types.ReplyKeyboardRemove()
         )
         
         await message.answer(
-            f"✅ *Ваши данные сохранены:*\n\n"
-            f"👤 *ФИО:* {name}\n"
-            f"📱 *Телефон:* `{phone}`\n\n"
-            f"🔐 *ВАШ ПОСТОЯННЫЙ КОД ДОСТУПА:*\n"
-            f"```\n{code}\n```\n\n"
-            f"📋 *Важная информация:*\n"
-            f"• Этот код **никогда не изменится**\n"
+            f"✅ <b>Ваши данные сохранены:</b>\n\n"
+            f"👤 <b>ФИО:</b> {name}\n"
+            f"📱 <b>Телефон:</b> <code>{phone}</code>\n\n"
+            f"🔐 <b>ВАШ ПОСТОЯННЫЙ КОД ДОСТУПА:</b>\n"
+            f"<code>{code}</code>\n\n"
+            f"📋 <b>Важная информация:</b>\n"
+            f"• Этот код <b>никогда не изменится</b>\n"
             f"• Запомните или сохраните его\n"
             f"• Для входа на веб-сервис используйте этот код\n"
-            f"• Для повторного получения нажмите «🔑 Мой код доступа»",
-            parse_mode="Markdown"
+            f"• Для повторного получения нажмите «🔑 Получить мой код»",
+            reply_markup=types.ReplyKeyboardMarkup(
+                keyboard=[
+                    [types.KeyboardButton(text="🔑 Получить мой код")],
+                    [types.KeyboardButton(text="📝 Новый сотрудник")]
+                ],
+                resize_keyboard=True
+            )
         )
         
-        # Отправляем файл с кодами
-        if CODES_FILE.exists():
-            with open(CODES_FILE, 'rb') as f:
-                await message.answer_document(
-                    types.BufferedInputFile(f.read(), filename="codes.txt"),
-                    caption="📁 Общий файл со всеми кодами"
-                )
-        
-        await message.answer(
-            "Теперь вы можете получить ваш код в любое время!",
-            reply_markup=get_registration_complete_keyboard()
-        )
-        
-        logger.info(f"Зарегистрирован новый сотрудник: {name} ({phone}) - код: {code}")
+        logger.info(f"Зарегистрирован: {name} ({phone}) - код: {code}")
     else:
         await message.answer(
-            "❌ *Ошибка сохранения данных*\n\n"
+            "❌ <b>Ошибка сохранения данных.</b>\n\n"
             "Попробуйте еще раз или обратитесь к администратору.",
-            parse_mode="Markdown",
-            reply_markup=get_main_keyboard()
+            reply_markup=types.ReplyKeyboardRemove()
         )
 
-async def show_employee_code(message: types.Message, phone: str, employee_data: dict):
-    """Показывает код существующего сотрудника"""
-    # Обновляем время последнего доступа
-    update_last_access(phone)
+@dp.message(lambda message: message.text == "↩️ Назад")
+async def go_back(message: types.Message):
+    """Возврат в главное меню"""
+    await cmd_start(message)
+
+@dp.message(lambda message: message.text == "📝 Новый сотрудник")
+async def new_employee(message: types.Message):
+    """Регистрация нового сотрудника"""
+    await request_phone_manual(message, None)
+
+@dp.message(Command("codes"))
+async def cmd_codes(message: types.Message):
+    """Команда /codes - показать все коды (для админа)"""
+    codes = load_codes()
     
-    await message.answer(
-        "✅ *Найден ваш код доступа!*\n"
-        "━━━━━━━━━━━━━━━━━━━━━",
-        parse_mode="Markdown",
-        reply_markup=ReplyKeyboardRemove()
+    if not codes:
+        await message.answer("❌ Нет зарегистрированных сотрудников.")
+        return
+    
+    text = "📋 <b>Список всех сотрудников:</b>\n\n"
+    for phone, data in sorted(codes.items(), key=lambda x: x[1]['name']):
+        text += f"👤 <b>{data['name']}</b>\n"
+        text += f"   📱 <code>{phone}</code>\n"
+        text += f"   🔐 <code>{data['code']}</code>\n"
+        text += f"   📅 {data['date']}\n\n"
+    
+    # Если текст слишком длинный, разбиваем на части
+    if len(text) > 4096:
+        parts = [text[i:i+4096] for i in range(0, len(text), 4096)]
+        for part in parts:
+            await message.answer(part)
+    else:
+        await message.answer(text)
+
+@dp.message(Command("help"))
+async def cmd_help(message: types.Message):
+    """Команда /help"""
+    help_text = (
+        "📋 <b>Справка по боту:</b>\n\n"
+        
+        "<b>Как зарегистрироваться:</b>\n"
+        "1. Нажмите «📝 Ввести номер вручную»\n"
+        "2. Введите номер телефона\n"
+        "3. Введите имя и фамилию\n"
+        "4. Получите постоянный код\n\n"
+        
+        "<b>Как получить код:</b>\n"
+        "1. Нажмите «🔑 Получить мой код»\n"
+        "2. Введите номер телефона\n"
+        "3. Получите ваш код\n\n"
+        
+        "<b>Важная информация:</b>\n"
+        "• Код выдается <b>один раз</b>\n"
+        "• Код <b>никогда не меняется</b>\n"
+        "• Все данные сохраняются в файл\n\n"
+        
+        "<b>Формат номера телефона:</b>\n"
+        "<code>79991234567</code> или <code>+79991234567</code>\n\n"
+        
+        "<b>Другие команды:</b>\n"
+        "/start - Начать работу\n"
+        "/help - Эта справка"
     )
-    
+    await message.answer(help_text)
+
+# Обработка любых других сообщений
+@dp.message()
+async def handle_other_messages(message: types.Message):
+    """Обработка других сообщений"""
     await message.answer(
-        f"👤 *ФИО:* {employee_data['name']}\n"
-        f"📱 *Телефон:* `{phone}`\n\n"
-        f"🔐 *ВАШ КОД ДОСТУПА:*\n"
-        f"```\n{employee_data['code']}\n```\n\n"
-        f"📅 *Зарегистрирован:* {employee_data['created']}\n"
-        f"🕐 *Последний доступ:* {employee_data.get('last_access', 'нет данных')}\n\n"
-        f"⚡ *Код постоянный и никогда не изменится!*",
-        parse_mode="Markdown"
+        "Используйте кнопки меню или команду /start для начала работы.",
+        reply_markup=types.ReplyKeyboardRemove()
     )
-    
-    await message.answer(
-        "Для получения кода в будущем используйте кнопку «🔑 Мой код доступа»",
-        reply_markup=get_registration_complete_keyboard()
-    )
-    
-    logger.info(f"Показан код для {employee_data['name']} ({phone})")
 
 # ========================================
 # ЗАПУСК БОТА
@@ -524,48 +428,21 @@ async def show_employee_code(message: types.Message, phone: str, employee_data: 
 
 async def main():
     """Основная функция запуска бота"""
-    logger.info("=" * 50)
-    logger.info("Бот с регистрацией сотрудников запускается")
-    logger.info(f"Файл кодов: {CODES_FILE}")
-    logger.info("=" * 50)
+    logger.info("🚀 Запуск Telegram бота на Render...")
+    logger.info(f"📁 Директория данных: {DATA_DIR.absolute()}")
+    logger.info(f"🔐 Токен: {BOT_TOKEN[:10]}...")
     
     # Загружаем существующие коды
     codes = load_codes()
-    logger.info(f"Загружено сотрудников: {len(codes)}")
+    logger.info(f"📊 Загружено сотрудников: {len(codes)}")
     
     try:
         await dp.start_polling(bot)
     except Exception as e:
-        logger.error(f"Ошибка: {e}")
+        logger.error(f"💥 Критическая ошибка: {e}")
+        raise
     finally:
         await bot.session.close()
 
 if __name__ == '__main__':
-    # Простой запуск
-    if not os.getenv('BOT_TOKEN'):
-        print("=" * 60)
-        print("БОТ РЕГИСТРАЦИИ СОТРУДНИКОВ")
-        print("=" * 60)
-        print("📁 Данные сохраняются в папке: data/")
-        print("📄 Файл с кодами: employee_codes.txt")
-        print("\nФормат файла:")
-        print("  Иванов Иван")
-        print("  ABCDEF12")
-        print("  ------------------------------")
-        print()
-        
-        token = input("Введите токен бота от @BotFather: ").strip()
-        if token:
-            BOT_TOKEN = token
-            bot = Bot(token=BOT_TOKEN)
-        else:
-            print("❌ Токен не введен.")
-            exit(1)
-    
-    print("\n✅ Бот запускается...")
-    print("📝 Система регистрации сотрудников")
-    print("🔐 Постоянные коды доступа")
-    print("\nДля остановки нажмите Ctrl+C")
-    print("=" * 60)
-    
     asyncio.run(main())
