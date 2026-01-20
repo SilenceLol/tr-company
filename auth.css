@@ -1,0 +1,617 @@
+/* auth.css - Стили для страницы авторизации - ПОЛНЫЙ ФАЙЛ */
+
+.auth-container {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 0;
+    margin: 0;
+}
+
+.auth-main {
+    flex: 1;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.auth-card {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+}
+
+/* QR-СКАНЕР */
+.qr-scanner-section {
+    margin-bottom: 20px;
+}
+
+#qr-reader {
+    width: 100%;
+    height: 300px;
+    border: 3px solid #3498db;
+    border-radius: 12px;
+    overflow: hidden;
+    margin: 0 auto 15px auto;
+    position: relative;
+    background: #000;
+    display: none;
+}
+
+#qr-reader.active {
+    display: block;
+}
+
+.scanner-placeholder {
+    width: 100%;
+    height: 300px;
+    border: 3px dashed #3498db;
+    border-radius: 12px;
+    margin: 0 auto 15px auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: #f8f9fa;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.scanner-placeholder:hover {
+    background: #e3f2fd;
+    border-color: #2980b9;
+}
+
+.scanner-placeholder-icon {
+    font-size: 48px;
+    margin-bottom: 15px;
+    color: #3498db;
+}
+
+.scanner-placeholder-text {
+    font-size: 18px;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 8px;
+}
+
+.scanner-placeholder-hint {
+    font-size: 14px;
+    color: #666;
+    text-align: center;
+    max-width: 80%;
+}
+
+.scanner-frame {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 220px;
+    height: 220px;
+    border: 3px solid #00ff00;
+    border-radius: 10px;
+    box-shadow: 0 0 0 1000px rgba(0, 0, 0, 0.5);
+    z-index: 1;
+}
+
+.scanner-instructions {
+    color: #666;
+    font-size: 14px;
+    line-height: 1.4;
+    margin-bottom: 10px;
+}
+
+.scanner-controls {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.btn-scan {
+    background: linear-gradient(135deg, #3498db, #2980b9);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 14px 20px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    flex: 1;
+    transition: all 0.3s;
+}
+
+.btn-scan:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+}
+
+.btn-scan:disabled {
+    background: #95a5a6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.btn-scan-stop {
+    background: linear-gradient(135deg, #e74c3c, #c0392b);
+}
+
+/* РУЧНОЙ ВВОД */
+.manual-auth-section {
+    border-top: 1px solid #e9ecef;
+    padding-top: 20px;
+    margin-top: 20px;
+}
+
+.manual-auth-section h3 {
+    margin-bottom: 15px;
+    color: #2c3e50;
+    font-size: 18px;
+}
+
+.manual-input {
+    display: flex;
+    gap: 10px;
+    width: 100%;
+    max-width: 300px;
+    margin: 0 auto;
+}
+
+#employeeCode {
+    flex: 1;
+    min-width: 0;
+    font-size: 16px;
+    height: 46px;
+    padding: 0 15px;
+    border: 2px solid #3498db;
+    border-radius: 8px;
+    text-align: center;
+}
+
+#employeeCode:focus {
+    outline: none;
+    border-color: #2980b9;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+}
+
+.btn-auth {
+    min-width: 90px;
+    padding: 0 20px;
+    height: 46px;
+    background: linear-gradient(135deg, #27ae60, #219653);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.btn-auth:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(39, 174, 96, 0.3);
+}
+
+/* СТАТУС АВТОРИЗАЦИИ */
+.auth-status {
+    margin-top: 15px;
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    min-height: 20px;
+    text-align: center;
+}
+
+.auth-status.success {
+    background: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.auth-status.error {
+    background: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+.auth-status.loading {
+    background: #d1ecf1;
+    color: #0c5460;
+    border: 1px solid #bee5eb;
+}
+
+.auth-status.scanning {
+    background: #fff3cd;
+    color: #856404;
+    border: 1px solid #ffeaa7;
+}
+
+/* ДЕМО-КОДЫ */
+.demo-info {
+    background: #f8f9fa;
+    border-radius: 10px;
+    padding: 15px;
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+    margin-top: 20px;
+}
+
+.demo-info h4 {
+    margin-bottom: 10px;
+    color: #495057;
+    font-size: 16px;
+}
+
+.demo-codes {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.demo-code {
+    background: white;
+    padding: 10px 15px;
+    border-radius: 6px;
+    border: 1px solid #dee2e6;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-size: 14px;
+    font-weight: 500;
+    text-align: center;
+    flex: 1;
+    max-width: 150px;
+}
+
+.demo-code:hover {
+    background: #e3f2fd;
+    border-color: #3498db;
+    transform: translateY(-2px);
+}
+
+/* ИНДИКАТОР СКАНИРОВАНИЯ */
+.scanning-indicator {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(90deg, #3498db, #2ecc71, #3498db);
+    background-size: 200% 100%;
+    animation: scanning 2s linear infinite;
+    z-index: 2;
+}
+
+@keyframes scanning {
+    0% {
+        background-position: 200% 0;
+    }
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+/* ПРЕЛОАДЕР КАМЕРЫ */
+.camera-loader {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    color: white;
+}
+
+.loader-spinner {
+    width: 50px;
+    height: 50px;
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #3498db;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 15px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* АДАПТАЦИЯ ДЛЯ МОБИЛЬНЫХ */
+@media (max-height: 700px) {
+    #qr-reader, .scanner-placeholder {
+        height: 250px;
+    }
+    
+    .scanner-frame {
+        width: 180px;
+        height: 180px;
+    }
+}
+
+@media (max-height: 600px) {
+    .auth-main {
+        padding: 10px;
+    }
+    
+    h1 {
+        font-size: 1.3em;
+        margin: 5px 0 10px 0;
+    }
+    
+    #qr-reader, .scanner-placeholder {
+        height: 220px;
+    }
+    
+    .scanner-frame {
+        width: 160px;
+        height: 160px;
+    }
+    
+    .auth-card {
+        padding: 15px;
+    }
+}
+
+@media (max-width: 350px) {
+    .manual-input {
+        flex-direction: column;
+    }
+    
+    .btn-auth {
+        width: 100%;
+    }
+    
+    .demo-codes {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .demo-code {
+        max-width: 100%;
+        width: 100%;
+    }
+    
+    .scanner-controls {
+        flex-direction: column;
+    }
+}
+
+/* АДАПТАЦИЯ ДЛЯ ПЛАНШЕТОВ */
+@media (min-width: 768px) and (max-width: 1024px) {
+    .auth-container {
+        justify-content: center;
+        padding: 20px;
+    }
+    
+    .auth-main {
+        padding: 20px;
+        max-width: 500px;
+        margin: 0 auto;
+    }
+    
+    .auth-card {
+        max-width: 500px;
+        padding: 30px;
+    }
+    
+    #qr-reader, .scanner-placeholder {
+        height: 350px;
+    }
+    
+    .scanner-frame {
+        width: 250px;
+        height: 250px;
+    }
+    
+    .scanner-placeholder-icon {
+        font-size: 60px;
+    }
+    
+    .scanner-placeholder-text {
+        font-size: 22px;
+    }
+    
+    .scanner-placeholder-hint {
+        font-size: 16px;
+    }
+    
+    .manual-auth-section h3 {
+        font-size: 20px;
+    }
+    
+    #employeeCode {
+        height: 50px;
+        font-size: 18px;
+    }
+    
+    .btn-auth {
+        height: 50px;
+        font-size: 18px;
+        min-width: 100px;
+    }
+    
+    .auth-status {
+        font-size: 16px;
+        padding: 15px;
+    }
+    
+    .demo-info h4 {
+        font-size: 18px;
+    }
+    
+    .demo-code {
+        padding: 12px 18px;
+        font-size: 16px;
+    }
+    
+    .btn-scan {
+        padding: 16px 24px;
+        font-size: 18px;
+        min-height: 60px;
+    }
+    
+    .scanner-instructions {
+        font-size: 16px;
+    }
+    
+    /* Увеличиваем touch targets для планшетов */
+    .btn-scan,
+    .btn-auth,
+    .demo-code {
+        min-height: 50px;
+    }
+}
+
+/* ДЛЯ ВЕРТИКАЛЬНЫХ ПЛАНШЕТОВ */
+@media (min-width: 768px) and (max-width: 1024px) and (orientation: portrait) {
+    .auth-main {
+        padding: 30px 20px;
+    }
+    
+    h1 {
+        font-size: 2em;
+        margin-bottom: 25px;
+    }
+}
+
+/* ДЛЯ ГОРИЗОНТАЛЬНЫХ ПЛАНШЕТОВ */
+@media (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) {
+    .auth-container {
+        padding: 10px;
+    }
+    
+    .auth-main {
+        padding: 10px;
+    }
+    
+    h1 {
+        font-size: 1.5em;
+        margin-bottom: 15px;
+    }
+}
+
+/* УВЕЛИЧЕНИЕ ТАЧ-ТАРГЕТОВ ДЛЯ ПЛАНШЕТОВ */
+@media (min-width: 768px) {
+    .btn-scan,
+    .btn-auth,
+    .demo-code,
+    .scanner-placeholder {
+        cursor: pointer;
+        min-height: 44px;
+    }
+    
+    /* Улучшение фокуса для планшетов */
+    *:focus {
+        outline: 3px solid #3498db;
+        outline-offset: 3px;
+    }
+}
+
+/* УЛУЧШЕНИЕ СКРОЛЛА */
+.auth-main::-webkit-scrollbar {
+    width: 6px;
+}
+
+.auth-main::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 3px;
+}
+
+.auth-main::-webkit-scrollbar-thumb {
+    background: #3498db;
+    border-radius: 3px;
+}
+
+.auth-main::-webkit-scrollbar-thumb:hover {
+    background: #2980b9;
+}
+/* Стили для динамической авторизации */
+
+/* Кнопка обновления */
+.btn-refresh {
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 50%;
+    transition: all 0.3s;
+}
+
+.btn-refresh:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: rotate(90deg);
+}
+
+/* Демо-коды с именем */
+.demo-code {
+    background: white;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #dee2e6;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-align: center;
+    flex: 1;
+    max-width: 150px;
+    min-height: 70px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.demo-code:hover {
+    background: #e3f2fd;
+    border-color: #3498db;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(52, 152, 219, 0.2);
+}
+
+.demo-code-value {
+    font-size: 16px;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 4px;
+}
+
+.demo-code-name {
+    font-size: 14px;
+    color: #666;
+}
+
+/* Для планшетов */
+@media (min-width: 768px) {
+    .demo-code {
+        min-height: 80px;
+        padding: 15px;
+    }
+    
+    .demo-code-value {
+        font-size: 18px;
+    }
+    
+    .demo-code-name {
+        font-size: 15px;
+    }
+}

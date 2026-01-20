@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>NORD WHEEL - Авторизация</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="auth.css">
+</head>
+<body>
+    <div class="container auth-container">
+        <header>
+            <div class="logo">
+                <img src="logonwnew.png" alt="NORD WHEEL" class="logo-image" onerror="this.style.display='none'">
+                <span class="logo-text">NORD WHEEL</span>
+            </div>
+        </header>
+
+        <main class="auth-main">
+            <h1>Авторизация сотрудника</h1>
+            
+            <div class="auth-card">
+                <!-- Ручной ввод кода -->
+                <div class="manual-auth-section">
+                    <h3>Введите код доступа:</h3>
+                    <div class="manual-input">
+                        <input type="text"
+                               id="employeeCode"
+                               placeholder="K9CM4CRF"
+                               maxlength="20"
+                               pattern="[A-Z0-9]{3,20}"
+                               inputmode="text"
+                               autocapitalize="characters"
+                               autofocus>
+                        <button class="btn-auth" onclick="manualAuth()">Войти</button>
+                    </div>
+                    <p style="font-size: 12px; color: #666; margin-top: 10px;">
+                        Код выдается администратором
+                    </p>
+                </div>
+                
+                <!-- Статус авторизации -->
+                <div id="authStatus" class="auth-status"></div>
+            </div>
+        </main>
+    </div>
+
+    <script src="auth-dynamic.js"></script>
+</body>
+</html>
