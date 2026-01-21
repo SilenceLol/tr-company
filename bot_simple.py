@@ -9,6 +9,7 @@ import json
 import random
 import string
 import subprocess
+import logging
 from datetime import datetime
 from pathlib import Path
 
@@ -18,6 +19,10 @@ from telebot import types
 # ========================================
 # НАСТРОЙКИ
 # ========================================
+
+# Включаем логирование для отладки
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
 
 # Получаем токен из файла .env или напрямую
 BOT_TOKEN = "8535867471:AAFY7X12sWghRM6afK44r2bLpW9IYBSSkf0"  # Замените на ваш токен
@@ -33,8 +38,11 @@ TXT_FILE = DATA_DIR / "employee_codes.txt"
 
 # Настройки Git
 GIT_REPO = Path(".")  # Текущая папка
-GIT_USER = "Ваше Имя"  # Ваше имя для Git
-GIT_EMAIL = "ваш@email.com"  # Ваш email для Git
+GIT_USER = "SilenceLol"  # Ваше имя для Git
+GIT_EMAIL = "Silence8405@yandex.ru"  # Ваш email для Git
+
+# Храним состояния пользователей
+user_states = {}
 
 # ========================================
 # ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ + GIT
@@ -55,43 +63,59 @@ def setup_git():
             # Настраиваем Git
             subprocess.run(["git", "config", "user.name", GIT_USER], cwd=GIT_REPO)
             subprocess.run(["git", "config", "user.email", GIT_EMAIL], cwd=GIT_REPO)
-            print("✅ Git настроен")
+            logger.info("✅ Git настроен")
     except Exception as e:
-        print(f"⚠️  Ошибка настройки Git: {e}")
+        logger.error(f"⚠️  Ошибка настройки Git: {e}")
 
 def git_commit_and_push(message="Обновление данных сотрудников"):
     """Автоматически коммитит и пушит изменения"""
     try:
-        # Добавляем файлы
+        # Проверяем, есть ли изменения в папке data
+        status_result = subprocess.run(
+            ["git", "status", "--porcelain", "data/"],
+            capture_output=True,
+            text=True,
+            cwd=GIT_REPO
+        )
+        
+        if not status_result.stdout.strip():
+            logger.info("ℹ️  Нет изменений в папке data для коммита")
+            return True
+        
+        # Добавляем только файлы из data
         subprocess.run(["git", "add", "data/"], cwd=GIT_REPO, check=True)
         
         # Коммитим
-        subprocess.run(
+        commit_result = subprocess.run(
             ["git", "commit", "-m", message],
             cwd=GIT_REPO,
-            check=True
+            capture_output=True,
+            text=True
         )
         
+        if commit_result.returncode != 0:
+            logger.warning(f"⚠️  Не удалось сделать коммит: {commit_result.stderr}")
+            return False
+        
+        logger.info(f"✅ Коммит создан: {message}")
+        
         # Пушим
-        result = subprocess.run(
+        push_result = subprocess.run(
             ["git", "push"],
             cwd=GIT_REPO,
             capture_output=True,
             text=True
         )
         
-        if result.returncode == 0:
-            print("✅ Изменения загружены на GitHub")
+        if push_result.returncode == 0:
+            logger.info("✅ Изменения загружены на GitHub")
             return True
         else:
-            print(f"⚠️  Не удалось запушить: {result.stderr}")
+            logger.warning(f"⚠️  Не удалось запушить: {push_result.stderr}")
             return False
             
-    except subprocess.CalledProcessError as e:
-        print(f"❌ Ошибка Git: {e}")
-        return False
     except Exception as e:
-        print(f"❌ Ошибка: {e}")
+        logger.error(f"❌ Ошибка Git: {e}")
         return False
 
 def load_codes():
@@ -100,7 +124,8 @@ def load_codes():
         try:
             with open(CODES_FILE, 'r', encoding='utf-8') as f:
                 return json.load(f)
-        except:
+        except Exception as e:
+            logger.error(f"❌ Ошибка загрузки файла {CODES_FILE}: {e}")
             return {}
     return {}
 
@@ -123,17 +148,17 @@ def save_codes(codes, commit_to_git=True):
                 f.write(f"{data['code']}\n")
                 f.write("-" * 30 + "\n")
         
-        print(f"✅ Сохранено {len(codes)} сотрудников")
+        logger.info(f"✅ Сохранено {len(codes)} сотрудников")
         
         # Коммитим в Git если нужно
-        if commit_to_git:
+        if commit_to_git and len(codes) > 0:
             employee_names = [data['name'] for data in codes.values()][-3:]  # Последние 3
-            commit_message = f"Добавлены сотрудники: {', '.join(employee_names)}"
+            commit_message = f"Добавлены сотрудники: {', '.join(employee_names)}" if employee_names else "Обновление данных сотрудников"
             git_commit_and_push(commit_message)
         
         return True
     except Exception as e:
-        print(f"❌ Ошибка сохранения: {e}")
+        logger.error(f"❌ Ошибка сохранения: {e}")
         return False
 
 def generate_code(length=8):
@@ -153,17 +178,19 @@ def normalize_phone(phone: str) -> str:
     
     return None
 
+def check_phone_format(phone: str) -> bool:
+    """Проверяет формат телефона"""
+    normalized = normalize_phone(phone)
+    return normalized is not None
+
 # ========================================
-# ОСНОВНОЙ КОД БОТА (такой же как раньше)
+# ОСНОВНОЙ КОД БОТА
 # ========================================
 
-# [Вставьте сюда весь код обработчиков из предыдущего сообщения]
-# Кнопки /start, регистрация, получение кода и т.д.
-# Сохраните этот код отдельно и добавьте сюда
-
-# Для примера - минимальные обработчики:
 @bot.message_handler(commands=['start'])
 def cmd_start(message):
+    logger.info(f"👤 /start от пользователя {message.chat.id} ({message.chat.first_name})")
+    
     keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
     keyboard.add(
         types.KeyboardButton("📱 Отправить контакт", request_contact=True),
@@ -173,13 +200,293 @@ def cmd_start(message):
     
     bot.send_message(
         message.chat.id,
-        "👋 <b>Бот работает на локальном компьютере!</b>\n\n"
-        "Данные автоматически сохраняются в Git.",
+        "👋 <b>Добро пожаловать в бот регистрации сотрудников!</b>\n\n"
+        "Выберите действие:\n"
+        "• 📱 <b>Отправить контакт</b> - автоматическая регистрация\n"
+        "• 📝 <b>Ввести номер вручную</b> - для регистрации другого сотрудника\n"
+        "• 🔑 <b>Получить мой код</b> - если уже зарегистрирован\n\n"
+        "Бот работает локально, данные автоматически сохраняются в Git.",
         parse_mode='HTML',
         reply_markup=keyboard
     )
 
-# ... остальные обработчики из предыдущего кода ...
+@bot.message_handler(content_types=['contact'])
+def handle_contact(message):
+    """Обработка отправленного контакта"""
+    logger.info(f"📱 Получен контакт от {message.chat.id}")
+    
+    try:
+        contact = message.contact
+        user_id = str(message.chat.id)
+        
+        if contact.phone_number:
+            # Нормализуем номер телефона
+            phone = normalize_phone(contact.phone_number)
+            
+            if not phone:
+                bot.send_message(
+                    message.chat.id,
+                    "❌ <b>Неверный формат номера телефона!</b>\n"
+                    "Пожалуйста, введите номер вручную.",
+                    parse_mode='HTML'
+                )
+                return
+            
+            # Проверяем, есть ли уже такой номер
+            codes = load_codes()
+            
+            if phone in codes:
+                # Пользователь уже зарегистрирован
+                data = codes[phone]
+                bot.send_message(
+                    message.chat.id,
+                    f"✅ <b>Вы уже зарегистрированы!</b>\n\n"
+                    f"👤 Имя: <b>{data['name']}</b>\n"
+                    f"📱 Телефон: <b>+{phone}</b>\n"
+                    f"🔑 Код доступа: <b>{data['code']}</b>\n\n"
+                    f"Сохраните этот код в надежном месте!",
+                    parse_mode='HTML'
+                )
+            else:
+                # Регистрируем нового пользователя
+                user_states[user_id] = {'phone': phone, 'step': 'waiting_for_name'}
+                bot.send_message(
+                    message.chat.id,
+                    "✅ <b>Контакт получен!</b>\n\n"
+                    "Теперь введите <b>имя и фамилию</b> сотрудника:",
+                    parse_mode='HTML'
+                )
+        else:
+            bot.send_message(
+                message.chat.id,
+                "❌ <b>Не удалось получить номер телефона из контакта.</b>\n"
+                "Пожалуйста, разрешите доступ к номеру или введите вручную.",
+                parse_mode='HTML'
+            )
+            
+    except Exception as e:
+        logger.error(f"❌ Ошибка обработки контакта: {e}")
+        bot.send_message(
+            message.chat.id,
+            "❌ <b>Произошла ошибка при обработке контакта.</b>\n"
+            "Пожалуйста, попробуйте еще раз.",
+            parse_mode='HTML'
+        )
+
+@bot.message_handler(func=lambda message: message.text == "📱 Отправить контакт")
+def handle_send_contact_button(message):
+    """Обработка кнопки 'Отправить контакт'"""
+    logger.info(f"📱 Нажата кнопка 'Отправить контакт' от {message.chat.id}")
+    
+    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
+    keyboard.add(types.KeyboardButton("📱 Поделиться контактом", request_contact=True))
+    keyboard.add(types.KeyboardButton("↩️ Назад"))
+    
+    bot.send_message(
+        message.chat.id,
+        "Нажмите на кнопку 👇 чтобы поделиться контактом\n\n"
+        "Или нажмите 'Назад' для возврата в меню",
+        reply_markup=keyboard
+    )
+
+@bot.message_handler(func=lambda message: message.text == "📝 Ввести номер вручную")
+def handle_manual_phone_button(message):
+    """Обработка кнопки 'Ввести номер вручную'"""
+    logger.info(f"📝 Нажата кнопка 'Ввести номер вручную' от {message.chat.id}")
+    
+    user_id = str(message.chat.id)
+    user_states[user_id] = {'step': 'waiting_for_phone_manual'}
+    
+    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
+    keyboard.add(types.KeyboardButton("↩️ Назад"))
+    
+    bot.send_message(
+        message.chat.id,
+        "📱 <b>Введите номер телефона:</b>\n\n"
+        "Формат: <b>+7XXXYYYZZZZ</b> или <b>8XXXYYYZZZZ</b>\n"
+        "Например: +79161234567 или 89161234567\n\n"
+        "Или нажмите 'Назад' для возврата в меню",
+        parse_mode='HTML',
+        reply_markup=keyboard
+    )
+
+@bot.message_handler(func=lambda message: message.text == "🔑 Получить мой код")
+def handle_get_code_button(message):
+    """Обработка кнопки 'Получить мой код'"""
+    logger.info(f"🔑 Нажата кнопка 'Получить мой код' от {message.chat.id}")
+    
+    user_id = str(message.chat.id)
+    user_states[user_id] = {'step': 'waiting_for_phone_for_code'}
+    
+    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
+    keyboard.add(types.KeyboardButton("↩️ Назад"))
+    
+    bot.send_message(
+        message.chat.id,
+        "📱 <b>Введите номер телефона для получения кода:</b>\n\n"
+        "Формат: <b>+7XXXYYYZZZZ</b> или <b>8XXXYYYZZZZ</b>\n"
+        "Например: +79161234567 или 89161234567\n\n"
+        "Или нажмите 'Назад' для возврата в меню",
+        parse_mode='HTML',
+        reply_markup=keyboard
+    )
+
+@bot.message_handler(func=lambda message: message.text == "↩️ Назад")
+def handle_back_button(message):
+    """Обработка кнопки 'Назад'"""
+    logger.info(f"↩️ Нажата кнопка 'Назад' от {message.chat.id}")
+    user_id = str(message.chat.id)
+    if user_id in user_states:
+        del user_states[user_id]
+    show_main_menu(message.chat.id)
+
+@bot.message_handler(func=lambda message: True)
+def handle_all_messages(message):
+    """Обработка всех текстовых сообщений"""
+    logger.info(f"💬 Сообщение от {message.chat.id}: {message.text}")
+    
+    user_id = str(message.chat.id)
+    text = message.text.strip()
+    
+    # Проверяем состояние пользователя
+    if user_id in user_states:
+        state = user_states[user_id]
+        
+        if state['step'] == 'waiting_for_phone_manual':
+            # Обработка номера телефона, введенного вручную
+            if check_phone_format(text):
+                phone = normalize_phone(text)
+                codes = load_codes()
+                
+                if phone in codes:
+                    # Номер уже зарегистрирован
+                    data = codes[phone]
+                    bot.send_message(
+                        message.chat.id,
+                        f"❌ <b>Этот номер уже зарегистрирован!</b>\n\n"
+                        f"👤 Имя: <b>{data['name']}</b>\n"
+                        f"🔑 Код: <b>{data['code']}</b>\n\n"
+                        "Если это ваша учетная запись, нажмите '🔑 Получить мой код'",
+                        parse_mode='HTML'
+                    )
+                    del user_states[user_id]
+                    show_main_menu(message.chat.id)
+                else:
+                    # Запрашиваем имя
+                    state['phone'] = phone
+                    state['step'] = 'waiting_for_name'
+                    bot.send_message(
+                        message.chat.id,
+                        "✅ <b>Номер телефона принят!</b>\n\n"
+                        "Теперь введите <b>имя и фамилию</b> сотрудника:",
+                        parse_mode='HTML'
+                    )
+            else:
+                bot.send_message(
+                    message.chat.id,
+                    "❌ <b>Неверный формат номера!</b>\n\n"
+                    "Пожалуйста, введите номер в формате:\n"
+                    "<b>+7XXXYYYZZZZ</b> или <b>8XXXYYYZZZZ</b>\n"
+                    "Например: +79161234567 или 89161234567",
+                    parse_mode='HTML'
+                )
+        
+        elif state['step'] == 'waiting_for_name':
+            # Обработка имени сотрудника
+            if len(text) < 2:
+                bot.send_message(
+                    message.chat.id,
+                    "❌ <b>Имя слишком короткое!</b>\n"
+                    "Пожалуйста, введите полное имя и фамилию:",
+                    parse_mode='HTML'
+                )
+                return
+            
+            # Генерируем код
+            code = generate_code()
+            phone = state['phone']
+            
+            # Сохраняем в базу
+            codes = load_codes()
+            codes[phone] = {
+                'name': text,
+                'code': code,
+                'date': datetime.now().strftime('%d.%m.%Y %H:%M:%S'),
+                'registered_by': user_id
+            }
+            
+            save_codes(codes)
+            
+            # Отправляем результат
+            bot.send_message(
+                message.chat.id,
+                f"🎉 <b>Регистрация завершена успешно!</b>\n\n"
+                f"👤 <b>Сотрудник:</b> {text}\n"
+                f"📱 <b>Телефон:</b> +{phone}\n"
+                f"🔑 <b>Код доступа:</b> <code>{code}</code>\n\n"
+                f"⚠️ <b>Сохраните этот код!</b> Он больше не будет показан.",
+                parse_mode='HTML'
+            )
+            
+            # Показываем основное меню
+            show_main_menu(message.chat.id)
+            del user_states[user_id]
+        
+        elif state['step'] == 'waiting_for_phone_for_code':
+            # Поиск кода по номеру телефона
+            if check_phone_format(text):
+                phone = normalize_phone(text)
+                codes = load_codes()
+                
+                if phone in codes:
+                    data = codes[phone]
+                    bot.send_message(
+                        message.chat.id,
+                        f"✅ <b>Код найден!</b>\n\n"
+                        f"👤 <b>Сотрудник:</b> {data['name']}\n"
+                        f"📱 <b>Телефон:</b> +{phone}\n"
+                        f"🔑 <b>Код доступа:</b> <code>{data['code']}</code>\n\n"
+                        f"⚠️ <b>Сохраните этот код!</b>",
+                        parse_mode='HTML'
+                    )
+                else:
+                    bot.send_message(
+                        message.chat.id,
+                        f"❌ <b>Номер не найден!</b>\n\n"
+                        f"Телефон +{phone} не зарегистрирован.\n"
+                        f"Пожалуйста, зарегистрируйтесь через меню.",
+                        parse_mode='HTML'
+                    )
+                
+                show_main_menu(message.chat.id)
+                del user_states[user_id]
+            else:
+                bot.send_message(
+                    message.chat.id,
+                    "❌ <b>Неверный формат номера!</b>\n\n"
+                    "Пожалуйста, введите номер в формате:\n"
+                    "<b>+7XXXYYYZZZZ</b> или <b>8XXXYYYZZZZ</b>\n"
+                    "Например: +79161234567 или 89161234567",
+                    parse_mode='HTML'
+                )
+    else:
+        # Если нет состояния, показываем главное меню
+        show_main_menu(message.chat.id)
+
+def show_main_menu(chat_id):
+    """Показывает главное меню"""
+    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
+    keyboard.add(
+        types.KeyboardButton("📱 Отправить контакт", request_contact=True),
+        types.KeyboardButton("📝 Ввести номер вручную"),
+        types.KeyboardButton("🔑 Получить мой код")
+    )
+    
+    bot.send_message(
+        chat_id,
+        "Выберите действие:",
+        reply_markup=keyboard
+    )
 
 # ========================================
 # ЗАПУСК БОТА С GIT СИНХРОНИЗАЦИЕЙ
@@ -199,19 +506,22 @@ if __name__ == '__main__':
     codes = load_codes()
     print(f"📊 Загружено сотрудников: {len(codes)}")
     
-    # Проверяем Git статус
+    # Проверяем Git статус только для папки data
     try:
         git_status = subprocess.run(
-            ["git", "status"],
+            ["git", "status", "--porcelain", "data/"],
             capture_output=True,
             text=True,
             cwd=GIT_REPO
         )
-        if "nothing to commit" not in git_status.stdout:
-            print("🔄 Есть несохраненные изменения в Git")
+        
+        if git_status.stdout.strip():
+            print("🔄 Есть несохраненные изменения в папке data")
             git_commit_and_push("Автоматическое обновление при запуске")
-    except:
-        print("⚠️  Не удалось проверить Git статус")
+        else:
+            print("✅ В папке data нет несохраненных изменений")
+    except Exception as e:
+        print(f"⚠️  Не удалось проверить Git статус: {e}")
     
     print("=" * 50)
     print("🚀 Бот запускается локально...")
@@ -219,5 +529,11 @@ if __name__ == '__main__':
     print("⏹️  Для остановки нажмите Ctrl+C")
     print("=" * 50)
     
-    # Запускаем бота
-    bot.infinity_polling()
+    try:
+        # Запускаем бота с логированием
+        print("\n🔄 Бот запущен. Ожидание сообщений...")
+        bot.infinity_polling()
+    except KeyboardInterrupt:
+        print("\n\n⏹️  Бот остановлен пользователем")
+    except Exception as e:
+        print(f"\n❌ Ошибка запуска бота: {e}")
